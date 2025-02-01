@@ -7,7 +7,7 @@
   
       body {
         font-family: 'Nunito', sans-serif;
-        background: linear-gradient(to bottom right,#535C49,#CFC3AD,#DACDBB,#9EB69B,#47513C,#A8C9AB,#797F6B ,#90A489,#6B7A65 ,#B69B87); /* Light beige to off-white */
+        background: radial-gradient(circle,#535C49,#9EB69B,#CFC3AD, #A8C9AB,#90A489 ,#B69B87); /* Light beige to off-white */
         display: flex;
         justify-content: center;
         align-items: center;
@@ -74,7 +74,7 @@
       }
   
       .login-btn {
-        background-color: #006400;
+        background-color: #105e4e;
         color: #fff;
         padding: 0.75rem;
         border: none;
