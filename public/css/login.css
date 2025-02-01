@@ -7,7 +7,7 @@
   
       body {
         font-family: 'Nunito', sans-serif;
-        background: linear-gradient(to bottom right, #F5F5DC, #FAF9F6); /* Light beige to off-white */
+        background: linear-gradient(to bottom right,#535C49,#CFC3AD,#DACDBB,#9EB69B,#47513C,#A8C9AB,#797F6B ,#90A489,#6B7A65 ,#B69B87); /* Light beige to off-white */
         display: flex;
         justify-content: center;
         align-items: center;
@@ -68,7 +68,7 @@
   
       input[type="text"]:focus,
       input[type="password"]:focus {
-        border-color: #90EE90;
+        border-color: #535C49;
         outline: none;
         box-shadow: 0 0 4px rgba(144, 238, 144, 0.5);
       }
@@ -85,8 +85,8 @@
       }
   
       .login-btn:hover {
-        background-color: #90EE90;
-        color: #2F4F4F;
+        /* background-color: #90EE90; */
+        /* color: #2F4F4F; */
       }
   
       .forgot-password {
