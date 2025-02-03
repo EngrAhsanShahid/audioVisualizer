@@ -25,7 +25,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     } else {
                         console.error('Main content not found!');
                     }
-                }, 5000); // Adjust the duration as needed
+                }, 3000); // Adjust the duration as needed
             })
             .catch(error => console.error('Error loading the loader:', error));
     } else {

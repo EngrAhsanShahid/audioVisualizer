@@ -110,14 +110,7 @@
         text-decoration: underline;
       }
   
-      @keyframes fadeIn {
-        0% {
-            opacity: 0;
-        }
-        100% {
-            opacity: 1;
-        }
-      }
+
       @media (max-width: 480px) {
         .login-container {
           height: 100vh;
