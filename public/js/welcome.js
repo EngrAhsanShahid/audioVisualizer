@@ -29,7 +29,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         if (index < onboardingText.length) {
                             welcomeElement.textContent += onboardingText.charAt(index);
                             index++;
-                            setTimeout(typeText, 50); // Adjust typing speed here
+                            setTimeout(typeText, 20); // Adjust typing speed here
                         }
                         else {
                             showButtonAndText()
