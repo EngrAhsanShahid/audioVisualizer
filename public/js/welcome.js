@@ -1,6 +1,8 @@
 window.addEventListener('DOMContentLoaded', () => {
     const username = localStorage.getItem("username") || "Guest";
-    const welcomeText = `Welcome, ${username}!`;
+    const welcomeText = `Welcome ${username}!`;
+    const onboardingText = `To proceed further, we need to onboard you by understanding you. Click start
+            when you're ready.`;
     // document.getElementById("username").textContent = username;
     const loaderContainer = document.getElementById('loader-container');
     const welcomeContent = document.querySelector('.welcome-container'); // Selects the welcome content container
@@ -15,18 +17,19 @@ window.addEventListener('DOMContentLoaded', () => {
             // Simulate loading time
             setTimeout(() => {
                 loaderContainer.style.display = 'none'; // Hide the loader
+                document.getElementById("welcome-text").textContent = welcomeText;
 
                 if (welcomeContent) {
                     welcomeContent.style.display = 'block'; // Show the main content
                     // Type the welcome text one letter at a time
                     let index = 0;
-                    const welcomeElement = document.getElementById("welcome-text");
+                    const welcomeElement = document.getElementsByClassName("onboarding-instruction")[0]; // Access the first element
 
                     function typeText() {
-                        if (index < welcomeText.length) {
-                            welcomeElement.textContent += welcomeText.charAt(index);
+                        if (index < onboardingText.length) {
+                            welcomeElement.textContent += onboardingText.charAt(index);
                             index++;
-                            setTimeout(typeText, 100); // Adjust typing speed here
+                            setTimeout(typeText, 50); // Adjust typing speed here
                         }
                         else {
                             showButtonAndText()

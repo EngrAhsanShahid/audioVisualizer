@@ -99,8 +99,8 @@
             font-size: 2rem;
             margin-bottom: 1.5rem;
             white-space: wrap;
-            width: 0;
-            animation: typing 3s steps(30) 1s forwards, blink 0.75s step-end infinite;
+            /* width: 0; */
+            /* animation: typing 3s steps(30) 1s forwards, blink 0.75s step-end infinite; */
         }
 
         /* Additional Styling for Onboarding Text */
@@ -115,8 +115,9 @@
             font-family: 'Poppins', sans-serif;
             color: #2E4F2E;
             font-size: 1.2rem;
-            font-weight: bold;
+            /* font-weight: bold; */
             margin-bottom: 0.5rem;
+            
         }
 
         .onboarding-instruction {
@@ -124,6 +125,7 @@
             color: #666;
             font-size: 1rem;
             margin-bottom: 2rem;
-            display: none;
-            animation: fadeIn 1s ease-in-out forwards;
+            /* display: none; */
+            /* animation: fadeIn 1s ease-in-out forwards; */
+            animation: typing 3s steps(30) 1s forwards, blink 0.75s step-end infinite;  
         }
