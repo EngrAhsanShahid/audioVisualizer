@@ -5,6 +5,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const loaderContainer = document.getElementById('loader-container');
     const welcomeContent = document.querySelector('.welcome-container'); // Selects the welcome content container
     const startButton = document.querySelector(".start-btn"); // Get the button element
+    const onboardingInstruction = document.querySelector(".onboarding-instruction");
     // Fetch and inject the loader HTML
     fetch('loader.html')
         .then(response => response.text())
@@ -28,11 +29,12 @@ window.addEventListener('DOMContentLoaded', () => {
                             setTimeout(typeText, 100); // Adjust typing speed here
                         }
                         else {
-                            showButton()
+                            showButtonAndText()
                         }
                     }
-                    function showButton() {
+                    function showButtonAndText() {
                         startButton.style.display = 'block'; // Show the button
+                        onboardingInstruction.style.display = 'block';
                     }
                     // Start typing effect
                     typeText();

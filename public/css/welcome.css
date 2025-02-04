@@ -1,0 +1,129 @@
+        /* General Body Styling */
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #F0F8FF;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Full Page Welcome Container */
+        .welcome-container {
+            background: #ffffff;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            box-sizing: border-box;
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Fade-in Animation */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            color: #2E4F2E;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            transition: color 0.3s ease-in-out;
+        }
+
+        h1:hover {
+            color: #A8C9AB;
+        }
+
+        /* Styling for the Start Button at the Center */
+        .start-btn {
+            background-color: #A8C9AB;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            right: 35%;
+            top: 50%;
+            animation: bounce 1s ease infinite;
+            display: none;
+        }
+
+        .start-btn:hover {
+            background-color: #90A489;
+            transform: translateY(-2px);
+        }
+
+        .start-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Bounce animation */
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Add the typing effect style */
+        #welcome-text {
+            font-family: 'Poppins', sans-serif;
+            color: #2E4F2E;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            white-space: wrap;
+            width: 0;
+            animation: typing 3s steps(30) 1s forwards, blink 0.75s step-end infinite;
+        }
+
+        /* Additional Styling for Onboarding Text */
+        .onboarding-heading {
+            font-family: 'Poppins', sans-serif;
+            color: #2E4F2E;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .onboarding-subtext {
+            font-family: 'Poppins', sans-serif;
+            color: #2E4F2E;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .onboarding-instruction {
+            font-family: 'Nunito', sans-serif;
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            display: none;
+            animation: fadeIn 1s ease-in-out forwards;
+        }
