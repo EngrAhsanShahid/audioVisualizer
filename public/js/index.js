@@ -7,7 +7,7 @@ function redirectToWelcome(e) {
     // Example: Perform login validation (you can customize this part)
     if (password === 'admin') {
         // Wait for 2 seconds and then redirect
-        window.location.href = 'welcome.html';  // Adjust the URL as needed
+        window.location.href = './public/welcome.html';  // Adjust the URL as needed
     } else {
         // If login fails, alert the user (you can show a message in the UI)
         alert('Invalid username or password');
