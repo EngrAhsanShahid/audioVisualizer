@@ -48,3 +48,41 @@ window.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => console.error('Error loading the loader:', error));
 });
+
+
+// function startButton() {
+//     const statusElement = document.getElementById("status");
+//     statusElement.textContent = "Processing...";
+//     console.log("Inside startBUtton")
+//     // window.location.href = '/public/audioVisualizer.html';  // Adjust the URL as needed
+//     // fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/session/")
+//     //     .then(response => {
+//     //         // statusElement.textContent = "Processing...";
+//     //         return response.text();
+//     //         // return new Promise(resolve => setTimeout(() => resolve(response.text()), 5000));
+//     //     })
+//     //     .then(data => {
+//     //         // statusElement.textContent = "Server Response: " + data;
+//     //         window.location.href = '/public/audioVisualizer.html';  // Adjust the URL as needed
+//     //     })
+//     //     .catch(error => {
+//     //         statusElement.textContent = "Error connecting!";
+//     //         console.error("Error:", error);
+//     //     });
+//     // Main control functions
+
+
+// }
+
+
+
+// Event listeners
+// startButton.addEventListener('click', init);
+// stopButton.addEventListener('click', stopRecording);
+// document.addEventListener('DOMContentLoaded', () => {
+//     updateStatus('Ready to start')
+//     const startButton = document.getElementById('startButton');
+//     if (startButton) {
+//         startButton.click(); // Auto-clicks the button
+//     }
+// });

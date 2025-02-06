@@ -13,7 +13,7 @@
 
         /* Full Page Welcome Container */
         .welcome-container {
-            background: #ffffff;
+            /* background: #ffffff; */
             width: 100%;
             height: 100vh;
             display: flex;
@@ -24,7 +24,7 @@
             box-sizing: border-box;
             opacity: 0;
             animation: fadeIn 2s forwards;
-            position: absolute;
+            /* position: absolute; */
             top: 0;
             left: 0;
         }
@@ -63,7 +63,7 @@
             border-radius: 30px;
             transition: background-color 0.3s, transform 0.2s;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            position: fixed;
+            /* position: fixed; */
             right: 35%;
             top: 50%;
             animation: bounce 1s ease infinite;
@@ -128,4 +128,27 @@
             /* display: none; */
             /* animation: fadeIn 1s ease-in-out forwards; */
             animation: typing 3s steps(30) 1s forwards, blink 0.75s step-end infinite;  
+        }
+
+        #audioVisualizer{
+            animation: fadeIn 2s forwards;
+        }
+        #stopButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        #stopButton:hover {
+            background-color: #e60000;
+        }
+
+        #startButton, #status{
+            display: flex;
+            justify-content: center;
         }

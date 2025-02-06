@@ -11,7 +11,7 @@ window.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('hasVisited', 'true');
 
         // Fetch and inject the loader HTML
-        fetch('loader.html')
+        fetch('/public/loader.html')
             .then(response => response.text())
             .then(data => {
                 loaderContainer.innerHTML = data;
