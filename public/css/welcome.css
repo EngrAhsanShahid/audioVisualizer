@@ -81,6 +81,9 @@
             transform: translateY(1px);
         }
 
+        .start-btn:disabled {
+            background-color: #666;
+        }
         /* Bounce animation */
         @keyframes bounce {
 
@@ -137,12 +140,12 @@
             animation: fadeIn 2s forwards;
         }
         #stopButton {
-            padding: 10px 20px;
+            padding: 20px 20px;
             font-size: 16px;
             background-color: #ff4d4d;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 50%;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
@@ -151,16 +154,16 @@
             background-color: #e60000;
         }
 
-        #startButton, #status{
+        #startButtonDiv, #status{
             display: flex;
             justify-content: center;
+            min-height: 10%;
         }
-
         .onboarding-heading {
             position: absolute;
             top: 20px; /* Adjust this value as needed */
             left: 50%;
             transform: translateX(-50%);
-            font-size: 24px;
+            font-size: 40px;
             font-weight: bold;
         }

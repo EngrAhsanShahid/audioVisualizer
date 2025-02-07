@@ -17,8 +17,8 @@
         <!-- <h1 class="onboarding-heading">Onboarding</h1> -->
         <div class="onboarding-subtext" id="welcome-text"></div>
         <div class="onboarding-instruction"></div>
-        <div id="startButton">
-            <button class="start-btn" onclick="init()">Start</button>
+        <div id="startButtonDiv">
+            <button id="startButton" class="start-btn" onclick="init()">Start</button>
         </div>
         <div id="status" class="status"></div>
         <div id="error" class="error"></div>
@@ -34,7 +34,7 @@
 </body>
 <script src="js/welcome.js"></script>
 <script>
-    // const startButton = document.getElementById('startButton');
+    const startButton = document.getElementById('startButton');
     const stopButton = document.getElementById('stopButton');
     const transcriptDiv = document.getElementById('transcript');
     const statusDiv = document.getElementById('status');
@@ -209,7 +209,6 @@
     // Main control functions
     async function init() {
         startButton.disabled = true;
-
         try {
             updateStatus('Initializing...');
 
@@ -274,7 +273,7 @@
         stopButton.disabled = true;
         // updateStatus('Ready to start');
         updateStatus('');
-        document.querySelector(".welcome-container").style.display = "block";
+        document.querySelector(".welcome-container").style.display = "flex";
         document.getElementById("audioVisualizer").style.display = "none";
     }
 
