@@ -140,8 +140,8 @@
             animation: fadeIn 2s forwards;
         }
         #stopButton {
-            padding: 20px 20px;
-            font-size: 16px;
+            padding: 5vh 5vh;
+            font-size: 20px;
             background-color: #ff4d4d;
             color: white;
             border: none;
