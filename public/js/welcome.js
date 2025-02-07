@@ -20,7 +20,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 document.getElementById("welcome-text").textContent = welcomeText;
 
                 if (welcomeContent) {
-                    welcomeContent.style.display = 'block'; // Show the main content
+                    welcomeContent.style.display = ''; // Show the main content
                     // Type the welcome text one letter at a time
                     let index = 0;
                     const welcomeElement = document.getElementsByClassName("onboarding-instruction")[0]; // Access the first element

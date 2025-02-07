@@ -8,12 +8,13 @@
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/welcome.css">
+    <link rel="icon" href="/static/logo.png" type="image/x-icon" />
 </head>
 
 <body>
     <div id="loader-container"></div>
     <div class="welcome-container" style="display:none;">
-        <h1 class="onboarding-heading">Onboarding</h1>
+        <!-- <h1 class="onboarding-heading">Onboarding</h1> -->
         <div class="onboarding-subtext" id="welcome-text"></div>
         <div class="onboarding-instruction"></div>
         <div id="startButton">
@@ -23,7 +24,12 @@
         <div id="error" class="error"></div>
     </div>
     <div id="audioVisualizer" hidden>
-        <button id="stopButton" onclick="stopRecording()">Stop</button>
+        <div>
+            <h1 class="onboarding-heading">Onboarding</h1>
+        </div>
+        <div>
+            <button id="stopButton" onclick="stopRecording()">Stop</button>
+        </div>
     </div>
 </body>
 <script src="js/welcome.js"></script>

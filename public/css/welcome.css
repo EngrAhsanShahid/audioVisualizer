@@ -27,6 +27,8 @@
             /* position: absolute; */
             top: 0;
             left: 0;
+            text-align: center;
+            position: fixed;
         }
 
         /* Fade-in Animation */
@@ -63,9 +65,9 @@
             border-radius: 30px;
             transition: background-color 0.3s, transform 0.2s;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            /* position: fixed; */
-            right: 35%;
-            top: 50%;
+            position: fixed;
+            /* right: 35%; */
+            /* top: 50%; */
             animation: bounce 1s ease infinite;
             display: none;
         }
@@ -104,12 +106,12 @@
         }
 
         /* Additional Styling for Onboarding Text */
-        .onboarding-heading {
+        /* .onboarding-heading {
             font-family: 'Poppins', sans-serif;
             color: #2E4F2E;
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
-        }
+        } */
 
         .onboarding-subtext {
             font-family: 'Poppins', sans-serif;
@@ -127,7 +129,8 @@
             margin-bottom: 2rem;
             /* display: none; */
             /* animation: fadeIn 1s ease-in-out forwards; */
-            animation: typing 3s steps(30) 1s forwards, blink 0.75s step-end infinite;  
+            /* animation: typing 3s steps(30) 1s forwards, blink 0.75s step-end infinite;   */
+            min-height: 100px;
         }
 
         #audioVisualizer{
@@ -151,4 +154,13 @@
         #startButton, #status{
             display: flex;
             justify-content: center;
+        }
+
+        .onboarding-heading {
+            position: absolute;
+            top: 20px; /* Adjust this value as needed */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            font-weight: bold;
         }
