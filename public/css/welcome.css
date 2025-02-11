@@ -9,6 +9,7 @@
             justify-content: center;
             align-items: center;
             position: relative;
+            text-align: center;
         }
 
         /* Full Page Welcome Container */
@@ -166,4 +167,11 @@
             transform: translateX(-50%);
             font-size: 40px;
             font-weight: bold;
+        }
+
+        canvas {
+            width: 100vw;
+            height: 200px;
+            border: 2px solid white;
+            background: black;
         }
