@@ -123,10 +123,14 @@
     async function setupAudio() {
         const audioEl = document.createElement("audio");
         audioEl.autoplay = true;
-        peerConnection.ontrack = e => audioEl.srcObject = e.streams[0];
+        peerConnection.ontrack = (e) => {
+            audioEl.srcObject = e.streams[0]; // Plays system audio
+            processAudioForVisualization(e.streams[0]); // Process system audio
+        };
 
         audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
         peerConnection.addTrack(audioStream.getTracks()[0]);
+        console.log("audioStream=>", audioStream)
     }
 
     function setupDataChannel() {
@@ -293,42 +297,85 @@
         errorDiv.style.display = 'none';
     }
 
-    let audioContext, analyser, microphone, dataArray, canvas, canvasCtx;
+
+
+    let audioContext, analyser, microphone, serverAudio, dataArray, canvas, canvasCtx;
 
     function startMic() {
-
         navigator.mediaDevices.getUserMedia({ audio: true })
             .then(stream => {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                analyser = audioContext.createAnalyser();
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    analyser = audioContext.createAnalyser();
+                    analyser.fftSize = 512;
+                }
+
                 microphone = audioContext.createMediaStreamSource(stream);
                 microphone.connect(analyser);
-                analyser.fftSize = 512;
 
                 const bufferLength = analyser.frequencyBinCount;
                 dataArray = new Uint8Array(bufferLength);
 
                 canvas = document.getElementById("waveform");
                 canvasCtx = canvas.getContext("2d");
-                // canvas.width = canvas.clientWidth;
-                // canvas.height = canvas.clientHeight;
-                const container = document.getElementById("audioVisualizer");
 
-                // Ensure the container is visible before setting canvas size
-                if (window.getComputedStyle(container).display === "block") {
-                    container.style.display = "block"; // Make it visible
-
-                    setTimeout(() => {
-                        canvas.width = canvas.clientWidth || 800;
-                        canvas.height = canvas.clientHeight || 300;
-                    }, 100); // Delay to allow layout update
-                } else {
-                    canvas.width = canvas.clientWidth || 800;
-                    canvas.height = canvas.clientHeight || 300;
-                }
+                setupCanvas();
                 drawWave();
             })
             .catch(error => console.error("Microphone access denied:", error));
+    }
+
+    function drawWave() {
+        requestAnimationFrame(drawWave);
+        analyser.getByteTimeDomainData(dataArray);
+
+        canvasCtx.fillStyle = "#f4f4f4";
+        canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+        canvasCtx.lineWidth = 2;
+        canvasCtx.strokeStyle = "limegreen";
+        canvasCtx.beginPath();
+
+        let sliceWidth = canvas.width / dataArray.length;
+        let x = 0;
+
+        for (let i = 0; i < dataArray.length; i++) {
+            let v = dataArray[i] / 128.0;
+            let y = v * canvas.height / 2;
+
+            if (i === 0) {
+                canvasCtx.moveTo(x, y);
+            } else {
+                canvasCtx.lineTo(x, y);
+            }
+            x += sliceWidth;
+        }
+
+        canvasCtx.lineTo(canvas.width, canvas.height / 2);
+        canvasCtx.stroke();
+    }
+
+    function processAudioForVisualization(stream) {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 512;
+        }
+
+        serverAudio = audioContext.createMediaStreamSource(stream);
+        serverAudio.connect(analyser);
+
+        setupCanvas();
+    }
+
+    function setupCanvas() {
+        const container = document.getElementById("audioVisualizer");
+        container.style.display = "block"; // Ensure it's visible
+
+        setTimeout(() => {
+            canvas.width = canvas.clientWidth || 800;
+            canvas.height = canvas.clientHeight || 300;
+        }, 100);
     }
 
     function drawWave() {
