@@ -31,6 +31,7 @@
             <button id="stopButton" onclick="stopRecording()">Stop</button>
         </div>
         <canvas id="waveform"></canvas>
+        <canvas id="waveform2"></canvas>
     </div>
 </body>
 <script src="js/welcome.js"></script>
@@ -300,32 +301,98 @@
 
 
 
-    let audioContext, analyser, microphone, serverAudio, dataArray, canvas, canvasCtx;
+    let audioContext, analyserMic, analyserServer;
+let microphone, serverAudio;
+let dataArrayMic, dataArrayServer;
+let canvasMic, canvasServer, canvasCtxMic, canvasCtxServer;
 
-    function startMic() {
-        navigator.mediaDevices.getUserMedia({ audio: true })
-            .then(stream => {
-                if (!audioContext) {
-                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    analyser = audioContext.createAnalyser();
-                    analyser.fftSize = 512;
-                }
+// 🎤 Start Microphone Visualization
+function startMic() {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
 
-                microphone = audioContext.createMediaStreamSource(stream);
-                microphone.connect(analyser);
+            analyserMic = audioContext.createAnalyser();
+            analyserMic.fftSize = 512;
 
-                const bufferLength = analyser.frequencyBinCount;
-                dataArray = new Uint8Array(bufferLength);
+            microphone = audioContext.createMediaStreamSource(stream);
+            microphone.connect(analyserMic);
 
-                canvas = document.getElementById("waveform");
-                canvasCtx = canvas.getContext("2d");
+            const bufferLength = analyserMic.frequencyBinCount;
+            dataArrayMic = new Uint8Array(bufferLength);
 
-                setupCanvas();
-                drawWave();
-            })
-            .catch(error => console.error("Microphone access denied:", error));
+            canvasMic = document.getElementById("waveform");
+            canvasCtxMic = canvasMic.getContext("2d");
+
+            setupCanvas(canvasMic);
+            drawWaveMic();
+        })
+        .catch(error => console.error("Microphone access denied:", error));
+}
+
+// 🎵 Draw Mic Waveform
+function drawWaveMic() {
+    requestAnimationFrame(drawWaveMic);
+    analyserMic.getByteTimeDomainData(dataArrayMic);
+
+    canvasCtxMic.fillStyle = "#f7f7e8";
+    canvasCtxMic.fillRect(0, 0, canvasMic.width, canvasMic.height);
+
+    canvasCtxMic.lineWidth = 2;
+    canvasCtxMic.strokeStyle = "limegreen";
+    canvasCtxMic.beginPath();
+
+    let sliceWidth = canvasMic.width / dataArrayMic.length;
+    let x = 0;
+
+    for (let i = 0; i < dataArrayMic.length; i++) {
+        let v = dataArrayMic[i] / 128.0;
+        let y = v * canvasMic.height / 2;
+
+        if (i === 0) {
+            canvasCtxMic.moveTo(x, y);
+        } else {
+            canvasCtxMic.lineTo(x, y);
+        }
+        x += sliceWidth;
     }
 
+    canvasCtxMic.lineTo(canvasMic.width, canvasMic.height / 2);
+    canvasCtxMic.stroke();
+}
+
+// 🎶 Draw Server Waveform
+function drawWaveServer() {
+    requestAnimationFrame(drawWaveServer);
+    analyserServer.getByteTimeDomainData(dataArrayServer);
+
+    canvasCtxServer.fillStyle = "#f7f7e8";
+    canvasCtxServer.fillRect(0, 0, canvasServer.width, canvasServer.height);
+
+    canvasCtxServer.lineWidth = 2;
+    canvasCtxServer.strokeStyle = "cyan";
+    canvasCtxServer.beginPath();
+
+    let sliceWidth = canvasServer.width / dataArrayServer.length;
+    let x = 0;
+
+    for (let i = 0; i < dataArrayServer.length; i++) {
+        let v = dataArrayServer[i] / 128.0;
+        let y = v * canvasServer.height / 2;
+
+        if (i === 0) {
+            canvasCtxServer.moveTo(x, y);
+        } else {
+            canvasCtxServer.lineTo(x, y);
+        }
+        x += sliceWidth;
+    }
+
+    canvasCtxServer.lineTo(canvasServer.width, canvasServer.height / 2);
+    canvasCtxServer.stroke();
+}
     function drawWave() {
         requestAnimationFrame(drawWave);
         analyser.getByteTimeDomainData(dataArray);
@@ -356,18 +423,27 @@
         canvasCtx.stroke();
     }
 
-    function processAudioForVisualization(stream) {
-        if (!audioContext) {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            analyser = audioContext.createAnalyser();
-            analyser.fftSize = 512;
-        }
-
-        serverAudio = audioContext.createMediaStreamSource(stream);
-        serverAudio.connect(analyser);
-
-        setupCanvas();
+// 📡 Process Server Audio Stream (WebRTC)
+function processAudioForVisualization(stream) {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
     }
+
+    analyserServer = audioContext.createAnalyser();
+    analyserServer.fftSize = 512;
+
+    serverAudio = audioContext.createMediaStreamSource(stream);
+    serverAudio.connect(analyserServer);
+
+    const bufferLength = analyserServer.frequencyBinCount;
+    dataArrayServer = new Uint8Array(bufferLength);
+
+    canvasServer = document.getElementById("waveform2");
+    canvasCtxServer = canvasServer.getContext("2d");
+
+    setupCanvas(canvasServer);
+    drawWaveServer();
+}
 
     function setupCanvas() {
         const container = document.getElementById("audioVisualizer");
@@ -377,36 +453,6 @@
             canvas.width = canvas.clientWidth || 800;
             canvas.height = canvas.clientHeight || 300;
         }, 100);
-    }
-
-    function drawWave() {
-        requestAnimationFrame(drawWave);
-        analyser.getByteTimeDomainData(dataArray);
-
-        canvasCtx.fillStyle = "#f4f4f4";
-        canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
-
-        canvasCtx.lineWidth = 2;
-        canvasCtx.strokeStyle = "limegreen";
-        canvasCtx.beginPath();
-
-        let sliceWidth = canvas.width / dataArray.length;
-        let x = 0;
-
-        for (let i = 0; i < dataArray.length; i++) {
-            let v = dataArray[i] / 128.0;
-            let y = v * canvas.height / 2;
-
-            if (i === 0) {
-                canvasCtx.moveTo(x, y);
-            } else {
-                canvasCtx.lineTo(x, y);
-            }
-            x += sliceWidth;
-        }
-
-        canvasCtx.lineTo(canvas.width, canvas.height / 2);
-        canvasCtx.stroke();
     }
 </script>
 
