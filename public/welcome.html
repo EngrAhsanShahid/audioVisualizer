@@ -283,6 +283,7 @@
         updateStatus('');
         document.querySelector(".welcome-container").style.display = "flex";
         document.getElementById("audioVisualizer").style.display = "none";
+        hideError();
     }
 
     // UI helper functions
@@ -332,36 +333,50 @@ function startMic() {
         .catch(error => console.error("Microphone access denied:", error));
 }
 
-// 🎵 Draw Mic Waveform
+let ripples = [];
+
 function drawWaveMic() {
     requestAnimationFrame(drawWaveMic);
     analyserMic.getByteTimeDomainData(dataArrayMic);
 
-    canvasCtxMic.fillStyle = "#f7f7e8";
-    canvasCtxMic.fillRect(0, 0, canvasMic.width, canvasMic.height);
+    let volume = dataArrayMic.reduce((a, b) => a + b, 0) / dataArrayMic.length; // Get avg volume
 
-    canvasCtxMic.lineWidth = 2;
-    canvasCtxMic.strokeStyle = "limegreen";
-    canvasCtxMic.beginPath();
-
-    let sliceWidth = canvasMic.width / dataArrayMic.length;
-    let x = 0;
-
-    for (let i = 0; i < dataArrayMic.length; i++) {
-        let v = dataArrayMic[i] / 128.0;
-        let y = v * canvasMic.height / 2;
-
-        if (i === 0) {
-            canvasCtxMic.moveTo(x, y);
-        } else {
-            canvasCtxMic.lineTo(x, y);
-        }
-        x += sliceWidth;
+    // Add ripple if volume is high enough
+    if (volume > 130) { 
+        ripples.push({
+            x: canvasMic.width / 2,
+            y: canvasMic.height / 2, // Start from the center
+            radius: 5, // Small initial ripple
+            opacity: 1, // Fully visible
+            speed: Math.random() * 2 + 1 
+        });
     }
 
-    canvasCtxMic.lineTo(canvasMic.width, canvasMic.height / 2);
-    canvasCtxMic.stroke();
+    // **Apply Fading Effect Instead of Full Clear**
+    canvasCtxMic.fillStyle = "#f7f7e8"; 
+    canvasCtxMic.fillRect(0, 0, canvasMic.width, canvasMic.height);
+
+    // **Draw & Animate Ripples**
+    for (let i = 0; i < ripples.length; i++) {
+        let ripple = ripples[i];
+        ripple.radius += ripple.speed; // Expand
+        ripple.opacity -= 0.02; // Fade out
+        ripple.y += 0.2; // Small gravity effect
+
+        if (ripple.opacity <= 0) {
+            ripples.splice(i, 1); // Remove faded ripples
+            i--;
+            continue;
+        }
+
+        canvasCtxMic.beginPath();
+        canvasCtxMic.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
+        canvasCtxMic.strokeStyle = `rgba(50, 205, 50, ${ripple.opacity})`; // Limegreen fade
+        canvasCtxMic.lineWidth = 2;
+        canvasCtxMic.stroke();
+    }
 }
+
 
 // 🎶 Draw Server Waveform
 function drawWaveServer() {
@@ -449,10 +464,10 @@ function processAudioForVisualization(stream) {
         const container = document.getElementById("audioVisualizer");
         container.style.display = "block"; // Ensure it's visible
 
-        setTimeout(() => {
-            canvas.width = canvas.clientWidth || 800;
-            canvas.height = canvas.clientHeight || 300;
-        }, 100);
+        // setTimeout(() => {
+        //     canvas.width = canvas.clientWidth || 800;
+        //     canvas.height = canvas.clientHeight || 300;
+        // }, 100);
     }
 </script>
 

@@ -1,4 +1,11 @@
 window.addEventListener('DOMContentLoaded', () => {
+    // Retrieve stored user data from localStorage
+    const access_token = localStorage.getItem("access_token");
+    // Check if user data exists and contains the correct access_token
+    if (!access_token) {
+        // Redirect to login page if the access_token is missing or incorrect
+        window.location.href = "/";
+    }
     const username = localStorage.getItem("username") || "Guest";
     const welcomeText = `Welcome ${username}!`;
     const onboardingText = `To proceed further, we need to onboard you by understanding you. Click start
