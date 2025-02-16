@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/welcome.css">
     <link rel="icon" href="/static/logo.png" type="image/x-icon" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 </head>
 
 <body>
@@ -265,26 +266,37 @@
     }
 
     function stopRecording() {
+        document.getElementById("audioVisualizer").style.display = "none";
         if (peerConnection) {
             peerConnection.close();
             peerConnection = null;
         }
         if (audioStream) {
-            audioStream.getTracks().forEach(track => track.stop());
+            audioStream.getTracks().forEach(track => {
+                track.stop();
+            });
             audioStream = null;
+        }
+        if (microphone) {
+            microphone.disconnect();
+            microphone = null;
+        }
+        if (audioContext) {
+            audioContext.close();
+            audioContext = null;
         }
         if (dataChannel) {
             dataChannel.close();
             dataChannel = null;
         }
+
         startButton.disabled = false;
         stopButton.disabled = true;
-        // updateStatus('Ready to start');
         updateStatus('');
         document.querySelector(".welcome-container").style.display = "flex";
-        document.getElementById("audioVisualizer").style.display = "none";
         hideError();
     }
+
 
     // UI helper functions
     function updateStatus(message) {
@@ -335,46 +347,67 @@ function startMic() {
 
 let ripples = [];
 
+function createRipple(x, y) {
+    let ripple = document.createElement("div");
+    if (!ripple.classList.contains("ripple")) {
+        ripple.classList.add("ripple");
+    }
+    document.body.appendChild(ripple);
+
+    // Position the ripple at the center of the canvas
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+
+    // GSAP animation: Expand and fade out
+    gsap.to(ripple, {
+        scale: 20, // Expand the ripple
+        opacity: 0, // Fade out
+        duration: 1.8, // Animation duration
+        ease: "power2.out",
+        onComplete: () => ripple.remove(), // Remove ripple after animation
+    });
+}
+
 function drawWaveMic() {
     requestAnimationFrame(drawWaveMic);
     analyserMic.getByteTimeDomainData(dataArrayMic);
 
-    let volume = dataArrayMic.reduce((a, b) => a + b, 0) / dataArrayMic.length; // Get avg volume
+    // Compute RMS volume (better for detecting speech)
+    let sum = 0;
+    for (let i = 0; i < dataArrayMic.length; i++) {
+        let value = (dataArrayMic[i] / 128) - 1; // Normalize between -1 and 1
+        sum += value * value; // Square values to avoid negatives
+    }
+    let volume = Math.sqrt(sum / dataArrayMic.length) * 1000; // Scale up
 
-    // Add ripple if volume is high enough
-    if (volume > 130) { 
-        ripples.push({
-            x: canvasMic.width / 2,
-            y: canvasMic.height / 2, // Start from the center
-            radius: 5, // Small initial ripple
-            opacity: 1, // Fully visible
-            speed: Math.random() * 2 + 1 
-        });
+    // Trigger ripple effect only when speech is detected
+    if (volume > 15) { // Adjust threshold for sensitivity
+        createRipple(window.innerWidth / 2, window.innerHeight / 2.2);
     }
 
-    // **Apply Fading Effect Instead of Full Clear**
-    canvasCtxMic.fillStyle = "#f7f7e8"; 
-    canvasCtxMic.fillRect(0, 0, canvasMic.width, canvasMic.height);
+    // // **Fading Effect Instead of Full Clear**
+    // canvasCtxMic.fillStyle = "rgba(247, 247, 232, 0.1)"; // Semi-transparent fade
+    // canvasCtxMic.fillRect(0, 0, canvasMic.width, canvasMic.height);
 
-    // **Draw & Animate Ripples**
-    for (let i = 0; i < ripples.length; i++) {
-        let ripple = ripples[i];
-        ripple.radius += ripple.speed; // Expand
-        ripple.opacity -= 0.02; // Fade out
-        ripple.y += 0.2; // Small gravity effect
+    // // **Draw & Animate Ripples**
+    // for (let i = 0; i < ripples.length; i++) {
+    //     let ripple = ripples[i];
+    //     ripple.radius += ripple.speed; // Expand
+    //     ripple.opacity -= 0.02; // Gradual fade-out
+    //     ripple.y += 0.2; // Small gravity effect
 
-        if (ripple.opacity <= 0) {
-            ripples.splice(i, 1); // Remove faded ripples
-            i--;
-            continue;
-        }
+    //     if (ripple.opacity <= 0) {
+    //         ripples.splice(i, 1); // Remove faded ripples
+    //         i--;
+    //         continue;
+    //     }
 
-        canvasCtxMic.beginPath();
-        canvasCtxMic.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
-        canvasCtxMic.strokeStyle = `rgba(50, 205, 50, ${ripple.opacity})`; // Limegreen fade
-        canvasCtxMic.lineWidth = 2;
-        canvasCtxMic.stroke();
-    }
+    //     canvasCtxMic.beginPath();
+    //     canvasCtxMic.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
+    //     canvasCtxMic.strokeStyle = `rgba(50, 205, 50, ${ripple.opacity})`; // Limegreen fade
+    //     canvasCtxMic.lineWidth = 2;
+    //     canvasCtxMic.stroke();
+    // }
 }
 
 
