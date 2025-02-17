@@ -178,8 +178,8 @@
 
         .ripple {
             position:fixed;
-            width: 15px;
-            height: 15px;
+            width: 10px;
+            height: 10px;
             background: #90A489;
             border-radius: 50%;
             transform: translate(-50%, -50%);
