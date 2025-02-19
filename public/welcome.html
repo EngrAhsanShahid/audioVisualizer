@@ -32,7 +32,12 @@
             <button id="stopButton" onclick="stopRecording()">Stop</button>
         </div>
         <canvas id="waveform"></canvas>
-        <canvas id="waveform2"></canvas>
+        <div class="waves-container">
+            <svg viewBox="0 0 500 200" preserveAspectRatio="none">
+                <path id="wavePath" d="M0 100 Q 50 100, 100 100 T 200 100 T 300 100 T 400 100 T 500 100 V200 H0 Z"
+                    fill="#f4f4f4" />
+            </svg>
+        </div>
     </div>
 </body>
 <script src="js/welcome.js"></script>
@@ -203,7 +208,7 @@
         if (dataChannel?.readyState === "open") {
             dataChannel.send(JSON.stringify(message));
             console.log('Sent message:', message);
-            
+
             document.getElementById("audioVisualizer").style.display = "block";
         }
     }
@@ -315,132 +320,127 @@
 
 
     let audioContext, analyserMic, analyserServer;
-let microphone, serverAudio;
-let dataArrayMic, dataArrayServer;
-let canvasMic, canvasServer, canvasCtxMic, canvasCtxServer;
+    let microphone, serverAudio;
+    let dataArrayMic, dataArrayServer;
+    let canvasMic, canvasServer, canvasCtxMic, canvasCtxServer;
 
-// 🎤 Start Microphone Visualization
-function startMic() {
-    navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(stream => {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
+    // 🎤 Start Microphone Visualization
+    function startMic() {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
 
-            analyserMic = audioContext.createAnalyser();
-            analyserMic.fftSize = 512;
+                analyserMic = audioContext.createAnalyser();
+                analyserMic.fftSize = 512;
 
-            microphone = audioContext.createMediaStreamSource(stream);
-            microphone.connect(analyserMic);
+                microphone = audioContext.createMediaStreamSource(stream);
+                microphone.connect(analyserMic);
 
-            const bufferLength = analyserMic.frequencyBinCount;
-            dataArrayMic = new Uint8Array(bufferLength);
+                const bufferLength = analyserMic.frequencyBinCount;
+                dataArrayMic = new Uint8Array(bufferLength);
 
-            canvasMic = document.getElementById("waveform");
-            canvasCtxMic = canvasMic.getContext("2d");
+                canvasMic = document.getElementById("waveform");
+                canvasCtxMic = canvasMic.getContext("2d");
 
-            setupCanvas(canvasMic);
-            drawWaveMic();
-        })
-        .catch(error => console.error("Microphone access denied:", error));
-}
-
-let ripples = [];
-
-function createRipple(x, y) {
-    let ripple = document.createElement("div");
-    if (!ripple.classList.contains("ripple")) {
-        ripple.classList.add("ripple");
-    }
-    document.body.appendChild(ripple);
-
-    // Position the ripple at the center of the canvas
-    ripple.style.left = `${x}px`;
-    ripple.style.top = `${y}px`;
-
-    // GSAP animation: Expand and fade out
-    gsap.to(ripple, {
-        scale: 20, // Expand the ripple
-        opacity: 0, // Fade out
-        duration: 1.8, // Animation duration
-        ease: "power2.out",
-        onComplete: () => ripple.remove(), // Remove ripple after animation
-    });
-}
-
-function drawWaveMic() {
-    requestAnimationFrame(drawWaveMic);
-    analyserMic.getByteTimeDomainData(dataArrayMic);
-
-    // Compute RMS volume (better for detecting speech)
-    let sum = 0;
-    for (let i = 0; i < dataArrayMic.length; i++) {
-        let value = (dataArrayMic[i] / 128) - 1; // Normalize between -1 and 1
-        sum += value * value; // Square values to avoid negatives
-    }
-    let volume = Math.sqrt(sum / dataArrayMic.length) * 1000; // Scale up
-
-    // Trigger ripple effect only when speech is detected
-    if (volume > 15) { // Adjust threshold for sensitivity
-        createRipple(window.innerWidth / 2, window.innerHeight / 2.2);
+                setupCanvas(canvasMic);
+                drawWaveMic();
+            })
+            .catch(error => console.error("Microphone access denied:", error));
     }
 
-    // // **Fading Effect Instead of Full Clear**
-    // canvasCtxMic.fillStyle = "rgba(247, 247, 232, 0.1)"; // Semi-transparent fade
-    // canvasCtxMic.fillRect(0, 0, canvasMic.width, canvasMic.height);
+    let ripples = [];
 
-    // // **Draw & Animate Ripples**
-    // for (let i = 0; i < ripples.length; i++) {
-    //     let ripple = ripples[i];
-    //     ripple.radius += ripple.speed; // Expand
-    //     ripple.opacity -= 0.02; // Gradual fade-out
-    //     ripple.y += 0.2; // Small gravity effect
-
-    //     if (ripple.opacity <= 0) {
-    //         ripples.splice(i, 1); // Remove faded ripples
-    //         i--;
-    //         continue;
-    //     }
-
-    //     canvasCtxMic.beginPath();
-    //     canvasCtxMic.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
-    //     canvasCtxMic.strokeStyle = `rgba(50, 205, 50, ${ripple.opacity})`; // Limegreen fade
-    //     canvasCtxMic.lineWidth = 2;
-    //     canvasCtxMic.stroke();
-    // }
-}
-
-
-// 🎶 Draw Server Waveform
-function drawWaveServer() {
-    requestAnimationFrame(drawWaveServer);
-    analyserServer.getByteTimeDomainData(dataArrayServer);
-
-    canvasCtxServer.fillStyle = "#f7f7e8";
-    canvasCtxServer.fillRect(0, 0, canvasServer.width, canvasServer.height);
-
-    canvasCtxServer.lineWidth = 2;
-    canvasCtxServer.strokeStyle = "#90A489";
-    canvasCtxServer.beginPath();
-
-    let sliceWidth = canvasServer.width / dataArrayServer.length;
-    let x = 0;
-
-    for (let i = 0; i < dataArrayServer.length; i++) {
-        let v = dataArrayServer[i] / 128.0;
-        let y = v * canvasServer.height / 2;
-
-        if (i === 0) {
-            canvasCtxServer.moveTo(x, y);
-        } else {
-            canvasCtxServer.lineTo(x, y);
+    function createRipple(x, y) {
+        let ripple = document.createElement("div");
+        if (!ripple.classList.contains("ripple")) {
+            ripple.classList.add("ripple");
         }
-        x += sliceWidth;
+        document.body.appendChild(ripple);
+
+        // Position the ripple at the center of the canvas
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+
+        // GSAP animation: Expand and fade out
+        gsap.to(ripple, {
+            scale: 20, // Expand the ripple
+            opacity: 0, // Fade out
+            duration: 1.8, // Animation duration
+            ease: "power2.out",
+            onComplete: () => ripple.remove(), // Remove ripple after animation
+        });
     }
 
-    canvasCtxServer.lineTo(canvasServer.width, canvasServer.height / 2);
-    canvasCtxServer.stroke();
-}
+    function drawWaveMic() {
+        requestAnimationFrame(drawWaveMic);
+        analyserMic.getByteTimeDomainData(dataArrayMic);
+
+        // Compute RMS volume (better for detecting speech)
+        let sum = 0;
+        for (let i = 0; i < dataArrayMic.length; i++) {
+            let value = (dataArrayMic[i] / 128) - 1; // Normalize between -1 and 1
+            sum += value * value; // Square values to avoid negatives
+        }
+        let volume = Math.sqrt(sum / dataArrayMic.length) * 1000; // Scale up
+
+        // Trigger ripple effect only when speech is detected
+        if (volume > 15) { // Adjust threshold for sensitivity
+            createRipple(window.innerWidth / 2, window.innerHeight / 2.2);
+        }
+
+        // // **Fading Effect Instead of Full Clear**
+        // canvasCtxMic.fillStyle = "rgba(247, 247, 232, 0.1)"; // Semi-transparent fade
+        // canvasCtxMic.fillRect(0, 0, canvasMic.width, canvasMic.height);
+
+        // // **Draw & Animate Ripples**
+        // for (let i = 0; i < ripples.length; i++) {
+        //     let ripple = ripples[i];
+        //     ripple.radius += ripple.speed; // Expand
+        //     ripple.opacity -= 0.02; // Gradual fade-out
+        //     ripple.y += 0.2; // Small gravity effect
+
+        //     if (ripple.opacity <= 0) {
+        //         ripples.splice(i, 1); // Remove faded ripples
+        //         i--;
+        //         continue;
+        //     }
+
+        //     canvasCtxMic.beginPath();
+        //     canvasCtxMic.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
+        //     canvasCtxMic.strokeStyle = `rgba(50, 205, 50, ${ripple.opacity})`; // Limegreen fade
+        //     canvasCtxMic.lineWidth = 2;
+        //     canvasCtxMic.stroke();
+        // }
+    }
+
+
+    // 🎶 Replace Canvas with SVG Waveform
+    function drawWaveServer() {
+        requestAnimationFrame(drawWaveServer);
+        analyserServer.getByteTimeDomainData(dataArrayServer);
+
+        let pathData = "M0 100"; // Baseline
+        let step = 2000 / dataArrayServer.length;
+        let amplitude = 300; // Increased amplitude for higher waves
+
+        for (let i = 0; i < dataArrayServer.length; i += 8) {
+            let x = i * step;
+            let y = 100 + ((dataArrayServer[i] - 128) / 128) * amplitude;
+            pathData += ` L${x} ${y}`;
+        }
+
+        pathData += " V300 H0 Z";
+
+        gsap.to("#wavePath", {
+            attr: { d: pathData },
+            duration: 0.05,
+            ease: "none"
+        });
+    }
+
+
     function drawWave() {
         requestAnimationFrame(drawWave);
         analyser.getByteTimeDomainData(dataArray);
@@ -471,27 +471,24 @@ function drawWaveServer() {
         canvasCtx.stroke();
     }
 
-// 📡 Process Server Audio Stream (WebRTC)
-function processAudioForVisualization(stream) {
-    if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    // 📡 Process Server Audio Stream (WebRTC)
+    function processAudioForVisualization(stream) {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        analyserServer = audioContext.createAnalyser();
+        analyserServer.fftSize = 1024; // More detailed wave
+
+        serverAudio = audioContext.createMediaStreamSource(stream);
+        serverAudio.connect(analyserServer);
+
+        const bufferLength = analyserServer.fftSize;
+        dataArrayServer = new Uint8Array(bufferLength);
+
+        drawWaveServer(); // Start SVG wave animation
     }
 
-    analyserServer = audioContext.createAnalyser();
-    analyserServer.fftSize = 512;
-
-    serverAudio = audioContext.createMediaStreamSource(stream);
-    serverAudio.connect(analyserServer);
-
-    const bufferLength = analyserServer.frequencyBinCount;
-    dataArrayServer = new Uint8Array(bufferLength);
-
-    canvasServer = document.getElementById("waveform2");
-    canvasCtxServer = canvasServer.getContext("2d");
-
-    setupCanvas(canvasServer);
-    drawWaveServer();
-}
 
     function setupCanvas() {
         const container = document.getElementById("audioVisualizer");

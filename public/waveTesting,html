@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mic Input Waves</title>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(60deg, rgba(84, 58, 183, 1) 0%, rgba(0, 172, 193, 1) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            flex-direction: column;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .waves-container {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Mic Input Waves</h1>
+
+    <div class="waves-container">
+        <svg viewBox="0 0 500 200" preserveAspectRatio="none">
+            <path id="wavePath" d="M0 100 Q 50 100, 100 100 T 200 100 T 300 100 T 400 100 T 500 100 V200 H0 Z"
+                fill="rgba(255,255,255,0.7)" />
+        </svg>
+    </div>
+
+    <script>
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const analyser = audioContext.createAnalyser();
+                const source = audioContext.createMediaStreamSource(stream);
+                source.connect(analyser);
+
+                analyser.fftSize = 1024; // Higher detail for smooth waves
+                const bufferLength = analyser.fftSize;
+                const dataArray = new Uint8Array(bufferLength);
+                const wavePath = document.getElementById("wavePath");
+
+                function updateWave() {
+                    analyser.getByteTimeDomainData(dataArray);
+
+                    let pathData = "M0 300"; // Middle baseline
+                    let step = 2000 / bufferLength;
+                    let amplitude = 300; // INCREASED AMPLITUDE for HIGHER WAVES
+
+                    for (let i = 0; i < bufferLength; i += 8) {
+                        let x = i * step;
+                        let y = 100 + ((dataArray[i] - 128) / 128) * amplitude; // More exaggerated height
+                        pathData += ` L${x} ${y}`;
+                    }
+
+                    pathData += " V300 H0 Z";
+
+                    gsap.to(wavePath, {
+                        attr: { d: pathData },
+                        duration: 0.1,
+                        ease: "none"
+                    });
+
+                    requestAnimationFrame(updateWave);
+                }
+
+                updateWave();
+            })
+            .catch(err => console.error("Microphone access denied:", err));
+    </script>
+
+</body>
+
+</html>
