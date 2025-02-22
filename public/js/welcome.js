@@ -68,58 +68,91 @@ micButton.addEventListener("click", () => {
         stopMic()
     } else {
         micIcon.classList.replace("fa-microphone-slash", "fa-microphone");
-        startMic();
+        startTheMic();
     }
 });
 
-async function stopMic() {
-    if (peerConnection) {
-        peerConnection.close();
-        peerConnection = null;
-    }
-    if (audioStream) {
-        audioStream.getTracks().forEach(track => {
-            track.stop();
-        });
-        audioStream = null;
-    }
-    if (microphone) {
-        microphone.disconnect();
-        microphone = null;
-    }
-    if (audioContext) {
-        audioContext.close();
-        audioContext = null;
-    }
-    if (dataChannel) {
-        dataChannel.close();
-        dataChannel = null;
-    }
+function stopMic() {
+        // document.getElementById("audioVisualizer").style.display = "none";
+        if (peerConnection) {
+            peerConnection.close();
+            peerConnection = null;
+        }
+        if (audioStream) {
+            audioStream.getTracks().forEach(track => {
+                track.stop();
+            });
+            audioStream = null;
+        }
+        if (microphone) {
+            microphone.disconnect();
+            microphone = null;
+        }
+        if (audioContext) {
+            audioContext.close();
+            audioContext = null;
+        }
+        if (dataChannel) {
+            dataChannel.close();
+            dataChannel = null;
+        }
+
+        startButton.disabled = false;
+        stopButton.disabled = true;
+        updateStatus('');
+        // document.querySelector(".welcome-container").style.display = "flex";
+        // hideError();
 }
 
-function startMic() {
-    navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(stream => {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
+async function startTheMic() {
+    // startButton.disabled = true;
+    try {
+        updateStatus('Initializing...');
 
-            analyserMic = audioContext.createAnalyser();
-            analyserMic.fftSize = 512;
+        const tokenResponse = await fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/session/");
+        const data = await tokenResponse.json();
+        const EPHEMERAL_KEY = data.client_secret.value;
 
-            microphone = audioContext.createMediaStreamSource(stream);
-            microphone.connect(analyserMic);
+        peerConnection = new RTCPeerConnection();
+        await setupAudio();
+        setupDataChannel();
 
-            const bufferLength = analyserMic.frequencyBinCount;
-            dataArrayMic = new Uint8Array(bufferLength);
+        const offer = await peerConnection.createOffer();
+        await peerConnection.setLocalDescription(offer);
 
-            canvasMic = document.getElementById("waveform");
-            canvasCtxMic = canvasMic.getContext("2d");
+        const baseUrl = "https://api.openai.com/v1/realtime";
+        const model = "gpt-4o-realtime-preview-2024-12-17";
+        const sdpResponse = await fetch(`${baseUrl}?model=${model}`, {
+            method: "POST",
+            body: offer.sdp,
+            headers: {
+                Authorization: `Bearer ${EPHEMERAL_KEY}`,
+                "Content-Type": "application/sdp"
+            },
+        });
 
-            // setupCanvas(canvasMic);
-            // drawWaveMic();
-        })
-        .catch(error => console.error("Microphone access denied:", error));
+        const answer = {
+            type: "answer",
+            sdp: await sdpResponse.text(),
+        };
+        await peerConnection.setRemoteDescription(answer);
+
+        updateStatus('Connected');
+        // document.querySelector(".welcome-container").style.display = "none";
+        startMic();
+
+
+        // window.location.href = '/public/audioVisualizer.html';
+        // stopButton.disabled = false;
+        hideError();
+
+    } catch (error) {
+        // startButton.disabled = false;
+        // stopButton.disabled = true;
+        showError('Error: ' + error.message);
+        // console.error('Initialization error:', error);
+        updateStatus('Failed to connect');
+    }
 }
 
 // function startButton() {
