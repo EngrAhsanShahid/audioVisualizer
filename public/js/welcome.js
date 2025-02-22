@@ -56,7 +56,71 @@ window.addEventListener('DOMContentLoaded', () => {
         .catch(error => console.error('Error loading the loader:', error));
 });
 
+const micButton = document.getElementById("micButton");
+const micIcon = document.getElementById("micIcon");
 
+micButton.addEventListener("click", () => {
+    micButton.classList.toggle("mic-on");
+    micButton.classList.toggle("mic-off");
+    // toggleMic();
+    if (micIcon.classList.contains("fa-microphone")) {
+        micIcon.classList.replace("fa-microphone", "fa-microphone-slash");
+        stopMic()
+    } else {
+        micIcon.classList.replace("fa-microphone-slash", "fa-microphone");
+        startMic();
+    }
+});
+
+async function stopMic() {
+    if (peerConnection) {
+        peerConnection.close();
+        peerConnection = null;
+    }
+    if (audioStream) {
+        audioStream.getTracks().forEach(track => {
+            track.stop();
+        });
+        audioStream = null;
+    }
+    if (microphone) {
+        microphone.disconnect();
+        microphone = null;
+    }
+    if (audioContext) {
+        audioContext.close();
+        audioContext = null;
+    }
+    if (dataChannel) {
+        dataChannel.close();
+        dataChannel = null;
+    }
+}
+
+function startMic() {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            analyserMic = audioContext.createAnalyser();
+            analyserMic.fftSize = 512;
+
+            microphone = audioContext.createMediaStreamSource(stream);
+            microphone.connect(analyserMic);
+
+            const bufferLength = analyserMic.frequencyBinCount;
+            dataArrayMic = new Uint8Array(bufferLength);
+
+            canvasMic = document.getElementById("waveform");
+            canvasCtxMic = canvasMic.getContext("2d");
+
+            // setupCanvas(canvasMic);
+            // drawWaveMic();
+        })
+        .catch(error => console.error("Microphone access denied:", error));
+}
 
 // function startButton() {
 //     const statusElement = document.getElementById("status");

@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/welcome.css">
     <link rel="icon" href="/static/logo.png" type="image/x-icon" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
@@ -33,6 +34,9 @@
             <button id="stopButton" onclick="stopRecording()">Stop</button>
         </div>
         <canvas id="waveform"></canvas>
+        <button id="micButton" class="mic-on">
+            <i id="micIcon" class="fas fa-microphone"></i>
+        </button>
         <div class="waves-container">
             <svg viewBox="0 0 500 200" preserveAspectRatio="none">
                 <path id="wavePath" d="M0 100 Q 50 100, 100 100 T 200 100 T 300 100 T 400 100 T 500 100 V200 H0 Z"

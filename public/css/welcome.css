@@ -141,7 +141,7 @@ h1:hover {
 #stopButton {
   position: fixed;
   margin-left: -15%;
-  margin-top: -71%;
+  margin-top: -50%;
   padding: 5vh 5vh;
   font-size: 20px;
   background-color: #ff4d4d;
@@ -188,8 +188,27 @@ canvas {
   pointer-events: none;
 }
 
+.mic-on {
+  background-color: green;
+}
 
+.mic-off {
+  background-color: red;
+}
 
+#micButton {
+  width: 80px;
+  height: 80px;
+  border: none;
+  border-radius: 50%;
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+  cursor: pointer;
+  font-size: 32px;
+  color: white;
+  transition: background 0.3s ease-in-out;
+}
 /* .waves-container {
   position: fixed;
   bottom: 0;
