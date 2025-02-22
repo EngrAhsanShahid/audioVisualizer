@@ -305,6 +305,7 @@
         updateStatus('');
         document.querySelector(".welcome-container").style.display = "flex";
         hideError();
+        stopRecordingFile();
     }
 
 
@@ -351,6 +352,7 @@
 
                 setupCanvas(canvasMic);
                 drawWaveMic();
+                startRecording('https://httpbin.org/post');
             })
             .catch(error => console.error("Microphone access denied:", error));
     }

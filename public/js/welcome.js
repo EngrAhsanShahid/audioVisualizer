@@ -1,3 +1,7 @@
+let mediaRecorder;
+let chunks = [];
+let timer;
+
 window.addEventListener('DOMContentLoaded', () => {
     // Retrieve stored user data from localStorage
     const access_token = localStorage.getItem("access_token");
@@ -102,6 +106,7 @@ function stopMic() {
         updateStatus('');
         // document.querySelector(".welcome-container").style.display = "flex";
         // hideError();
+        pauseRecordingFile()
 }
 
 async function startTheMic() {
@@ -140,7 +145,7 @@ async function startTheMic() {
         updateStatus('Connected');
         // document.querySelector(".welcome-container").style.display = "none";
         startMic();
-
+        resumeRecordingFile();
 
         // window.location.href = '/public/audioVisualizer.html';
         // stopButton.disabled = false;
@@ -159,6 +164,74 @@ function logout(){
     localStorage.removeItem("access_token");
     window.location.href = "/";
 }
+
+async function startRecording(apiUrl) {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        chunks = [];
+
+        mediaRecorder.ondataavailable = event => {
+            chunks.push(event.data);
+        };
+
+        mediaRecorder.onstop = async () => {
+            const blob = new Blob(chunks, { type: 'audio/mp3' });
+            const file = new File([blob], 'audio.mp3', { type: 'audio/mp3' });
+            
+            // Create a download link for the recorded file
+            // const downloadLink = document.createElement('a');
+            // downloadLink.href = URL.createObjectURL(blob);
+            // downloadLink.download = 'audio.mp3';
+            // document.body.appendChild(downloadLink);
+            // downloadLink.click();
+            // document.body.removeChild(downloadLink);
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('https://httpbin.org/post', {
+                    method: 'POST',
+                    body: formData,
+                });
+                console.log('File sent:', await response.json());
+            } catch (error) {
+                console.error('Error sending file:', error);
+            }
+        };
+
+        mediaRecorder.start();
+        timer = setTimeout(() => stopRecordingFile(), 10000); // Stop after 1 minute
+    } catch (error) {
+        console.error('Error accessing microphone:', error);
+    }
+}
+
+function pauseRecordingFile() {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.pause();
+        clearTimeout(timer);
+        console.log('Recording paused');
+    }
+}
+
+function resumeRecordingFile() {
+    if (mediaRecorder && mediaRecorder.state === 'paused') {
+        mediaRecorder.resume();
+        console.log('Recording resumed');
+    }
+}
+
+function stopRecordingFile() {
+    if (mediaRecorder && (mediaRecorder.state === 'recording' || mediaRecorder.state === 'paused')) {
+        mediaRecorder.stop();
+        clearTimeout(timer);
+        startRecording('https://httpbin.org/post');
+        console.log('Recording stopped');
+    }
+}
+
 // function startButton() {
 //     const statusElement = document.getElementById("status");
 //     statusElement.textContent = "Processing...";
