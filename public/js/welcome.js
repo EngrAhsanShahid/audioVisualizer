@@ -97,8 +97,8 @@ function stopMic() {
             dataChannel = null;
         }
 
-        startButton.disabled = false;
-        stopButton.disabled = true;
+        // startButton.disabled = false;
+        // stopButton.disabled = true;
         updateStatus('');
         // document.querySelector(".welcome-container").style.display = "flex";
         // hideError();
