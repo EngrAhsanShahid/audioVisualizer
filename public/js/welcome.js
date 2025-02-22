@@ -73,7 +73,7 @@ micButton.addEventListener("click", () => {
 });
 
 function stopMic() {
-        // document.getElementById("audioVisualizer").style.display = "none";
+        // document.getElementById("waveform").style.display = "none";
         if (peerConnection) {
             peerConnection.close();
             peerConnection = null;
@@ -155,6 +155,10 @@ async function startTheMic() {
     }
 }
 
+function logout(){
+    localStorage.removeItem("access_token");
+    window.location.href = "/";
+}
 // function startButton() {
 //     const statusElement = document.getElementById("status");
 //     statusElement.textContent = "Processing...";
