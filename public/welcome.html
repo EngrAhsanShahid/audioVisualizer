@@ -357,68 +357,47 @@
 
     let ripples = [];
 
-    function createRipple(x, y) {
+    function createRipple(x, y, size) {
         let ripple = document.createElement("div");
-        if (!ripple.classList.contains("ripple")) {
-            ripple.classList.add("ripple");
-        }
+        ripple.classList.add("ripple");
         document.body.appendChild(ripple);
 
-        // Position the ripple at the center of the canvas
         ripple.style.left = `${x}px`;
         ripple.style.top = `${y}px`;
+        ripple.style.width = `${size}px`;
+        ripple.style.height = `${size}px`;
+        ripple.style.borderWidth = "2px"; // Ring effect
 
-        // GSAP animation: Expand and fade out
-        gsap.to(ripple, {
-            scale: 20, // Expand the ripple
-            opacity: 0, // Fade out
-            duration: 1.8, // Animation duration
-            ease: "power2.out",
-            onComplete: () => ripple.remove(), // Remove ripple after animation
-        });
+        // Remove ripple after animation ends
+        setTimeout(() => {
+            ripple.style.opacity = "0"; // Smooth fade-out
+            setTimeout(() => ripple.remove(), 500); // Ensure removal after fade
+        }, 500);
     }
+
+
 
     function drawWaveMic() {
-        requestAnimationFrame(drawWaveMic);
-        analyserMic.getByteTimeDomainData(dataArrayMic);
+    requestAnimationFrame(drawWaveMic);
+    analyserMic.getByteTimeDomainData(dataArrayMic);
 
-        // Compute RMS volume (better for detecting speech)
-        let sum = 0;
-        for (let i = 0; i < dataArrayMic.length; i++) {
-            let value = (dataArrayMic[i] / 128) - 1; // Normalize between -1 and 1
-            sum += value * value; // Square values to avoid negatives
+    // Get the peak value from the waveform (instantaneous amplitude)
+    let maxAmplitude = 0;
+    for (let i = 0; i < dataArrayMic.length; i++) {
+        let amplitude = Math.abs(dataArrayMic[i] - 128); // Centered around 128
+        if (amplitude > maxAmplitude) {
+            maxAmplitude = amplitude;
         }
-        let volume = Math.sqrt(sum / dataArrayMic.length) * 1000; // Scale up
-
-        // Trigger ripple effect only when speech is detected
-        if (volume > 15) { // Adjust threshold for sensitivity
-            createRipple(window.innerWidth / 2, window.innerHeight / 2.2);
-        }
-
-        // // **Fading Effect Instead of Full Clear**
-        // canvasCtxMic.fillStyle = "rgba(247, 247, 232, 0.1)"; // Semi-transparent fade
-        // canvasCtxMic.fillRect(0, 0, canvasMic.width, canvasMic.height);
-
-        // // **Draw & Animate Ripples**
-        // for (let i = 0; i < ripples.length; i++) {
-        //     let ripple = ripples[i];
-        //     ripple.radius += ripple.speed; // Expand
-        //     ripple.opacity -= 0.02; // Gradual fade-out
-        //     ripple.y += 0.2; // Small gravity effect
-
-        //     if (ripple.opacity <= 0) {
-        //         ripples.splice(i, 1); // Remove faded ripples
-        //         i--;
-        //         continue;
-        //     }
-
-        //     canvasCtxMic.beginPath();
-        //     canvasCtxMic.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
-        //     canvasCtxMic.strokeStyle = `rgba(50, 205, 50, ${ripple.opacity})`; // Limegreen fade
-        //     canvasCtxMic.lineWidth = 2;
-        //     canvasCtxMic.stroke();
-        // }
     }
+
+    // Normalize amplitude and set threshold
+    let threshold = 10; // Adjust for sensitivity
+    if (maxAmplitude > threshold) {
+        let scaledSize = Math.min(maxAmplitude * 2, 100); // Scale for visual effect
+        createRipple(window.innerWidth / 2, window.innerHeight / 2.2, scaledSize);
+    }
+}
+
 
 
     // 🎶 Replace Canvas with SVG Waveform
@@ -451,30 +430,30 @@
         requestAnimationFrame(drawWave);
         analyser.getByteTimeDomainData(dataArray);
 
-        canvasCtx.fillStyle = "#f4f4f4";
-        canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+        // canvasCtx.fillStyle = "#f4f4f4";
+        // canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
 
-        canvasCtx.lineWidth = 2;
-        canvasCtx.strokeStyle = "limegreen";
-        canvasCtx.beginPath();
+        // canvasCtx.lineWidth = 1;
+        // canvasCtx.strokeStyle = "limegreen";
+        // canvasCtx.beginPath();
 
-        let sliceWidth = canvas.width / dataArray.length;
-        let x = 0;
+        // let sliceWidth = canvas.width / dataArray.length;
+        // let x = 0;
 
-        for (let i = 0; i < dataArray.length; i++) {
-            let v = dataArray[i] / 128.0;
-            let y = v * canvas.height / 2;
+        // for (let i = 0; i < dataArray.length; i++) {
+        //     let v = dataArray[i] / 128.0;
+        //     let y = v * canvas.height / 2;
 
-            if (i === 0) {
-                canvasCtx.moveTo(x, y);
-            } else {
-                canvasCtx.lineTo(x, y);
-            }
-            x += sliceWidth;
-        }
+        //     if (i === 0) {
+        //         canvasCtx.moveTo(x, y);
+        //     } else {
+        //         canvasCtx.lineTo(x, y);
+        //     }
+        //     x += sliceWidth;
+        // }
 
-        canvasCtx.lineTo(canvas.width, canvas.height / 2);
-        canvasCtx.stroke();
+        // canvasCtx.lineTo(canvas.width, canvas.height / 2);
+        // canvasCtx.stroke();
     }
 
     // 📡 Process Server Audio Stream (WebRTC)
