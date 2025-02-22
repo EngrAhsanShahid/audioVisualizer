@@ -57,6 +57,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 
+
 // function startButton() {
 //     const statusElement = document.getElementById("status");
 //     statusElement.textContent = "Processing...";

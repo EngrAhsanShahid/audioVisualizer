@@ -7,8 +7,8 @@ body {
   height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
-  position: relative;
+  align-items: end !important;
+  /* position: relative; */
   text-align: center;
 }
 
@@ -139,6 +139,9 @@ h1:hover {
   animation: fadeIn 2s forwards;
 }
 #stopButton {
+  position: fixed;
+  margin-left: -15%;
+  margin-top: -71%;
   padding: 5vh 5vh;
   font-size: 20px;
   background-color: #ff4d4d;
@@ -184,6 +187,8 @@ canvas {
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
+
+
 
 /* .waves-container {
   position: fixed;
