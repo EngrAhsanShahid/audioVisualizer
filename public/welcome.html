@@ -26,7 +26,7 @@
         <div id="error" class="error"></div>
     </div>
     <div id="audioVisualizer" hidden>
-        
+        <button class="logout-button" onclick="logout()">Logout</button>
         <div>
             <h1 class="onboarding-heading">Onboarding</h1>
         </div>
@@ -407,7 +407,7 @@
         requestAnimationFrame(drawWaveServer);
         analyserServer.getByteTimeDomainData(dataArrayServer);
 
-        let pathData = "M0 100"; // Baseline
+        let pathData = "M0 500"; // Baseline
         let step = 2000 / dataArrayServer.length;
         let amplitude = 300; // Increased amplitude for higher waves
 
@@ -417,12 +417,12 @@
             pathData += ` L${x} ${y}`;
         }
 
-        pathData += " V300 H0 Z";
+        pathData += " V500 H0 Z";
 
         gsap.to("#wavePath", {
             attr: { d: pathData },
-            duration: 0.05,
-            ease: "none",
+            duration: 0.08,
+            ease: "power2.out",
             fill: "#90a489"
         });
     }

@@ -224,6 +224,19 @@ canvas {
   color: white;
   transition: background 0.3s ease-in-out;
 }
+
+.logout-button {
+  position: fixed;
+  top: 9%;
+  right: 36%;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white;
+  background-color: red;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
 /* .waves-container {
   position: fixed;
   bottom: 0;
