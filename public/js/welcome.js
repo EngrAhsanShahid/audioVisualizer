@@ -77,72 +77,43 @@ micButton.addEventListener("click", () => {
 });
 
 function stopMic() {
-        // document.getElementById("waveform").style.display = "none";
-        if (peerConnection) {
-            peerConnection.close();
-            peerConnection = null;
-        }
-        if (audioStream) {
-            audioStream.getTracks().forEach(track => {
-                track.stop();
-            });
-            audioStream = null;
-        }
+    if (audioStream) {
+        audioStream.getTracks().forEach(track => {
+            if (track.kind === "audio") track.stop(); // Stop only audio tracks
+        });
+        audioStream = null;
         if (microphone) {
             microphone.disconnect();
             microphone = null;
         }
-        if (audioContext) {
-            audioContext.close();
-            audioContext = null;
-        }
-        if (dataChannel) {
-            dataChannel.close();
-            dataChannel = null;
-        }
+    }
 
-        // startButton.disabled = false;
-        // stopButton.disabled = true;
-        updateStatus('');
-        // document.querySelector(".welcome-container").style.display = "flex";
-        // hideError();
-        pauseRecordingFile()
+    pauseRecordingFile(); // Pause recording
+    // updateStatus("Microphone disabled");
 }
 
 async function startTheMic() {
     // startButton.disabled = true;
     try {
-        updateStatus('Initializing...');
+        if (!peerConnection) {
+            console.warn("WebRTC connection is not initialized.");
+            return;
+        }
 
-        const tokenResponse = await fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/session/");
-        const data = await tokenResponse.json();
-        const EPHEMERAL_KEY = data.client_secret.value;
+        // Request a new audio stream
+        audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-        peerConnection = new RTCPeerConnection();
-        await setupAudio();
-        setupDataChannel();
-
-        const offer = await peerConnection.createOffer();
-        await peerConnection.setLocalDescription(offer);
-
-        const baseUrl = "https://api.openai.com/v1/realtime";
-        const model = "gpt-4o-realtime-preview-2024-12-17";
-        const sdpResponse = await fetch(`${baseUrl}?model=${model}`, {
-            method: "POST",
-            body: offer.sdp,
-            headers: {
-                Authorization: `Bearer ${EPHEMERAL_KEY}`,
-                "Content-Type": "application/sdp"
-            },
+        // Replace the old audio tracks with new ones in WebRTC
+        audioStream.getTracks().forEach(track => {
+            const sender = peerConnection.getSenders().find(s => s.track && s.track.kind === "audio");
+            if (sender) {
+                sender.replaceTrack(track); // Replace existing track without breaking WebRTC
+            } else {
+                peerConnection.addTrack(track, audioStream); // Add if no track exists
+            }
         });
 
-        const answer = {
-            type: "answer",
-            sdp: await sdpResponse.text(),
-        };
-        await peerConnection.setRemoteDescription(answer);
-
-        updateStatus('Connected');
+        // updateStatus('Connected');
         // document.querySelector(".welcome-container").style.display = "none";
         startMic();
         resumeRecordingFile();
