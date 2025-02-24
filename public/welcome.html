@@ -26,17 +26,22 @@
         <div id="error" class="error"></div>
     </div>
     <div id="audioVisualizer" hidden>
-        <button class="logout-button" onclick="logout()">Logout</button>
+        <div class="sidebar">
+            <button class="logout-button" onclick="logout()">Logout</button>
+        </div>
         <div>
             <h1 class="onboarding-heading">Onboarding</h1>
         </div>
-        <div>
-            <button id="stopButton" onclick="stopRecording()">Stop</button>
-        </div>
+
         <canvas id="waveform"></canvas>
-        <button id="micButton" class="mic-on">
-            <i id="micIcon" class="fas fa-microphone"></i>
-        </button>
+        <div class="buttonDiv"">
+            <button id="micButton" class="mic-on">
+                <i id="micIcon" class="fas fa-microphone"></i>
+            </button>
+            <div>
+                <button id="stopButton" onclick="stopRecording()">Stop</button>
+            </div>
+        </div>
         <div class="waves-container">
             <svg viewBox="0 0 500 200" preserveAspectRatio="none">
                 <path id="wavePath" d="M0 100 Q 50 100, 100 100 T 200 100 T 300 100 T 400 100 T 500 100 V200 H0 Z" />

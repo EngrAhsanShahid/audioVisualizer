@@ -139,17 +139,27 @@ h1:hover {
   animation: fadeIn 2s forwards;
 }
 #stopButton {
-  position: fixed;
-  margin-left: -15%;
-  margin-top: -50%;
-  padding: 5vh 5vh;
+  /* position: fixed; */
+  /* margin-left: -15%; */
+  /* margin-top: -50%; */
+  /* padding: 5vh 5vh; */
+  padding: 10px 15px;
+  width: 80px;
+  height: 80px;
   font-size: 20px;
-  background-color: #ff4d4d;
+  background-color: red;
   color: white;
   border: none;
   border-radius: 50%;
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
+
+.buttonDiv{
+  display: flex;
+  justify-content: center;
+  justify-content: space-evenly;
+  /* margin-top: 20px; */
 }
 
 #stopButton:hover {
@@ -226,16 +236,18 @@ canvas {
 }
 
 .logout-button {
-  position: fixed;
-  top: 9%;
-  right: 36%;
-  padding: 10px 20px;
+  padding: 15px 0px;
   font-size: 16px;
   color: white;
   background-color: red;
   border: none;
+  display: inline-flex  ;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 35% 0 0 35%;
+  flex-direction: column;
+  writing-mode: vertical-rl;
+  font-size: large;
+  float: right;
 }
 /* .waves-container {
   position: fixed;
