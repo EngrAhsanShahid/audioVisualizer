@@ -85,14 +85,57 @@
         }
     }
 
+
+    async function handleUpdateProgressFunction(output) {
+        try {
+            const args = JSON.parse(output.arguments);
+            
+
+            let headersList = {
+                "Accept": "*/*",
+                "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+                "Authorization": "Bearer " + localStorage.getItem('access_token'),
+                "Content-Type": "application/json"
+            }
+
+            let bodyContent = JSON.stringify({
+                "category_id": args.category_id,
+                "user_response_summary": args.user_response_summary
+            });
+
+            let response = await fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/session/onboarding/update_progress", {
+                method: "POST",
+                body: bodyContent,
+                headers: headersList
+            });
+
+            const data = await response.json();
+             // Send function output
+             console.log("submitting this response: ",data)
+             sendFunctionOutput(output.call_id, data);
+
+
+            // Request new response
+            sendResponseCreate();
+        } catch (error) {
+            showError('Error handling weather function: ' + error.message);
+        }
+    }
+
     function handleFunctionCall(output) {
-        console.log("function name is: ",output?.name)
-        console.log("function_args is:",JSON.parse(output.arguments))
+        console.log("function name is: ", output?.name)
+        console.log("function_args is:", JSON.parse(output.arguments))
         if (output?.type === "function_call" &&
             output?.name === "get_weather" &&
             output?.call_id) {
             console.log('Function call found:', output);
             handleWeatherFunction(output);
+        }
+        if (output?.type === "function_call" &&
+            output?.name === "update_user_progress" &&
+            output?.call_id) {
+            console.log('Function call found:', output);
+            handleUpdateProgressFunction(output);
         }
     }
 
@@ -154,7 +197,7 @@
 
     // Message sending functions
     // function sendSessionUpdate() {
-        
+
     //     const sessionUpdateEvent = {
     //         "type": "session.update",
     //         "session": {
@@ -246,13 +289,13 @@
             updateStatus('Initializing...');
             const accessToken = localStorage.getItem('access_token');
             const tokenResponse = await fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/session/", {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${accessToken}`,
-                        "Content-Type": "application/json"
-                    }
-                })
-            
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                    "Content-Type": "application/json"
+                }
+            })
+
             const data = await tokenResponse.json();
             const EPHEMERAL_KEY = data.client_secret.value;
 
