@@ -150,15 +150,16 @@ h1:hover {
   background-color: red;
   color: white;
   border: none;
-  border-radius: 50%;
+  border-radius: 10%;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-left: 2%;
 }
 
 .buttonDiv{
   display: flex;
   justify-content: center;
-  justify-content: space-evenly;
+  /* justify-content: space-evenly; */
   /* margin-top: 20px; */
 }
 
@@ -225,7 +226,7 @@ canvas {
   width: 80px;
   height: 80px;
   border: none;
-  border-radius: 50%;
+  border-radius: 10%;
   /* display: flex;
   align-items: center;
   justify-content: center; */
