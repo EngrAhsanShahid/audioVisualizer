@@ -148,7 +148,22 @@
                             },
                             "required": ["location"]
                         }
-                    }],
+                    },
+                    {
+                        "type": "function",
+                        "name": "update_user_progress",
+                        "description": "updates & store user progress in database",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "catagory_id": { "type": "string" },
+                                "user_response_summary": { "type": "string" }
+                            },
+                            "required": ["catagory_id", "user_response_summary"]
+                        }
+                    }
+
+                    ],
                     "tool_choice": "auto",
                     "modalities": ["audio", "text"]
                     // "modalities": ["text"]
@@ -208,11 +223,18 @@
 
             try {
                 updateStatus('Initializing...');
+                const accessToken = localStorage.getItem('access_token');
+                console.log("access_token: ",accessToken)
+                const tokenResponse = await fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/session/", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${accessToken}`,
+                        "Content-Type": "application/json"
+                    }
+                });
 
-                const tokenResponse = await fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/session/");
                 const data = await tokenResponse.json();
                 const EPHEMERAL_KEY = data.client_secret.value;
-
                 peerConnection = new RTCPeerConnection();
                 await setupAudio();
                 setupDataChannel();
