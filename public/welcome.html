@@ -35,8 +35,8 @@
 
         <canvas id="waveform"></canvas>
         <div class="buttonDiv"">
-            <button id="micButton" class="mic-on">
-                <i id="micIcon" class="fas fa-microphone"></i>
+            <button id=" micButton" class="mic-on">
+            <i id="micIcon" class="fas fa-microphone"></i>
             </button>
             <div>
                 <button id="stopButton" onclick="stopRecording()">Stop</button>
@@ -94,7 +94,7 @@
     async function handleUpdateProgressFunction(output) {
         try {
             const args = JSON.parse(output.arguments);
-            
+
 
             let headersList = {
                 "Accept": "*/*",
@@ -115,9 +115,9 @@
             });
 
             const data = await response.json();
-             // Send function output
-             console.log("submitting this response: ",data)
-             sendFunctionOutput(output.call_id, data);
+            // Send function output
+            console.log("submitting this response: ", data)
+            sendFunctionOutput(output.call_id, data);
 
 
             // Request new response
@@ -128,21 +128,28 @@
     }
 
     function handleFunctionCall(output) {
-        console.log("function name is: ", output?.name)
-        console.log("function_args is:", JSON.parse(output.arguments))
-        if (output?.type === "function_call" &&
-            output?.name === "get_weather" &&
-            output?.call_id) {
-            console.log('Function call found:', output);
-            handleWeatherFunction(output);
-        }
-        if (output?.type === "function_call" &&
+        // console.log("function name is: ", output?.name)
+        // console.log("function_args is:", JSON.parse(output.arguments))
+        // output = JSON.parse(output.arguments)
+
+        if ((output?.type === "response.function_call_arguments.done" || output?.type === "function_call") &&
             output?.name === "update_user_progress" &&
             output?.call_id) {
-            console.log('Function call found:', output);
+            console.log("calling update_user_progress..")
             handleUpdateProgressFunction(output);
         }
+        if ((output?.type === "response.function_call_arguments.done" || output?.type === "function_call") &&
+            output?.name === "onboarding_completed" &&
+            output?.call_id) {
+            console.log("calling onboarding completed..")
+            if (peerConnection) {
+                console.log("closing connection...")
+                peerConnection.close();
+                peerConnection = null;
+            }
+        }
     }
+
 
     function handleMessage(event) {
         try {
@@ -150,8 +157,18 @@
             // console.log('Received message:', message);
             console.log("message type is: ", message.type)
             switch (message.type) {
+
+                case "response.function_call_arguments.done":
+                    // console.log("the_message_obj_is: ", message)
+                    let fx_details = message
+                    console.log("fx_details: ", fx_details)
+                    handleFunctionCall(fx_details)
+
+
+
                 case "response.done":
                     handleTranscript(message);
+
                     const output = message.response?.output?.[0];
 
                     // This is called when AI wants Fx mostly
@@ -160,6 +177,9 @@
                         handleFunctionCall(output)
                     };
                     break;
+
+                    break;
+
 
                 // If text only then this prints the text
                 case "response.text.delta":
