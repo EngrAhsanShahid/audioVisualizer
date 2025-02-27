@@ -1,0 +1,37 @@
+/* General Body Styling */
+body {
+    animation: fadeIn 2s forwards;
+    font-family: 'Nunito', sans-serif;
+    background-color: linear-gradient(to bottom right, #F5F5DC, #FAF9F6);
+    margin: 0;
+    padding: 0;
+    /* height: 100vh; */
+    display: flex;
+    justify-content: center;
+    align-items: end !important;
+    /* position: relative; */
+    text-align: center;
+}
+  
+  h1 {
+    font-family: 'Poppins', sans-serif;
+    color: #2e4f2e;
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    transition: color 0.3s ease-in-out;
+  }
+  
+  h1:hover {
+    color: #a8c9ab;
+  }
+
+  /* Fade-in Animation */
+@keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+  
+    100% {
+      opacity: 1;
+    }
+  }
