@@ -231,7 +231,7 @@ function testingFunction() {
     startButton.disabled = false;
     stopButton.disabled = true;
     updateStatus('');
-    document.querySelector(".welcome-container").style.display = "flex";
+    // document.querySelector(".welcome-container").style.display = "flex";
     hideError();
     stopRecordingFile();
     window.location.href = '/public/dashboard.html';
