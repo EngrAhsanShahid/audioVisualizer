@@ -1,0 +1,1297 @@
+[
+    {
+        "event": "call_analyzed",
+        "call": {
+            "call_id": "call_4b29ae470fde8bd0b9ce168dada",
+            "call_type": "web_call",
+            "agent_id": "agent_57d34dd59d549eb8ac62ac2da7",
+            "retell_llm_dynamic_variables": {
+                "name": "sohail",
+                "past_conversation_context": "None",
+                "phone": "+923240233750",
+                "email": "sssohail8611@gmail.com",
+                "current_datetime": ""
+            },
+            "call_status": "ended",
+            "start_timestamp": 1740931543370,
+            "end_timestamp": 1740931598267,
+            "duration_ms": 54897,
+            "transcript": "Agent: Hello sohail, this is smile dental care, how can I help you?\nUser: What do you\nAgent: I’m here to assist you with any dental concerns you may have, especially if you're experiencing discomfort or need to schedule an appointment. If you're in distress, please share your symptoms, and I'll do my best to help you.\nUser: You gave\nAgent: It seems like there might have been a misunderstanding. Could you please clarify what you meant? I'm here to help with any dental issues or to schedule an appointment for you.\nUser: I'm saying, would you be able to\nAgent: I apologize for the confusion, sohail. Could you please let me know what you \n",
+            "transcript_object": [
+                {
+                    "role": "agent",
+                    "content": "Hello sohail, this is smile dental care, how can I help you?",
+                    "words": [
+                        {
+                            "word": "Hello ",
+                            "start": 1.586,
+                            "end": 1.949636474609375
+                        },
+                        {
+                            "word": "sohail, ",
+                            "start": 1.949636474609375,
+                            "end": 2.313272705078125
+                        },
+                        {
+                            "word": "this ",
+                            "start": 2.313272705078125,
+                            "end": 2.6769091796875
+                        },
+                        {
+                            "word": "is ",
+                            "start": 2.6769091796875,
+                            "end": 3.04054541015625
+                        },
+                        {
+                            "word": "smile ",
+                            "start": 3.04054541015625,
+                            "end": 3.404181884765625
+                        },
+                        {
+                            "word": "dental ",
+                            "start": 3.404181884765625,
+                            "end": 3.767818115234375
+                        },
+                        {
+                            "word": "care, ",
+                            "start": 3.767818115234375,
+                            "end": 4.13145458984375
+                        },
+                        {
+                            "word": "how ",
+                            "start": 4.13145458984375,
+                            "end": 4.4950908203125
+                        },
+                        {
+                            "word": "can ",
+                            "start": 4.4950908203125,
+                            "end": 4.858727294921875
+                        },
+                        {
+                            "word": "I ",
+                            "start": 4.524072021484375,
+                            "end": 4.887708251953125
+                        },
+                        {
+                            "word": "help ",
+                            "start": 4.524072021484375,
+                            "end": 4.887708251953125
+                        },
+                        {
+                            "word": "you?",
+                            "start": 4.524072021484375,
+                            "end": 4.887708251953125
+                        }
+                    ],
+                    "metadata": {
+                        "response_id": 0
+                    }
+                },
+                {
+                    "role": "user",
+                    "content": "What do you",
+                    "words": [
+                        {
+                            "word": "What ",
+                            "start": 5.927,
+                            "end": 6.167
+                        },
+                        {
+                            "word": "do ",
+                            "start": 6.167,
+                            "end": 6.2469999000000005
+                        },
+                        {
+                            "word": "you",
+                            "start": 6.2469999000000005,
+                            "end": 6.5969999999999995
+                        }
+                    ]
+                },
+                {
+                    "role": "agent",
+                    "content": "I’m here to assist you with any dental concerns you may have, especially if you're experiencing discomfort or need to schedule an appointment. If you're in distress, please share your symptoms, and I'll do my best to help you.",
+                    "words": [
+                        {
+                            "word": "I’m ",
+                            "start": 12.498,
+                            "end": 12.861636474609375
+                        },
+                        {
+                            "word": "here ",
+                            "start": 12.861636474609375,
+                            "end": 13.225272705078124
+                        },
+                        {
+                            "word": "to ",
+                            "start": 13.225272705078124,
+                            "end": 13.5889091796875
+                        },
+                        {
+                            "word": "assist ",
+                            "start": 16.8902841796875,
+                            "end": 17.25392041015625
+                        },
+                        {
+                            "word": "you ",
+                            "start": 17.30742041015625,
+                            "end": 17.671056884765626
+                        },
+                        {
+                            "word": "with ",
+                            "start": 17.671056884765626,
+                            "end": 18.034693115234376
+                        },
+                        {
+                            "word": "any ",
+                            "start": 18.034693115234376,
+                            "end": 18.39832958984375
+                        },
+                        {
+                            "word": "dental ",
+                            "start": 18.39832958984375,
+                            "end": 18.7619658203125
+                        },
+                        {
+                            "word": "concerns ",
+                            "start": 18.7619658203125,
+                            "end": 19.125602294921876
+                        },
+                        {
+                            "word": "you ",
+                            "start": 19.125602294921876,
+                            "end": 19.489238525390626
+                        },
+                        {
+                            "word": "may ",
+                            "start": 19.489238525390626,
+                            "end": 19.852875
+                        },
+                        {
+                            "word": "have, ",
+                            "start": 19.852875,
+                            "end": 20.216511474609376
+                        },
+                        {
+                            "word": "especially ",
+                            "start": 20.216511474609376,
+                            "end": 20.580147705078126
+                        },
+                        {
+                            "word": "if ",
+                            "start": 20.580147705078126,
+                            "end": 20.9437841796875
+                        },
+                        {
+                            "word": "you're ",
+                            "start": 20.9437841796875,
+                            "end": 21.30742041015625
+                        },
+                        {
+                            "word": "experiencing ",
+                            "start": 21.30742041015625,
+                            "end": 21.671056884765626
+                        },
+                        {
+                            "word": "discomfort ",
+                            "start": 21.671056884765626,
+                            "end": 22.034693115234376
+                        },
+                        {
+                            "word": "or ",
+                            "start": 22.034693115234376,
+                            "end": 22.39832958984375
+                        },
+                        {
+                            "word": "need ",
+                            "start": 22.39832958984375,
+                            "end": 22.7619658203125
+                        },
+                        {
+                            "word": "to ",
+                            "start": 22.7619658203125,
+                            "end": 23.125602294921876
+                        },
+                        {
+                            "word": "schedule ",
+                            "start": 23.125602294921876,
+                            "end": 23.489238525390626
+                        },
+                        {
+                            "word": "an ",
+                            "start": 23.489238525390626,
+                            "end": 23.852875
+                        },
+                        {
+                            "word": "appointment.",
+                            "start": 23.506947021484375,
+                            "end": 23.870583251953125
+                        },
+                        {
+                            "word": " If ",
+                            "start": 15.852875,
+                            "end": 16.216511474609376
+                        },
+                        {
+                            "word": "you're ",
+                            "start": 16.216511474609376,
+                            "end": 16.580147705078126
+                        },
+                        {
+                            "word": "in ",
+                            "start": 16.580147705078126,
+                            "end": 16.9437841796875
+                        },
+                        {
+                            "word": "distress, ",
+                            "start": 16.9437841796875,
+                            "end": 17.30742041015625
+                        },
+                        {
+                            "word": "please ",
+                            "start": 17.30742041015625,
+                            "end": 17.671056884765626
+                        },
+                        {
+                            "word": "share ",
+                            "start": 17.671056884765626,
+                            "end": 18.034693115234376
+                        },
+                        {
+                            "word": "your ",
+                            "start": 18.034693115234376,
+                            "end": 18.39832958984375
+                        },
+                        {
+                            "word": "symptoms, ",
+                            "start": 18.39832958984375,
+                            "end": 18.7619658203125
+                        },
+                        {
+                            "word": "and ",
+                            "start": 18.7619658203125,
+                            "end": 19.125602294921876
+                        },
+                        {
+                            "word": "I'll ",
+                            "start": 19.125602294921876,
+                            "end": 19.489238525390626
+                        },
+                        {
+                            "word": "do ",
+                            "start": 19.489238525390626,
+                            "end": 19.852875
+                        },
+                        {
+                            "word": "my ",
+                            "start": 19.852875,
+                            "end": 20.216511474609376
+                        },
+                        {
+                            "word": "best ",
+                            "start": 20.0899052734375,
+                            "end": 20.453541748046874
+                        },
+                        {
+                            "word": "to ",
+                            "start": 20.0899052734375,
+                            "end": 20.453541748046874
+                        },
+                        {
+                            "word": "help ",
+                            "start": 20.0899052734375,
+                            "end": 20.453541748046874
+                        },
+                        {
+                            "word": "you.",
+                            "start": 20.0899052734375,
+                            "end": 20.453541748046874
+                        }
+                    ],
+                    "metadata": {
+                        "response_id": 1
+                    }
+                },
+                {
+                    "role": "user",
+                    "content": "You gave",
+                    "words": [
+                        {
+                            "word": "You ",
+                            "start": 29.507,
+                            "end": 29.827
+                        },
+                        {
+                            "word": "gave",
+                            "start": 29.827,
+                            "end": 30.207
+                        }
+                    ]
+                },
+                {
+                    "role": "agent",
+                    "content": "It seems like there might have been a misunderstanding. Could you please clarify what you meant? I'm here to help with any dental issues or to schedule an appointment for you.",
+                    "words": [
+                        {
+                            "word": "It ",
+                            "start": 37.00625,
+                            "end": 37.36988647460937
+                        },
+                        {
+                            "word": "seems ",
+                            "start": 37.36988647460937,
+                            "end": 37.73352270507812
+                        },
+                        {
+                            "word": "like ",
+                            "start": 37.73352270507812,
+                            "end": 38.0971591796875
+                        },
+                        {
+                            "word": "there ",
+                            "start": 38.0971591796875,
+                            "end": 38.46079541015625
+                        },
+                        {
+                            "word": "might ",
+                            "start": 38.46079541015625,
+                            "end": 38.82443188476562
+                        },
+                        {
+                            "word": "have ",
+                            "start": 38.82443188476562,
+                            "end": 39.18806811523437
+                        },
+                        {
+                            "word": "been ",
+                            "start": 39.18806811523437,
+                            "end": 39.55170458984375
+                        },
+                        {
+                            "word": "a ",
+                            "start": 39.55170458984375,
+                            "end": 39.9153408203125
+                        },
+                        {
+                            "word": "misunderstanding.",
+                            "start": 39.77398852539063,
+                            "end": 40.137625
+                        },
+                        {
+                            "word": " Could ",
+                            "start": 37.00625,
+                            "end": 37.36988647460937
+                        },
+                        {
+                            "word": "you ",
+                            "start": 37.36988647460937,
+                            "end": 37.73352270507812
+                        },
+                        {
+                            "word": "please ",
+                            "start": 37.73352270507812,
+                            "end": 38.0971591796875
+                        },
+                        {
+                            "word": "clarify ",
+                            "start": 38.0971591796875,
+                            "end": 38.46079541015625
+                        },
+                        {
+                            "word": "what ",
+                            "start": 38.46079541015625,
+                            "end": 38.82443188476562
+                        },
+                        {
+                            "word": "you ",
+                            "start": 38.82443188476562,
+                            "end": 39.18806811523437
+                        },
+                        {
+                            "word": "meant?",
+                            "start": 38.85936352539063,
+                            "end": 39.223
+                        },
+                        {
+                            "word": " I'm ",
+                            "start": 37.00625,
+                            "end": 37.36988647460937
+                        },
+                        {
+                            "word": "here ",
+                            "start": 37.36988647460937,
+                            "end": 37.73352270507812
+                        },
+                        {
+                            "word": "to ",
+                            "start": 37.73352270507812,
+                            "end": 38.0971591796875
+                        },
+                        {
+                            "word": "help ",
+                            "start": 38.0971591796875,
+                            "end": 38.46079541015625
+                        },
+                        {
+                            "word": "with ",
+                            "start": 38.46079541015625,
+                            "end": 38.82443188476562
+                        },
+                        {
+                            "word": "any ",
+                            "start": 38.82443188476562,
+                            "end": 39.18806811523437
+                        },
+                        {
+                            "word": "dental ",
+                            "start": 39.18806811523437,
+                            "end": 39.55170458984375
+                        },
+                        {
+                            "word": "issues ",
+                            "start": 39.55170458984375,
+                            "end": 39.9153408203125
+                        },
+                        {
+                            "word": "or ",
+                            "start": 39.9153408203125,
+                            "end": 40.27897729492187
+                        },
+                        {
+                            "word": "to ",
+                            "start": 40.27897729492187,
+                            "end": 40.64261352539062
+                        },
+                        {
+                            "word": "schedule ",
+                            "start": 40.64261352539062,
+                            "end": 41.00625
+                        },
+                        {
+                            "word": "an ",
+                            "start": 41.00625,
+                            "end": 41.36988647460937
+                        },
+                        {
+                            "word": "appointment ",
+                            "start": 41.04373852539062,
+                            "end": 41.407375
+                        },
+                        {
+                            "word": "for ",
+                            "start": 41.04373852539062,
+                            "end": 41.407375
+                        },
+                        {
+                            "word": "you.",
+                            "start": 41.04373852539062,
+                            "end": 41.407375
+                        }
+                    ],
+                    "metadata": {
+                        "response_id": 2
+                    }
+                },
+                {
+                    "role": "user",
+                    "content": "I'm saying, would you be able to",
+                    "words": [
+                        {
+                            "word": "I'm ",
+                            "start": 42.537002,
+                            "end": 42.777
+                        },
+                        {
+                            "word": "saying, ",
+                            "start": 42.777,
+                            "end": 43.257
+                        },
+                        {
+                            "word": "would ",
+                            "start": 43.257,
+                            "end": 43.417
+                        },
+                        {
+                            "word": "you ",
+                            "start": 43.417,
+                            "end": 43.577003000000005
+                        },
+                        {
+                            "word": "be ",
+                            "start": 43.577003000000005,
+                            "end": 43.737003
+                        },
+                        {
+                            "word": "able ",
+                            "start": 43.737003,
+                            "end": 44.057003
+                        },
+                        {
+                            "word": "to",
+                            "start": 44.057003,
+                            "end": 44.457
+                        }
+                    ]
+                },
+                {
+                    "role": "agent",
+                    "content": "I apologize for the confusion, sohail. Could you please let me know what you ",
+                    "words": [
+                        {
+                            "word": "I ",
+                            "start": 51.876,
+                            "end": 52.23963647460938
+                        },
+                        {
+                            "word": "apologize ",
+                            "start": 52.23963647460938,
+                            "end": 52.603272705078126
+                        },
+                        {
+                            "word": "for ",
+                            "start": 52.603272705078126,
+                            "end": 52.9669091796875
+                        },
+                        {
+                            "word": "the ",
+                            "start": 52.9669091796875,
+                            "end": 53.33054541015625
+                        },
+                        {
+                            "word": "confusion, ",
+                            "start": 53.33054541015625,
+                            "end": 53.69418188476563
+                        },
+                        {
+                            "word": "sohail.",
+                            "start": 53.61023852539063,
+                            "end": 53.973875
+                        },
+                        {
+                            "word": " Could ",
+                            "start": 51.876,
+                            "end": 52.23963647460938
+                        },
+                        {
+                            "word": "you ",
+                            "start": 52.23963647460938,
+                            "end": 52.603272705078126
+                        },
+                        {
+                            "word": "please ",
+                            "start": 52.603272705078126,
+                            "end": 52.9669091796875
+                        },
+                        {
+                            "word": "let ",
+                            "start": 52.9669091796875,
+                            "end": 53.33054541015625
+                        },
+                        {
+                            "word": "me ",
+                            "start": 53.33054541015625,
+                            "end": 53.69418188476563
+                        },
+                        {
+                            "word": "know ",
+                            "start": 53.69418188476563,
+                            "end": 54.057818115234376
+                        },
+                        {
+                            "word": "what ",
+                            "start": 54.057818115234376,
+                            "end": 54.42145458984375
+                        },
+                        {
+                            "word": "you ",
+                            "start": 54.42145458984375,
+                            "end": 54.7850908203125
+                        }
+                    ],
+                    "metadata": {
+                        "response_id": 3
+                    }
+                }
+            ],
+            "transcript_with_tool_calls": [
+                {
+                    "role": "agent",
+                    "content": "Hello sohail, this is smile dental care, how can I help you?",
+                    "words": [
+                        {
+                            "word": "Hello ",
+                            "start": 1.586,
+                            "end": 1.949636474609375
+                        },
+                        {
+                            "word": "sohail, ",
+                            "start": 1.949636474609375,
+                            "end": 2.313272705078125
+                        },
+                        {
+                            "word": "this ",
+                            "start": 2.313272705078125,
+                            "end": 2.6769091796875
+                        },
+                        {
+                            "word": "is ",
+                            "start": 2.6769091796875,
+                            "end": 3.04054541015625
+                        },
+                        {
+                            "word": "smile ",
+                            "start": 3.04054541015625,
+                            "end": 3.404181884765625
+                        },
+                        {
+                            "word": "dental ",
+                            "start": 3.404181884765625,
+                            "end": 3.767818115234375
+                        },
+                        {
+                            "word": "care, ",
+                            "start": 3.767818115234375,
+                            "end": 4.13145458984375
+                        },
+                        {
+                            "word": "how ",
+                            "start": 4.13145458984375,
+                            "end": 4.4950908203125
+                        },
+                        {
+                            "word": "can ",
+                            "start": 4.4950908203125,
+                            "end": 4.858727294921875
+                        },
+                        {
+                            "word": "I ",
+                            "start": 4.524072021484375,
+                            "end": 4.887708251953125
+                        },
+                        {
+                            "word": "help ",
+                            "start": 4.524072021484375,
+                            "end": 4.887708251953125
+                        },
+                        {
+                            "word": "you?",
+                            "start": 4.524072021484375,
+                            "end": 4.887708251953125
+                        }
+                    ],
+                    "metadata": {
+                        "response_id": 0
+                    }
+                },
+                {
+                    "role": "user",
+                    "content": "What do you",
+                    "words": [
+                        {
+                            "word": "What ",
+                            "start": 5.927,
+                            "end": 6.167
+                        },
+                        {
+                            "word": "do ",
+                            "start": 6.167,
+                            "end": 6.2469999000000005
+                        },
+                        {
+                            "word": "you",
+                            "start": 6.2469999000000005,
+                            "end": 6.5969999999999995
+                        }
+                    ]
+                },
+                {
+                    "role": "agent",
+                    "content": "I’m here to assist you with any dental concerns you may have, especially if you're experiencing discomfort or need to schedule an appointment. If you're in distress, please share your symptoms, and I'll do my best to help you.",
+                    "words": [
+                        {
+                            "word": "I’m ",
+                            "start": 12.498,
+                            "end": 12.861636474609375
+                        },
+                        {
+                            "word": "here ",
+                            "start": 12.861636474609375,
+                            "end": 13.225272705078124
+                        },
+                        {
+                            "word": "to ",
+                            "start": 13.225272705078124,
+                            "end": 13.5889091796875
+                        },
+                        {
+                            "word": "assist ",
+                            "start": 16.8902841796875,
+                            "end": 17.25392041015625
+                        },
+                        {
+                            "word": "you ",
+                            "start": 17.30742041015625,
+                            "end": 17.671056884765626
+                        },
+                        {
+                            "word": "with ",
+                            "start": 17.671056884765626,
+                            "end": 18.034693115234376
+                        },
+                        {
+                            "word": "any ",
+                            "start": 18.034693115234376,
+                            "end": 18.39832958984375
+                        },
+                        {
+                            "word": "dental ",
+                            "start": 18.39832958984375,
+                            "end": 18.7619658203125
+                        },
+                        {
+                            "word": "concerns ",
+                            "start": 18.7619658203125,
+                            "end": 19.125602294921876
+                        },
+                        {
+                            "word": "you ",
+                            "start": 19.125602294921876,
+                            "end": 19.489238525390626
+                        },
+                        {
+                            "word": "may ",
+                            "start": 19.489238525390626,
+                            "end": 19.852875
+                        },
+                        {
+                            "word": "have, ",
+                            "start": 19.852875,
+                            "end": 20.216511474609376
+                        },
+                        {
+                            "word": "especially ",
+                            "start": 20.216511474609376,
+                            "end": 20.580147705078126
+                        },
+                        {
+                            "word": "if ",
+                            "start": 20.580147705078126,
+                            "end": 20.9437841796875
+                        },
+                        {
+                            "word": "you're ",
+                            "start": 20.9437841796875,
+                            "end": 21.30742041015625
+                        },
+                        {
+                            "word": "experiencing ",
+                            "start": 21.30742041015625,
+                            "end": 21.671056884765626
+                        },
+                        {
+                            "word": "discomfort ",
+                            "start": 21.671056884765626,
+                            "end": 22.034693115234376
+                        },
+                        {
+                            "word": "or ",
+                            "start": 22.034693115234376,
+                            "end": 22.39832958984375
+                        },
+                        {
+                            "word": "need ",
+                            "start": 22.39832958984375,
+                            "end": 22.7619658203125
+                        },
+                        {
+                            "word": "to ",
+                            "start": 22.7619658203125,
+                            "end": 23.125602294921876
+                        },
+                        {
+                            "word": "schedule ",
+                            "start": 23.125602294921876,
+                            "end": 23.489238525390626
+                        },
+                        {
+                            "word": "an ",
+                            "start": 23.489238525390626,
+                            "end": 23.852875
+                        },
+                        {
+                            "word": "appointment.",
+                            "start": 23.506947021484375,
+                            "end": 23.870583251953125
+                        },
+                        {
+                            "word": " If ",
+                            "start": 15.852875,
+                            "end": 16.216511474609376
+                        },
+                        {
+                            "word": "you're ",
+                            "start": 16.216511474609376,
+                            "end": 16.580147705078126
+                        },
+                        {
+                            "word": "in ",
+                            "start": 16.580147705078126,
+                            "end": 16.9437841796875
+                        },
+                        {
+                            "word": "distress, ",
+                            "start": 16.9437841796875,
+                            "end": 17.30742041015625
+                        },
+                        {
+                            "word": "please ",
+                            "start": 17.30742041015625,
+                            "end": 17.671056884765626
+                        },
+                        {
+                            "word": "share ",
+                            "start": 17.671056884765626,
+                            "end": 18.034693115234376
+                        },
+                        {
+                            "word": "your ",
+                            "start": 18.034693115234376,
+                            "end": 18.39832958984375
+                        },
+                        {
+                            "word": "symptoms, ",
+                            "start": 18.39832958984375,
+                            "end": 18.7619658203125
+                        },
+                        {
+                            "word": "and ",
+                            "start": 18.7619658203125,
+                            "end": 19.125602294921876
+                        },
+                        {
+                            "word": "I'll ",
+                            "start": 19.125602294921876,
+                            "end": 19.489238525390626
+                        },
+                        {
+                            "word": "do ",
+                            "start": 19.489238525390626,
+                            "end": 19.852875
+                        },
+                        {
+                            "word": "my ",
+                            "start": 19.852875,
+                            "end": 20.216511474609376
+                        },
+                        {
+                            "word": "best ",
+                            "start": 20.0899052734375,
+                            "end": 20.453541748046874
+                        },
+                        {
+                            "word": "to ",
+                            "start": 20.0899052734375,
+                            "end": 20.453541748046874
+                        },
+                        {
+                            "word": "help ",
+                            "start": 20.0899052734375,
+                            "end": 20.453541748046874
+                        },
+                        {
+                            "word": "you.",
+                            "start": 20.0899052734375,
+                            "end": 20.453541748046874
+                        }
+                    ],
+                    "metadata": {
+                        "response_id": 1
+                    }
+                },
+                {
+                    "role": "user",
+                    "content": "You gave",
+                    "words": [
+                        {
+                            "word": "You ",
+                            "start": 29.507,
+                            "end": 29.827
+                        },
+                        {
+                            "word": "gave",
+                            "start": 29.827,
+                            "end": 30.207
+                        }
+                    ]
+                },
+                {
+                    "role": "agent",
+                    "content": "It seems like there might have been a misunderstanding. Could you please clarify what you meant? I'm here to help with any dental issues or to schedule an appointment for you.",
+                    "words": [
+                        {
+                            "word": "It ",
+                            "start": 37.00625,
+                            "end": 37.36988647460937
+                        },
+                        {
+                            "word": "seems ",
+                            "start": 37.36988647460937,
+                            "end": 37.73352270507812
+                        },
+                        {
+                            "word": "like ",
+                            "start": 37.73352270507812,
+                            "end": 38.0971591796875
+                        },
+                        {
+                            "word": "there ",
+                            "start": 38.0971591796875,
+                            "end": 38.46079541015625
+                        },
+                        {
+                            "word": "might ",
+                            "start": 38.46079541015625,
+                            "end": 38.82443188476562
+                        },
+                        {
+                            "word": "have ",
+                            "start": 38.82443188476562,
+                            "end": 39.18806811523437
+                        },
+                        {
+                            "word": "been ",
+                            "start": 39.18806811523437,
+                            "end": 39.55170458984375
+                        },
+                        {
+                            "word": "a ",
+                            "start": 39.55170458984375,
+                            "end": 39.9153408203125
+                        },
+                        {
+                            "word": "misunderstanding.",
+                            "start": 39.77398852539063,
+                            "end": 40.137625
+                        },
+                        {
+                            "word": " Could ",
+                            "start": 37.00625,
+                            "end": 37.36988647460937
+                        },
+                        {
+                            "word": "you ",
+                            "start": 37.36988647460937,
+                            "end": 37.73352270507812
+                        },
+                        {
+                            "word": "please ",
+                            "start": 37.73352270507812,
+                            "end": 38.0971591796875
+                        },
+                        {
+                            "word": "clarify ",
+                            "start": 38.0971591796875,
+                            "end": 38.46079541015625
+                        },
+                        {
+                            "word": "what ",
+                            "start": 38.46079541015625,
+                            "end": 38.82443188476562
+                        },
+                        {
+                            "word": "you ",
+                            "start": 38.82443188476562,
+                            "end": 39.18806811523437
+                        },
+                        {
+                            "word": "meant?",
+                            "start": 38.85936352539063,
+                            "end": 39.223
+                        },
+                        {
+                            "word": " I'm ",
+                            "start": 37.00625,
+                            "end": 37.36988647460937
+                        },
+                        {
+                            "word": "here ",
+                            "start": 37.36988647460937,
+                            "end": 37.73352270507812
+                        },
+                        {
+                            "word": "to ",
+                            "start": 37.73352270507812,
+                            "end": 38.0971591796875
+                        },
+                        {
+                            "word": "help ",
+                            "start": 38.0971591796875,
+                            "end": 38.46079541015625
+                        },
+                        {
+                            "word": "with ",
+                            "start": 38.46079541015625,
+                            "end": 38.82443188476562
+                        },
+                        {
+                            "word": "any ",
+                            "start": 38.82443188476562,
+                            "end": 39.18806811523437
+                        },
+                        {
+                            "word": "dental ",
+                            "start": 39.18806811523437,
+                            "end": 39.55170458984375
+                        },
+                        {
+                            "word": "issues ",
+                            "start": 39.55170458984375,
+                            "end": 39.9153408203125
+                        },
+                        {
+                            "word": "or ",
+                            "start": 39.9153408203125,
+                            "end": 40.27897729492187
+                        },
+                        {
+                            "word": "to ",
+                            "start": 40.27897729492187,
+                            "end": 40.64261352539062
+                        },
+                        {
+                            "word": "schedule ",
+                            "start": 40.64261352539062,
+                            "end": 41.00625
+                        },
+                        {
+                            "word": "an ",
+                            "start": 41.00625,
+                            "end": 41.36988647460937
+                        },
+                        {
+                            "word": "appointment ",
+                            "start": 41.04373852539062,
+                            "end": 41.407375
+                        },
+                        {
+                            "word": "for ",
+                            "start": 41.04373852539062,
+                            "end": 41.407375
+                        },
+                        {
+                            "word": "you.",
+                            "start": 41.04373852539062,
+                            "end": 41.407375
+                        }
+                    ],
+                    "metadata": {
+                        "response_id": 2
+                    }
+                },
+                {
+                    "role": "user",
+                    "content": "I'm saying, would you be able to",
+                    "words": [
+                        {
+                            "word": "I'm ",
+                            "start": 42.537002,
+                            "end": 42.777
+                        },
+                        {
+                            "word": "saying, ",
+                            "start": 42.777,
+                            "end": 43.257
+                        },
+                        {
+                            "word": "would ",
+                            "start": 43.257,
+                            "end": 43.417
+                        },
+                        {
+                            "word": "you ",
+                            "start": 43.417,
+                            "end": 43.577003000000005
+                        },
+                        {
+                            "word": "be ",
+                            "start": 43.577003000000005,
+                            "end": 43.737003
+                        },
+                        {
+                            "word": "able ",
+                            "start": 43.737003,
+                            "end": 44.057003
+                        },
+                        {
+                            "word": "to",
+                            "start": 44.057003,
+                            "end": 44.457
+                        }
+                    ]
+                },
+                {
+                    "role": "agent",
+                    "content": "I apologize for the confusion, sohail. Could you please let me know what you ",
+                    "words": [
+                        {
+                            "word": "I ",
+                            "start": 51.876,
+                            "end": 52.23963647460938
+                        },
+                        {
+                            "word": "apologize ",
+                            "start": 52.23963647460938,
+                            "end": 52.603272705078126
+                        },
+                        {
+                            "word": "for ",
+                            "start": 52.603272705078126,
+                            "end": 52.9669091796875
+                        },
+                        {
+                            "word": "the ",
+                            "start": 52.9669091796875,
+                            "end": 53.33054541015625
+                        },
+                        {
+                            "word": "confusion, ",
+                            "start": 53.33054541015625,
+                            "end": 53.69418188476563
+                        },
+                        {
+                            "word": "sohail.",
+                            "start": 53.61023852539063,
+                            "end": 53.973875
+                        },
+                        {
+                            "word": " Could ",
+                            "start": 51.876,
+                            "end": 52.23963647460938
+                        },
+                        {
+                            "word": "you ",
+                            "start": 52.23963647460938,
+                            "end": 52.603272705078126
+                        },
+                        {
+                            "word": "please ",
+                            "start": 52.603272705078126,
+                            "end": 52.9669091796875
+                        },
+                        {
+                            "word": "let ",
+                            "start": 52.9669091796875,
+                            "end": 53.33054541015625
+                        },
+                        {
+                            "word": "me ",
+                            "start": 53.33054541015625,
+                            "end": 53.69418188476563
+                        },
+                        {
+                            "word": "know ",
+                            "start": 53.69418188476563,
+                            "end": 54.057818115234376
+                        },
+                        {
+                            "word": "what ",
+                            "start": 54.057818115234376,
+                            "end": 54.42145458984375
+                        },
+                        {
+                            "word": "you ",
+                            "start": 54.42145458984375,
+                            "end": 54.7850908203125
+                        }
+                    ],
+                    "metadata": {
+                        "response_id": 3
+                    }
+                }
+            ],
+            "recording_url": "https://dxc03zgurdly9.cloudfront.net/7ec92427f2824256b0372927fe7110b0baa323e312172f7f5994efd980200d2a/recording.wav",
+            "public_log_url": "https://dxc03zgurdly9.cloudfront.net/7ec92427f2824256b0372927fe7110b0baa323e312172f7f5994efd980200d2a/public.log",
+            "disconnection_reason": "user_hangup",
+            "latency": {
+                "llm": {
+                    "p50": 432.5,
+                    "p90": 658.7,
+                    "p95": 688.8499999999999,
+                    "p99": 712.9699999999999,
+                    "min": 0,
+                    "max": 719,
+                    "num": 4,
+                    "values": [
+                        0,
+                        518,
+                        719,
+                        347
+                    ]
+                },
+                "e2e": {
+                    "p50": 5901,
+                    "p90": 6554.6,
+                    "p95": 6636.3,
+                    "p99": 6701.66,
+                    "min": 5798.9970703125,
+                    "max": 6718,
+                    "num": 3,
+                    "values": [
+                        5901,
+                        6718,
+                        5798.9970703125
+                    ]
+                },
+                "tts": {
+                    "p50": 979.5,
+                    "p90": 1310.4,
+                    "p95": 1321.2,
+                    "p99": 1329.84,
+                    "min": 689,
+                    "max": 1332,
+                    "num": 4,
+                    "values": [
+                        1332,
+                        699,
+                        1260,
+                        689
+                    ]
+                }
+            },
+            "call_cost": {
+                "total_duration_unit_price": 0.1433333,
+                "product_costs": [
+                    {
+                        "product": "retell_platform",
+                        "unit_price": 0,
+                        "cost": 0
+                    },
+                    {
+                        "product": "openai_tts",
+                        "unit_price": 0.1333333,
+                        "cost": 7.3333333
+                    },
+                    {
+                        "product": "gpt_4o_mini",
+                        "unit_price": 0.01,
+                        "cost": 0.55
+                    }
+                ],
+                "total_one_time_price": 0,
+                "combined_cost": 7.8833333,
+                "total_duration_seconds": 55
+            },
+            "call_analysis": {
+                "call_summary": "The user called Smile Dental Care seeking assistance, but there was some confusion in communication. The agent attempted to clarify the user's needs and offered help with dental concerns or scheduling an appointment.",
+                "in_voicemail": false,
+                "user_sentiment": "Neutral",
+                "call_successful": false,
+                "custom_analysis_data": {
+                    "detailed_call_summary": "The call involved the user trying to express a need for dental assistance, but the conversation was hindered by unclear communication. The agent repeatedly asked for clarification to better understand the user's request."
+                }
+            },
+            "opt_out_sensitive_data_storage": false,
+            "access_token": "eyJhbGciOiJIUzI1NiJ9.eyJ2aWRlbyI6eyJyb29tSm9pbiI6dHJ1ZSwicm9vbSI6IndlYl9jYWxsXzRiMjlhZTQ3MGZkZThiZDBiOWNlMTY4ZGFkYSJ9LCJpc3MiOiJBUElqWGZBMzVHTmM3WHgiLCJleHAiOjE3NDA5MzIxNDIsIm5iZiI6MCwic3ViIjoiY2xpZW50In0.__YCNM8yGOZFfZQhuSnbld5bUVSY1W2qlDjIXMnrGBU"
+        }
+    }
+]
