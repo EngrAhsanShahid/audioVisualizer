@@ -104,8 +104,8 @@
             }
 
             let bodyContent = JSON.stringify({
-                "category_id": args.category_id,
-                "user_response_summary": args.user_response_summary
+                "question_id": args.question_id,
+                "summary_of_user_response": args.summary_of_user_response
             });
 
             let response = await fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/session/onboarding/update_progress", {
@@ -173,11 +173,11 @@
                     const output = message.response?.output?.[0];
 
                     // This is called when AI wants Fx mostly
-                    if (output) {
+                    // if (output) {
 
-                        handleFunctionCall(output)
-                    };
-                    break;
+                    //     handleFunctionCall(output)
+                    // };
+                    // break;
 
                     break;
 
