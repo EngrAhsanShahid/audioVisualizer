@@ -198,7 +198,7 @@ function stopRecordingFile() {
     if (mediaRecorder && (mediaRecorder.state === 'recording' || mediaRecorder.state === 'paused')) {
         mediaRecorder.stop();
         clearTimeout(timer);
-        startRecording('https://httpbin.org/post');
+        // startRecording('https://httpbin.org/post');
         console.log('Recording stopped');
     }
 }
