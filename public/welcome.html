@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/global.css">
+    <!-- <link rel="stylesheet" href="css/index.css"> -->
+    <!-- <link rel="stylesheet" href="css/global.css"> -->
     <link rel="stylesheet" href="css/welcome.css">
     <link rel="icon" href="/static/logo.svg" type="image/x-icon" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -352,6 +352,11 @@
             updateStatus('Connected');
             document.querySelector(".welcome-container").style.display = "none";
             startMic();
+            const micButton = document.getElementById("micButton");
+            const micIcon = document.getElementById("micIcon");
+
+            micOnFunction()
+
 
 
             // window.location.href = '/public/audioVisualizer.html';
@@ -396,6 +401,8 @@
         stopButton.disabled = true;
         updateStatus('');
         document.querySelector(".welcome-container").style.display = "flex";
+        document.querySelectorAll(".ripple-dot").forEach(dot => dot.remove());
+
         hideError();
         stopRecordingFile();
     }
@@ -451,23 +458,69 @@
 
     let ripples = [];
 
-    function createRipple(x, y, size) {
-        let ripple = document.createElement("div");
-        ripple.classList.add("ripple");
-        document.body.appendChild(ripple);
+function createRipple(x, y, size) {
+    let ripple = document.createElement("div");
+    ripple.classList.add("ripple");
 
-        ripple.style.left = `${x}px`;
-        ripple.style.top = `${y}px`;
-        ripple.style.width = `${size}px`;
-        ripple.style.height = `${size}px`;
-        ripple.style.borderWidth = "2px"; // Ring effect
+    let dot = document.createElement("div");
+    dot.classList.add("ripple-dot");
 
-        // Remove ripple after animation ends
-        setTimeout(() => {
-            ripple.style.opacity = "0"; // Smooth fade-out
-            setTimeout(() => ripple.remove(), 500); // Ensure removal after fade
-        }, 500);
+    document.body.appendChild(ripple);
+    document.body.appendChild(dot);
+
+    ripple.style.left = `${x - size / 2}px`;
+    ripple.style.top = `${y - size / 2}px`;
+    ripple.style.width = `${size}px`;
+    ripple.style.height = `${size}px`;
+    ripple.style.borderWidth = "2px";
+
+    let dotSize = 60; // Increased dot size
+    dot.style.width = `${dotSize}px`;
+    dot.style.height = `${dotSize}px`;
+    dot.style.left = `${x - dotSize / 2}px`; // Center dot in ring
+    dot.style.top = `${y - dotSize / 2}px`;
+
+    // Remove ripple after animation ends, but keep the dot
+    setTimeout(() => {
+        ripple.style.opacity = "0"; // Fade out ripple
+        setTimeout(() => ripple.remove(), 500);
+    }, 500);
+}
+
+/* Add styles */
+const style = document.createElement("style");
+style.innerHTML = `
+    .ripple {
+        position: absolute;
+        border: 2px solid rgb(144, 164, 137);
+        border-radius: 50%;
+        background: transparent;
+        transform: scale(0);
+        animation: rippleEffect 0.5s ease-out forwards;
+        pointer-events: none;
     }
+
+    .ripple-dot {
+        position: absolute;
+        width: 12px; /* Increased size */
+        height: 12px;
+        background: rgb(144, 164, 137);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    @keyframes rippleEffect {
+        from {
+            transform: scale(0);
+        }
+        to {
+            transform: scale(1.5);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
+
 
 
 
@@ -488,7 +541,7 @@
         let threshold = 10; // Adjust for sensitivity
         if (maxAmplitude > threshold) {
             let scaledSize = Math.min(maxAmplitude * 2, 100); // Scale for visual effect
-            createRipple(window.innerWidth / 2, window.innerHeight / 2.2, scaledSize);
+            createRipple(window.innerWidth / 2.1, window.innerHeight / 4.4, scaledSize);
         }
     }
 

@@ -237,6 +237,13 @@ function testingFunction() {
     window.location.href = '/public/dashboard.html';
 }
 
+function micOnFunction(){
+    if (micIcon.classList.contains("fa-microphone-slash")) {
+        micButton.classList.remove("mic-off");
+        micIcon.classList.replace("fa-microphone-slash", "fa-microphone");
+        micButton.classList.toggle("mic-on");
+    } 
+}
 // function startButton() {
 //     const statusElement = document.getElementById("status");
 //     statusElement.textContent = "Processing...";

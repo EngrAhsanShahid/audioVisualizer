@@ -6,14 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loader</title>
     <style>
-        body {
+        .loader {
             margin: 0;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #f4f4f4;
+            /* background-color: #f4f4f4; */
             font-family: Arial, sans-serif;
+            
         }
 
         .loader-container {
@@ -29,6 +30,8 @@
             /* background-color: rgba(0, 0, 0, 0.8); */
             /* Semi-transparent background */
             z-index: 1000;
+            /* background: linear-gradient(to bottom right, #F5F5DC, #FAF9F6); */
+            background: #a8c9ab;
         }
 
         .loader-logo {
@@ -58,7 +61,7 @@
     </style>
 </head>
 
-<body>
+<body class="loader">
     <div class="loader-container">
         <img src="/static/logo.svg" alt="Loader Logo" class="loader-logo">
         <div class="loader-text">The answers lie within you</div>

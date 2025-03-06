@@ -2,7 +2,8 @@
 body {
     animation: fadeIn 2s forwards;
     font-family: 'Nunito', sans-serif;
-    background-color: linear-gradient(to bottom right, #F5F5DC, #FAF9F6);
+    /* background-color: linear-gradient(to bottom right, #F5F5DC, #FAF9F6); */
+    background-color: #e0dfc6;
     margin: 0;
     padding: 0;
     /* height: 100vh; */
