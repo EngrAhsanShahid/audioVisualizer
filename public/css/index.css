@@ -7,8 +7,7 @@
   
       body {
         font-family: 'Nunito', sans-serif;
-        /* background: linear-gradient(to bottom right, #F5F5DC, #FAF9F6); */
-        background-color: #e0dfc6;
+        background: linear-gradient(to bottom right, #F5F5DC, #FAF9F6);
         /* background: radial-gradient(circle,#535C49,#9EB69B,#CFC3AD, #A8C9AB,#90A489 ,#B69B87); Light beige to off-white */
         display: flex;
         justify-content: center;
@@ -23,8 +22,7 @@
         /*background: linear-gradient(to bottom, #F2F2F2, #FFFFFF); /* Light gray to white */
         /*background: linear-gradient(to bottom right, #F5F5F5, #FFFFFF); /* Light gray to white */
         animation: fadeIn 1s ease-in-out forwards;
-        /*background: linear-gradient(to bottom right, #F5F5DC, #FAF9F6); /* Light beige to off-white */
-        background-color: #a8c9ab;;
+        background: linear-gradient(to bottom right, #F5F5DC, #FAF9F6); /* Light beige to off-white */
         padding: 2rem;
         border-radius: 12px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

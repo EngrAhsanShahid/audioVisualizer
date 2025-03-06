@@ -244,6 +244,19 @@ function micOnFunction(){
         micButton.classList.toggle("mic-on");
     } 
 }
+
+function showWelcomeScreen() {
+    document.querySelector(".welcome-container").style.display = "flex";
+    document.getElementById("audioVisualizer").hidden = true;
+    document.body.classList.remove("bg-audio"); // Remove background image
+}
+
+function showAudioVisualizer() {
+    document.querySelector(".welcome-container").style.display = "none";
+    document.getElementById("audioVisualizer").hidden = false;
+    document.body.classList.add("bg-audio"); // Add background image
+}
+
 // function startButton() {
 //     const statusElement = document.getElementById("status");
 //     statusElement.textContent = "Processing...";
