@@ -1,0 +1,258 @@
+{
+    "q1": {
+        "question": "What do you like most about yourself?",
+        "answer": ""
+    },
+    "q2": {
+        "question": "What do you least like about yourself?",
+        "answer": ""
+    },
+    "q3": {
+        "question": "What do you LOVE about yourself?",
+        "answer": ""
+    },
+    "q4": {
+        "question": "What do you least love about yourself?",
+        "answer": ""
+    },
+    "q5": {
+        "question": "What do you consider your strengths?",
+        "answer": ""
+    },
+    "q6": {
+        "question": "What do you consider your weaknesses?",
+        "answer": ""
+    },
+    "q7": {
+        "question": "Are there any repeating cycles in your life or family that concern you?",
+        "answer": ""
+    },
+    "q8": {
+        "question": "How often do you have negative thoughts throughout the day?",
+        "answer": ""
+    },
+    "q9": {
+        "question": "On average, how long does it take you to realize you're having negative thoughts?",
+        "answer": ""
+    },
+    "q10": {
+        "question": "How do you handle difficult emotions?",
+        "answer": ""
+    },
+    "q11": {
+        "question": "When was the last time you felt stuck? How did you get out of it?",
+        "answer": ""
+    },
+    "q12": {
+        "question": "Do you have a higher power? If so, please describe it.",
+        "answer": ""
+    },
+    "q13": {
+        "question": "How do you connect to your higher power, if you have one?",
+        "answer": ""
+    },
+    "q14": {
+        "question": "Have you ever gone inward? If so, what was/is it like? If not, would you be interested in exploring that?",
+        "answer": ""
+    },
+    "q15": {
+        "question": "What does spirituality mean to you?",
+        "answer": ""
+    },
+    "q16": {
+        "question": "Do you believe in destiny, free will, or a mix of both?",
+        "answer": ""
+    },
+    "q17": {
+        "question": "Have you ever had a moment where you felt deeply connected to the universe or something greater than yourself?",
+        "answer": ""
+    },
+    "q18": {
+        "question": "Do you have a mindfulness practice? If so, what is it?",
+        "answer": ""
+    },
+    "q19": {
+        "question": "Are you able to pause throughout the day and enjoy small moments, such as a beautiful sunset, sunrise, or an interaction with a stranger?",
+        "answer": ""
+    },
+    "q20": {
+        "question": "How often do you laugh?",
+        "answer": ""
+    },
+    "q21": {
+        "question": "What makes you laugh?",
+        "answer": ""
+    },
+    "q22": {
+        "question": "Do you have difficulty being patient with others?",
+        "answer": ""
+    },
+    "q23": {
+        "question": "Do you love yourself?",
+        "answer": ""
+    },
+    "q24": {
+        "question": "How often do you practice self-compassion?",
+        "answer": ""
+    },
+    "q25": {
+        "question": "When was the last time you truly felt at peace?",
+        "answer": ""
+    },
+    "q26": {
+        "question": "What is your idea of a perfect day?",
+        "answer": ""
+    },
+    "q27": {
+        "question": "What inspires you and brings you joy?",
+        "answer": ""
+    },
+    "q28": {
+        "question": "What is your favorite childhood memory?",
+        "answer": ""
+    },
+    "q29": {
+        "question": "Who was your childhood best friend?",
+        "answer": ""
+    },
+    "q30": {
+        "question": "Who was the last person who hugged you?",
+        "answer": ""
+    },
+    "q31": {
+        "question": "What is your favorite compliment to receive?",
+        "answer": ""
+    },
+    "q32": {
+        "question": "What is your favorite season?",
+        "answer": ""
+    },
+    "q33": {
+        "question": "Do you prefer sunrise or sunset?",
+        "answer": ""
+    },
+    "q34": {
+        "question": "What is your favorite movie and why?",
+        "answer": ""
+    },
+    "q35": {
+        "question": "What is your favorite candy?",
+        "answer": ""
+    },
+    "q36": {
+        "question": "What are you most grateful for today?",
+        "answer": ""
+    },
+    "q37": {
+        "question": "Who did you last help?",
+        "answer": ""
+    },
+    "q38": {
+        "question": "Describe the most moving moment you've ever experienced.",
+        "answer": ""
+    },
+    "q39": {
+        "question": "How do you express gratitude in your daily life?",
+        "answer": ""
+    },
+    "q40": {
+        "question": "What is something small that makes you feel deeply connected to life?",
+        "answer": ""
+    },
+    "q41": {
+        "question": "What superpower do you most envy, and how do you wish you could use it?",
+        "answer": ""
+    },
+    "q42": {
+        "question": "What's your guilty pleasure TV show, and why should we be watching it?",
+        "answer": ""
+    },
+    "q43": {
+        "question": "What\u2019s your favorite breakfast food?",
+        "answer": ""
+    },
+    "q44": {
+        "question": "What favorite fashion trend do you wish was still acceptable?",
+        "answer": ""
+    },
+    "q45": {
+        "question": "If you were stranded on a deserted island with access to a stereo, what favorite song would you play on repeat?",
+        "answer": ""
+    },
+    "q46": {
+        "question": "Which favorite cartoon character still makes you smile today?",
+        "answer": ""
+    },
+    "q47": {
+        "question": "What's the weirdest food you've ever eaten, and would you try it again?",
+        "answer": ""
+    },
+    "q48": {
+        "question": "What musical instrument have you always wanted to play?",
+        "answer": ""
+    },
+    "q49": {
+        "question": "What would you choose if you could only eat one type of cuisine for the rest of your life?",
+        "answer": ""
+    },
+    "q50": {
+        "question": "If you could jump in a time machine, would you go forwards or backward?",
+        "answer": ""
+    },
+    "q51": {
+        "question": "Which historical figure would you most like to have a Zoom meeting with?",
+        "answer": ""
+    },
+    "q52": {
+        "question": "Which fictional family do you think our work team is most like and why?",
+        "answer": ""
+    },
+    "q53": {
+        "question": "If you could choose our work dress code, what would it be?",
+        "answer": ""
+    },
+    "q54": {
+        "question": "What advice would you give yourself if you were starting your career again?",
+        "answer": ""
+    },
+    "q55": {
+        "question": "Which famous actor would play the story of your life?",
+        "answer": ""
+    },
+    "q56": {
+        "question": "What book has had the biggest impact on your life and why?",
+        "answer": ""
+    },
+    "q57": {
+        "question": "Who or what inspires you?",
+        "answer": ""
+    },
+    "q58": {
+        "question": "What will you be celebrating in five years?",
+        "answer": ""
+    },
+    "q59": {
+        "question": "What is the NO you keep postponing?",
+        "answer": ""
+    },
+    "q60": {
+        "question": "What is the gift you hold in exile?",
+        "answer": ""
+    },
+    "q61": {
+        "question": "What talent do you have that you are not using?",
+        "answer": ""
+    },
+    "q62": {
+        "question": "What strengths have you developed that you didn\u2019t have a year ago?",
+        "answer": ""
+    },
+    "q63": {
+        "question": "If someone were watching a highlight reel of your last six months, what moments of growth would they see?",
+        "answer": ""
+    },
+    "q64": {
+        "question": "What would you like someone to say at your eulogy?",
+        "answer": ""
+    }
+}

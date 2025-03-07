@@ -272,7 +272,7 @@
                 "role": "user",
                 "content": [{
                     "type": "input_text",
-                    "text": "My name is Geert and I live in Antwerp, Belgium."
+                    "text": "Hello."
                 }]
             }
         };
@@ -308,6 +308,8 @@
     function onDataChannelOpen() {
         // sendSessionUpdate();
         sendInitialMessage();
+        //Have AI start the conversation after initial message is sent..
+        sendResponseCreate()
     }
 
     // Main control functions
