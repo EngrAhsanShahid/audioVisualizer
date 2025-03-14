@@ -1,6 +1,10 @@
 let mediaRecorder;
 let chunks = [];
 let timer;
+let startTime;
+let remainingTime = 10000; // 10 seconds
+let isPaused = false;
+
 
 window.addEventListener('DOMContentLoaded', () => {
     // Retrieve stored user data from localStorage
@@ -173,7 +177,9 @@ async function startRecording(apiUrl) {
         };
 
         mediaRecorder.start();
-        timer = setTimeout(() => stopRecordingFile(), 10000); // Stop after 1 minute
+        startTime = Date.now();
+        isPaused = false;
+        timer = setTimeout(stopRecordingFile, remainingTime); // Start countdown
     } catch (error) {
         console.error('Error accessing microphone:', error);
     }
@@ -182,15 +188,20 @@ async function startRecording(apiUrl) {
 function pauseRecordingFile() {
     if (mediaRecorder && mediaRecorder.state === 'recording') {
         mediaRecorder.pause();
-        clearTimeout(timer);
-        console.log('Recording paused');
+        clearTimeout(timer); // Stop the countdown
+        remainingTime -= (Date.now() - startTime); // Calculate remaining time
+        isPaused = true;
+        console.log(`Paused. Remaining time: ${remainingTime / 1000} seconds`);
     }
 }
 
 function resumeRecordingFile() {
     if (mediaRecorder && mediaRecorder.state === 'paused') {
         mediaRecorder.resume();
-        console.log('Recording resumed');
+        startTime = Date.now();
+        isPaused = false;
+        timer = setTimeout(stopRecordingFile, remainingTime); // Resume countdown
+        console.log('Resumed recording');
     }
 }
 
@@ -198,7 +209,7 @@ function stopRecordingFile() {
     if (mediaRecorder && (mediaRecorder.state === 'recording' || mediaRecorder.state === 'paused')) {
         mediaRecorder.stop();
         clearTimeout(timer);
-        // startRecording('https://httpbin.org/post');
+        startRecording('https://httpbin.org/post');
         console.log('Recording stopped');
     }
 }
