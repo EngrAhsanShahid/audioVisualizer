@@ -140,10 +140,12 @@
             handleUpdateProgressFunction(output);
         }
         if ((output?.type === "response.function_call_arguments.done" || output?.type === "function_call") &&
-            output?.name === "onboarding_completed" &&
+            output?.name === "skip_onboarding" &&
             output?.call_id) {
-            console.log("calling onboarding completed..")
-            testingFunction()
+            console.log("calling skip onboarding")
+            sendFunctionOutput(output.call_id, "User must answer the required questions before skipping.");
+            sendResponseCreate();
+            // testingFunction()
             // if (peerConnection) {
             //     console.log("closing connection...")
             //     peerConnection.close();
