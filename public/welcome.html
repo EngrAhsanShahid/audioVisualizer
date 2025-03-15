@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="css/welcome.css">
     <link rel="icon" href="/static/logo.svg" type="image/x-icon" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.0/lame.min.js"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
@@ -36,7 +38,7 @@
 
         <canvas id="waveform"></canvas>
         <div class="buttonDiv"">
-            <button id="micButton" class="mic-on">
+            <button id=" micButton" class="mic-on">
             <i id="micIcon" class="fas fa-microphone"></i>
             </button>
             <div>
@@ -205,18 +207,150 @@
     }
 
     // WebRTC setup functions
-    async function setupAudio() {
+    let AUDIO_RECORDING_FOR_CLONING = []; // Store meaningful audio chunks
+    let totalRecordedTime = 0; // Track total speech time in seconds
+    const SAMPLE_RATE = 44100; // Default WebRTC sample rate (might vary)
+    const CHUNK_DURATION = 4096 / SAMPLE_RATE; // Duration of each audio chunk
+    let CLONING_REQUIRED = true;
+
+
+    async function setupAudio(recordForCloning = true) {
         const audioEl = document.createElement("audio");
         audioEl.autoplay = true;
+
         peerConnection.ontrack = (e) => {
             audioEl.srcObject = e.streams[0]; // Plays system audio
             processAudioForVisualization(e.streams[0]); // Process system audio
         };
 
+        // Capture microphone audio
         audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
         peerConnection.addTrack(audioStream.getTracks()[0]);
-        console.log("audioStream=>", audioStream)
+
+        console.log("audioStream=>", audioStream);
+
+
+
+        // ❌ If Cloning is required then this code will run.
+        if (recordForCloning && CLONING_REQUIRED) {
+
+            // Extract audio directly from the WebRTC stream
+            const audioContext = new AudioContext();
+            const source = audioContext.createMediaStreamSource(audioStream);
+            const processor = audioContext.createScriptProcessor(4096, 1, 1);
+
+            source.connect(processor);
+            processor.connect(audioContext.destination);
+
+            processor.onaudioprocess = (event) => {
+                const audioData = event.inputBuffer.getChannelData(0); // Extract raw audio samples
+
+                // Check if this chunk has meaningful (non-silent) data
+                if (isSpeechDetected(audioData)) {
+                    console.log("Speech detected.");
+                    AUDIO_RECORDING_FOR_CLONING.push(...audioData);
+                    totalRecordedTime += CHUNK_DURATION; // Add only speech duration
+
+                    // If accumulated speech reaches 10 seconds, log message and reset
+                    if (totalRecordedTime >= 10) {
+                        console.log("10-second audio grabbed.");
+                        downloadAudioAsWAV([...AUDIO_RECORDING_FOR_CLONING]);
+                        totalRecordedTime = 0; // Reset the timer
+                        AUDIO_RECORDING_FOR_CLONING = []; // Clear stored audio
+                    }
+                }
+            };
+        }
     }
+
+
+
+    // Function to detect if meaningful speech exists in the audio chunk
+    function isSpeechDetected(audioBuffer) {
+        const THRESHOLD = 0.03;
+        let speechDetected = audioBuffer.some(sample => Math.abs(sample) > THRESHOLD);
+
+        // if (!speechDetected) {
+        //     AUDIO_RECORDING_FOR_CLONING.push(...new Float32Array(4800)); // Add 0.1s silence
+        // }
+
+        return speechDetected;
+    }
+
+    async function downloadAudioAsWAV(audioBuffer) {
+        if (audioBuffer.length === 0) {
+            console.error("No audio data available to save.");
+            return;
+        }
+
+        // Convert Float32Array to Int16Array for WAV format
+        let int16AudioData = float32ToInt16(audioBuffer);
+
+        // Create WAV file
+        const wavBlob = createWAVFile(int16AudioData, 48000); // 48kHz is default for WebRTC
+
+        // Download WAV file
+        const url = URL.createObjectURL(wavBlob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "recorded_audio.wav";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    // Convert Float32Array to Int16Array
+    function float32ToInt16(buffer) {
+        let int16Buffer = new Int16Array(buffer.length);
+        for (let i = 0; i < buffer.length; i++) {
+            int16Buffer[i] = Math.max(-1, Math.min(1, buffer[i])) * 32767;
+        }
+        return int16Buffer;
+    }
+
+    // Create a WAV file from Int16 PCM audio
+    function createWAVFile(audioData, sampleRate = 48000) {
+        const buffer = new ArrayBuffer(44 + audioData.length * 2);
+        const view = new DataView(buffer);
+
+        // WAV file header
+        function writeString(offset, str) {
+            for (let i = 0; i < str.length; i++) {
+                view.setUint8(offset + i, str.charCodeAt(i));
+            }
+        }
+
+        function writeUint32(offset, value) {
+            view.setUint32(offset, value, true);
+        }
+
+        function writeUint16(offset, value) {
+            view.setUint16(offset, value, true);
+        }
+
+        writeString(0, "RIFF");
+        writeUint32(4, 36 + audioData.length * 2);
+        writeString(8, "WAVE");
+        writeString(12, "fmt ");
+        writeUint32(16, 16);
+        writeUint16(20, 1);
+        writeUint16(22, 1);
+        writeUint32(24, sampleRate);
+        writeUint32(28, sampleRate * 2);
+        writeUint16(32, 2);
+        writeUint16(34, 16);
+        writeString(36, "data");
+        writeUint32(40, audioData.length * 2);
+
+        // Write PCM data
+        for (let i = 0; i < audioData.length; i++) {
+            view.setInt16(44 + i * 2, audioData[i], true);
+        }
+
+        return new Blob([view], { type: "audio/wav" });
+    }
+
 
     function setupDataChannel() {
         dataChannel = peerConnection.createDataChannel("oai-events");
@@ -344,7 +478,7 @@
                 method: "POST",
                 body: offer.sdp,
                 headers: {
-                    Authorization: `Bearer ${EPHEMERAL_KEY}`,
+                    Authorization: `Bearer d${EPHEMERAL_KEY}`,
                     "Content-Type": "application/sdp"
                 },
             });
@@ -409,7 +543,7 @@
         document.querySelector(".welcome-container").style.display = "flex";
         showWelcomeScreen()
         hideError();
-        stopRecordingFile();
+        // stopRecordingFile();
     }
 
 
@@ -456,7 +590,7 @@
 
                 setupCanvas(canvasMic);
                 drawWaveMic();
-                startRecording('https://httpbin.org/post');
+                // startRecording('https://httpbin.org/post');
             })
             .catch(error => console.error("Microphone access denied:", error));
     }
