@@ -243,8 +243,8 @@ function testingFunction() {
     stopButton.disabled = true;
     updateStatus('');
     // document.querySelector(".welcome-container").style.display = "flex";
-    hideError();
-    stopRecordingFile();
+    // hideError();
+    // stopRecordingFile();
     window.location.href = '/public/dashboard.html';
 }
 

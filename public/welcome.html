@@ -130,6 +130,41 @@
         }
     }
 
+
+    async function handleSkipOnboardingFunction(output) {
+    try {
+        const args = JSON.parse(output.arguments);
+
+        let headersList = {
+            "Accept": "*/*",
+            "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+            "Authorization": "Bearer " + localStorage.getItem('access_token'),
+            "Content-Type": "application/json"
+        };
+
+        let bodyContent = JSON.stringify({});
+
+        let response = await fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/session/onboarding/skip_onboarding", {
+            method: "POST",
+            body: bodyContent,
+            headers: headersList
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            console.log("All required questions answered, Skipping Onboarding");
+            testingFunction()
+        } else {
+            console.log("Some question requires asnwer, can not skip onboarding");
+            sendFunctionOutput(output.call_id, data);
+            sendResponseCreate();
+        }
+    } catch (error) {
+        console.error('Error handling skip onboarding: ' + error.message);
+    }
+}
+
     function handleFunctionCall(output) {
         // console.log("function name is: ", output?.name)
         // console.log("function_args is:", JSON.parse(output.arguments))
@@ -145,8 +180,8 @@
             output?.name === "skip_onboarding" &&
             output?.call_id) {
             console.log("calling skip onboarding")
-            sendFunctionOutput(output.call_id, "User must answer the required questions before skipping.");
-            sendResponseCreate();
+            handleSkipOnboardingFunction(output);
+           
             // testingFunction()
             // if (peerConnection) {
             //     console.log("closing connection...")
@@ -206,6 +241,54 @@
         }
     }
 
+
+
+    async function sendAudioToCloneAPI(audioBuffer) {
+    try {
+
+
+        if (audioBuffer.length === 0) {
+            console.error("No audio data available to save.");
+            return;
+        }
+
+        // Convert Float32Array to Int16Array for WAV format
+        let int16AudioData = float32ToInt16(audioBuffer);
+
+        // Create WAV file
+        const wavBlob = createWAVFile(int16AudioData, 48000);
+        
+        // Create FormData and append the WAV file
+        let formData = new FormData();
+        formData.append("audio_file", wavBlob, "recorded_audio.wav");
+
+        // Retrieve authentication token
+        const accessToken = localStorage.getItem("access_token");
+        if (!accessToken) {
+            console.error("No access token found.");
+            return;
+        }
+
+        // API endpoint
+        let apiUrl = "https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/voice/clone";
+
+        // Send audio file to API
+        let response = await fetch(apiUrl, {
+            method: "POST",
+            body: formData,
+            headers: {
+                "Authorization": "Bearer " + accessToken
+            }
+        });
+
+        const data = await response.json();
+        console.log("Audio sent to cloning API:", data);
+        return data;
+    } catch (error) {
+        console.error("Error sending audio to cloning API:", error.message);
+    }
+}
+
     // WebRTC setup functions
     let AUDIO_RECORDING_FOR_CLONING = []; // Store meaningful audio chunks
     let totalRecordedTime = 0; // Track total speech time in seconds
@@ -252,9 +335,10 @@
                     totalRecordedTime += CHUNK_DURATION; // Add only speech duration
 
                     // If accumulated speech reaches 10 seconds, log message and reset
-                    if (totalRecordedTime >= 10) {
+                    if (totalRecordedTime >= 60) {
                         console.log("10-second audio grabbed.");
                         downloadAudioAsWAV([...AUDIO_RECORDING_FOR_CLONING]);
+                        sendAudioToCloneAPI([...AUDIO_RECORDING_FOR_CLONING]);
                         totalRecordedTime = 0; // Reset the timer
                         AUDIO_RECORDING_FOR_CLONING = []; // Clear stored audio
                     }
@@ -288,6 +372,7 @@
 
         // Create WAV file
         const wavBlob = createWAVFile(int16AudioData, 48000); // 48kHz is default for WebRTC
+
 
         // Download WAV file
         const url = URL.createObjectURL(wavBlob);
@@ -478,7 +563,7 @@
                 method: "POST",
                 body: offer.sdp,
                 headers: {
-                    Authorization: `Bearer d${EPHEMERAL_KEY}`,
+                    Authorization: `Bearer ${EPHEMERAL_KEY}`,
                     "Content-Type": "application/sdp"
                 },
             });
