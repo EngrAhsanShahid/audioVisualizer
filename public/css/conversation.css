@@ -250,7 +250,10 @@ body {
     margin-left: 38%;
   }
   
-  
+  #wavePath {
+    fill: rgb(144, 164, 137); /* Set the initial color (e.g., blue) */
+    opacity: 0.7;
+}
   /* .waves-container {
     position: fixed;
     bottom: 0;

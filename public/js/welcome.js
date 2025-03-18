@@ -37,6 +37,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 if (welcomeContent) {
                     welcomeContent.style.display = 'flex'; // Show the main content
+                    document.querySelector(".top-line").style.display = "inline";
                     // Type the welcome text one letter at a time
                     let index = 0;
                     const welcomeElement = document.getElementsByClassName("onboarding-instruction")[0]; // Access the first element
@@ -203,7 +204,7 @@ async function init(e) {
             method: "POST",
             body: offer.sdp,
             headers: {
-                Authorization: `Bearer a${EPHEMERAL_KEY}`,
+                Authorization: `Bearer ${EPHEMERAL_KEY}`,
                 "Content-Type": "application/sdp"
             },
         });
@@ -224,7 +225,7 @@ async function init(e) {
         else if(urlValue == "Start Conversation"){
             window.location.href = '/public/conversation.html'; // Redirect to onboarding page
         }
-        else if(urlValue == "onboarding"){
+        else if(urlValue == "OnBoarding"){
             window.location.href = '/public/onboarding.html'; // Redirect to onboarding page
         }
         // Start microphone and enable stop button
@@ -307,6 +308,7 @@ function stopRecording() {
     stopButton.disabled = true;
     updateStatus('');
     document.querySelector(".welcome-container").style.display = "flex";
+    document.querySelector(".top-line").style.display = "flex";
     showWelcomeScreen()
     hideError();
     // stopRecordingFile();
