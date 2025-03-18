@@ -20,7 +20,7 @@
     <div id="loader-container"></div>
     <!-- New line and text at the top -->
     <div class="top-line" style="display: none;">
-        <span>Continue <a onclick="init(this)">OnBoarding</a> for more visualization</span>
+        <span>Continue <a id="OnBoarding" onclick="init(this); userclicked(this)">OnBoarding</a> for more visualization</span>
     </div>
     <div class="welcome-container" style="display: none;">
 
@@ -31,8 +31,8 @@
             <button id="startButton" class="start-btn" onclick="init()" style="display: none !important;">Start</button>
         </div> -->
         <div class="container">
-            <button class="btn" onclick="init(this)">Start Affirmation</button>
-            <button class="btn" onclick="init(this)">Start Conversation</button>
+            <button id="start_affirmation" class="btn" onclick="init(this); userclicked(this)">Start Affirmation</button>
+            <button id="start_conversation" class="btn" onclick="init(this); userclicked(this)">Start Conversation</button>
             <select class="dropdown">
                 <option value="1">Alloy</option>
                 <option value="2">My Voice</option>
@@ -45,7 +45,7 @@
 
 </body>
 <script src="js/welcome.js"></script>
-
+<script src="js/index.js"></script>
 <script>
 
 </script>

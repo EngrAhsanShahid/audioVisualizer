@@ -30,3 +30,21 @@ async function redirectToWelcome(e) {
         alert(error.message); // Show error message if login fails
     }
 }
+
+function userclicked(element){
+    // Get selected dropdown value
+    let voiceSelected = document.querySelector(".dropdown").value;
+
+    // Get clicked button ID
+    let buttonClicked = element.id;
+
+    // Create the required output object
+    let output = {
+        voiceSelected: voiceSelected,
+        buttonClicked: buttonClicked
+    };
+
+    console.log(output); // Log the output or use it as needed
+    return output;
+    
+}
