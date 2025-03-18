@@ -27,9 +27,9 @@ body {
 }
 
 .top-line a {
-  color: white;
-  font-weight: bold;
+  font-weight:700;
   text-decoration: underline;
+  color: white
 }
 /* Full Page Welcome Container */
 .welcome-container {
