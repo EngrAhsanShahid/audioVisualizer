@@ -4,7 +4,8 @@ let timer;
 let startTime;
 let remainingTime = 10000; // 10 seconds
 let isPaused = false;
-
+const statusDiv = document.getElementById('status');
+const errorDiv = document.getElementById('error');
 
 window.addEventListener('DOMContentLoaded', () => {
     // Retrieve stored user data from localStorage
@@ -21,7 +22,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // document.getElementById("username").textContent = username;
     const loaderContainer = document.getElementById('loader-container');
     const welcomeContent = document.querySelector('.welcome-container'); // Selects the welcome content container
-    const startButton = document.querySelector(".start-btn"); // Get the button element
+    // const startButton = document.querySelector(".start-btn"); // Get the button element
     const onboardingInstruction = document.querySelector(".onboarding-instruction");
     // Fetch and inject the loader HTML
     fetch('loader.html')
@@ -51,7 +52,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         }
                     }
                     function showButtonAndText() {
-                        startButton.style.display = 'block'; // Show the button
+                        // startButton.style.display = 'block'; // Show the button
                         onboardingInstruction.style.display = 'block';
                     }
                     // Start typing effect
@@ -64,36 +65,178 @@ window.addEventListener('DOMContentLoaded', () => {
         .catch(error => console.error('Error loading the loader:', error));
 });
 
-const micButton = document.getElementById("micButton");
-const micIcon = document.getElementById("micIcon");
+// Define required variables
+const CLONING_REQUIRED = true; // Set to `true` if cloning is required, otherwise `false`
+let AUDIO_RECORDING_FOR_CLONING = []; // Store meaningful audio chunks
+let totalRecordedTime = 0; // Track total speech time in seconds
+const CHUNK_DURATION = 4096 / 44100; // Duration of each audio chunk (4096 samples at 44.1kHz)
 
-micButton.addEventListener("click", () => {
-    micButton.classList.toggle("mic-on");
-    micButton.classList.toggle("mic-off");
-    // toggleMic();
-    if (micIcon.classList.contains("fa-microphone")) {
-        micIcon.classList.replace("fa-microphone", "fa-microphone-slash");
-        stopMic()
-    } else {
-        micIcon.classList.replace("fa-microphone-slash", "fa-microphone");
-        startTheMic();
+// setupAudio function
+async function setupAudio(recordForCloning = true) {
+    const audioEl = document.createElement("audio");
+    audioEl.autoplay = true;
+
+    peerConnection.ontrack = (e) => {
+        audioEl.srcObject = e.streams[0]; // Plays system audio
+        processAudioForVisualization(e.streams[0]); // Process system audio
+    };
+
+    // Capture microphone audio
+    audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    peerConnection.addTrack(audioStream.getTracks()[0]);
+
+    if (recordForCloning && CLONING_REQUIRED) {
+        const audioContext = new AudioContext();
+        const source = audioContext.createMediaStreamSource(audioStream);
+        const processor = audioContext.createScriptProcessor(4096, 1, 1);
+
+        source.connect(processor);
+        processor.connect(audioContext.destination);
+
+        processor.onaudioprocess = (event) => {
+            const audioData = event.inputBuffer.getChannelData(0); // Extract raw audio samples
+            if (isSpeechDetected(audioData)) {
+                AUDIO_RECORDING_FOR_CLONING.push(...audioData);
+                totalRecordedTime += CHUNK_DURATION;
+                if (totalRecordedTime >= 60) {
+                    console.log("10-second audio grabbed.");
+                    downloadAudioAsWAV([...AUDIO_RECORDING_FOR_CLONING]);
+                    sendAudioToCloneAPI([...AUDIO_RECORDING_FOR_CLONING]);
+                    totalRecordedTime = 0;
+                    AUDIO_RECORDING_FOR_CLONING = [];
+                }
+            }
+        };
     }
-});
+}
 
-function stopMic() {
-    if (audioStream) {
-        audioStream.getTracks().forEach(track => {
-            if (track.kind === "audio") track.stop(); // Stop only audio tracks
-        });
-        audioStream = null;
-        if (microphone) {
-            microphone.disconnect();
-            microphone = null;
+// isSpeechDetected function
+function isSpeechDetected(audioBuffer) {
+    const THRESHOLD = 0.03; // Adjust this threshold as needed
+    return audioBuffer.some(sample => Math.abs(sample) > THRESHOLD);
+}
+
+// setupDataChannel function
+function setupDataChannel() {
+    dataChannel = peerConnection.createDataChannel("oai-events");
+    dataChannel.onopen = onDataChannelOpen;
+    dataChannel.addEventListener("message", handleMessage);
+}
+
+function onDataChannelOpen() {
+    console.log("Data channel opened.");
+    sendInitialMessage(); // Send initial message to the server
+    sendResponseCreate(); // Request a response from the server
+}
+
+function handleMessage(event) {
+    try {
+        const message = JSON.parse(event.data);
+        console.log('Received message:', message);
+
+        switch (message.type) {
+            case "response.function_call_arguments.done":
+                handleFunctionCall(message);
+                break;
+
+            case "response.done":
+                handleTranscript(message);
+                break;
+
+            case "response.text.delta":
+                console.log("Text response:", message.delta);
+                break;
+
+            default:
+                console.log('Unhandled message type:', message.type);
         }
+    } catch (error) {
+        showError('Error processing message: ' + error.message);
+        console.error('Message handling error:', error);
     }
+}
 
-    pauseRecordingFile(); // Pause recording
-    // updateStatus("Microphone disabled");
+// init function
+async function init(e) {
+    let urlValue = e.textContent;
+    // const startButton = document.getElementById('startButton');
+    const stopButton = document.getElementById('stopButton');
+
+    // if (!startButton || !stopButton) {
+    //     console.error('Start or Stop button not found in the DOM.');
+    //     return;
+    // }
+
+    // startButton.disabled = true;
+    // stopButton.disabled = true;
+
+    try {
+        updateStatus('Initializing...');
+
+        const accessToken = localStorage.getItem('access_token');
+        const tokenResponse = await fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/session/", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        const data = await tokenResponse.json();
+        const EPHEMERAL_KEY = data.client_secret.value;
+
+        // Initialize WebRTC connection
+        peerConnection = new RTCPeerConnection();
+
+        // Set up audio and data channel
+        await setupAudio(); // Ensure setupAudio is defined or imported
+        setupDataChannel();
+
+        // Create and set local offer
+        const offer = await peerConnection.createOffer();
+        await peerConnection.setLocalDescription(offer);
+
+        // Send offer to server
+        const baseUrl = "https://api.openai.com/v1/realtime";
+        const model = "gpt-4o-realtime-preview-2024-12-17";
+        const sdpResponse = await fetch(`${baseUrl}?model=${model}`, {
+            method: "POST",
+            body: offer.sdp,
+            headers: {
+                Authorization: `Bearer a${EPHEMERAL_KEY}`,
+                "Content-Type": "application/sdp"
+            },
+        });
+
+        // Set server's answer
+        const answer = {
+            type: "answer",
+            sdp: await sdpResponse.text(),
+        };
+        await peerConnection.setRemoteDescription(answer);
+
+        // Update status and redirect to onboarding page
+        updateStatus('Connected');
+
+        if(urlValue == "Start Affirmation"){
+            window.location.href = '/public/affirmation.html'; // Redirect to onboarding page
+        }
+        else if(urlValue == "Start Conversation"){
+            window.location.href = '/public/conversation.html'; // Redirect to onboarding page
+        }
+        else if(urlValue == "onboarding"){
+            window.location.href = '/public/onboarding.html'; // Redirect to onboarding page
+        }
+        // Start microphone and enable stop button
+        startTheMic();
+        stopButton.disabled = false;
+        hideError();
+    } catch (error) {
+        // startButton.disabled = false;
+        stopButton.disabled = true;
+        showError('Error: ' + error.message);
+        console.error('Initialization error:', error);
+    }
 }
 
 async function startTheMic() {
@@ -135,87 +278,8 @@ async function startTheMic() {
     }
 }
 
-function logout(){
-    localStorage.removeItem("access_token");
-    window.location.href = "/";
-}
-
-async function startRecording(apiUrl) {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream);
-        chunks = [];
-
-        mediaRecorder.ondataavailable = event => {
-            chunks.push(event.data);
-        };
-
-        mediaRecorder.onstop = async () => {
-            const blob = new Blob(chunks, { type: 'audio/mp3' });
-            const file = new File([blob], 'audio.mp3', { type: 'audio/mp3' });
-            
-            // Create a download link for the recorded file
-            // const downloadLink = document.createElement('a');
-            // downloadLink.href = URL.createObjectURL(blob);
-            // downloadLink.download = 'audio.mp3';
-            // document.body.appendChild(downloadLink);
-            // downloadLink.click();
-            // document.body.removeChild(downloadLink);
-
-            const formData = new FormData();
-            formData.append('file', file);
-
-            try {
-                const response = await fetch('https://httpbin.org/post', {
-                    method: 'POST',
-                    body: formData,
-                });
-                console.log('File sent:', await response.json());
-            } catch (error) {
-                console.error('Error sending file:', error);
-            }
-        };
-
-        mediaRecorder.start();
-        startTime = Date.now();
-        isPaused = false;
-        timer = setTimeout(stopRecordingFile, remainingTime); // Start countdown
-    } catch (error) {
-        console.error('Error accessing microphone:', error);
-    }
-}
-
-function pauseRecordingFile() {
-    if (mediaRecorder && mediaRecorder.state === 'recording') {
-        mediaRecorder.pause();
-        clearTimeout(timer); // Stop the countdown
-        remainingTime -= (Date.now() - startTime); // Calculate remaining time
-        isPaused = true;
-        console.log(`Paused. Remaining time: ${remainingTime / 1000} seconds`);
-    }
-}
-
-function resumeRecordingFile() {
-    if (mediaRecorder && mediaRecorder.state === 'paused') {
-        mediaRecorder.resume();
-        startTime = Date.now();
-        isPaused = false;
-        timer = setTimeout(stopRecordingFile, remainingTime); // Resume countdown
-        console.log('Resumed recording');
-    }
-}
-
-function stopRecordingFile() {
-    if (mediaRecorder && (mediaRecorder.state === 'recording' || mediaRecorder.state === 'paused')) {
-        mediaRecorder.stop();
-        clearTimeout(timer);
-        startRecording('https://httpbin.org/post');
-        console.log('Recording stopped');
-    }
-}
-
-function testingFunction() {
-    // document.getElementById("audioVisualizer").style.display = "none";
+function stopRecording() {
+    document.getElementById("audioVisualizer").style.display = "none";
     if (peerConnection) {
         peerConnection.close();
         peerConnection = null;
@@ -239,68 +303,28 @@ function testingFunction() {
         dataChannel = null;
     }
 
-    startButton.disabled = false;
+    // startButton.disabled = false;
     stopButton.disabled = true;
     updateStatus('');
-    // document.querySelector(".welcome-container").style.display = "flex";
-    // hideError();
-    // stopRecordingFile();
-    window.location.href = '/public/dashboard.html';
-}
-
-function micOnFunction(){
-    if (micIcon.classList.contains("fa-microphone-slash")) {
-        micButton.classList.remove("mic-off");
-        micIcon.classList.replace("fa-microphone-slash", "fa-microphone");
-        micButton.classList.toggle("mic-on");
-    } 
-}
-
-function showWelcomeScreen() {
     document.querySelector(".welcome-container").style.display = "flex";
-    document.getElementById("audioVisualizer").hidden = true;
-    document.body.classList.remove("bg-audio"); // Remove background image
+    showWelcomeScreen()
+    hideError();
+    // stopRecordingFile();
 }
 
-function showAudioVisualizer() {
-    document.querySelector(".welcome-container").style.display = "none";
-    document.getElementById("audioVisualizer").hidden = false;
-    document.body.classList.add("bg-audio"); // Add background image
+
+// UI helper functions
+function updateStatus(message) {
+    statusDiv.textContent = message;
 }
 
-// function startButton() {
-//     const statusElement = document.getElementById("status");
-//     statusElement.textContent = "Processing...";
-//     console.log("Inside startBUtton")
-//     // window.location.href = '/public/audioVisualizer.html';  // Adjust the URL as needed
-//     // fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/session/")
-//     //     .then(response => {
-//     //         // statusElement.textContent = "Processing...";
-//     //         return response.text();
-//     //         // return new Promise(resolve => setTimeout(() => resolve(response.text()), 5000));
-//     //     })
-//     //     .then(data => {
-//     //         // statusElement.textContent = "Server Response: " + data;
-//     //         window.location.href = '/public/audioVisualizer.html';  // Adjust the URL as needed
-//     //     })
-//     //     .catch(error => {
-//     //         statusElement.textContent = "Error connecting!";
-//     //         console.error("Error:", error);
-//     //     });
-//     // Main control functions
+function showError(message) {
+    errorDiv.style.display = 'block';
+    errorDiv.textContent = message;
+}
+
+function hideError() {
+    errorDiv.style.display = 'none';
+}
 
 
-// }
-
-
-
-// Event listeners
-// startButton.addEventListener('click', init);
-// stopButton.addEventListener('click', stopRecording);
-// document.addEventListener('DOMContentLoaded', () => {
-//     updateStatus('Ready to start')
-//     const startButton = document.getElementById('startButton');
-//     if (startButton) {
-//         startButton.click(); // Auto-clicks the button
-//     }
-// });

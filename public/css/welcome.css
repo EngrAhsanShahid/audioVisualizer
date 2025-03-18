@@ -65,6 +65,45 @@ h1:hover {
   color: #a8c9ab;
 }
 
+.container {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center items horizontally */
+  gap: 10px; /* Add space between items */
+}
+
+.btn, .dropdown {
+  padding: 10px 20px;
+  font-size: 16px;
+  width: 200px; /* Set a fixed width for consistency */
+  text-align: center;
+}
+
+.btn {
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #a8c9ab;
+  color: white;
+  border: none;
+  /* padding: 15px 30px; */
+  font-size: 1.2rem;
+  cursor: pointer;
+  border-radius: 30px;  
+}
+
+.btn:hover {
+  background-color: #90a489;
+  transform: translateY(-2px);
+}
+
+.dropdown {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
+}
+
 /* Styling for the Start Button at the Center */
 .start-btn {
   background-color: #a8c9ab;
