@@ -215,10 +215,7 @@ function hideError() {
 }
 
 
-function logout(){
-    localStorage.removeItem("access_token");
-    window.location.href = "/";
-}
+
 
 async function startRecording(apiUrl) {
     try {
