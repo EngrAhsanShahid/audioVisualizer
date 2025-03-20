@@ -1,14 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/dashboard.css">
     <link rel="icon" href="/static/logo.svg" type="image/x-icon" />
-    <link rel="stylesheet" href="/public/css/dashboard.css">
-    <title>Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.0/lame.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
+
 <body>
-    <h1>Welcome to Awakening App</h1>
-    
+      
+    <div id="loader-container"></div>
+    <!-- New line and text at the top -->
+    <div class="top-line" style="display: none;" hidden>
+        <span>Continue <a id="OnBoarding" onclick="init(this); userclicked(this)">OnBoarding</a> for more personalization</span>
+    </div>
+    <div class="welcome-container" style="display: none;">
+
+        <!-- <h1 class="onboarding-heading">Onboarding</h1> -->
+        <div class="onboarding-subtext" id="welcome-text"></div>
+        <div class="onboarding-instruction"></div>
+        <!-- <div id="startButtonDiv" hidden>
+            <button id="startButton" class="start-btn" onclick="init()" style="display: none !important;">Start</button>
+        </div> -->
+        <div class="container">
+            <button id="start_affirmation" class="btn" onclick="init(this); userclicked(this)">Start Onboarding</button>
+            <button id="start_conversation" class="btn" onclick="init(this); userclicked(this)">Start Conversation</button>
+            <!-- <button id="" class="btn" onclick="logout()">logout</button> -->
+            <!-- <select class="dropdown">
+                <option value="1">Alloy</option>
+                <option value="2">My Voice</option>
+            </select> -->
+            <div class="custom-select">
+                <label for="">Selected Voice: </label>
+                <select id="dropdown">
+                    <option value="dashboard">Alloy</option>
+                    <option value="settings">My Voice</option>
+                </select>
+            </div>          
+        </div> 
+        <br>       
+        <div id="status" class="status"></div>
+        <div id="error" class="error"></div>
+    </div>
+
 </body>
+<script src="js/dashboard.js"></script>
+<script src="js/index.js"></script>
+<script>
+
+</script>
+
 </html>

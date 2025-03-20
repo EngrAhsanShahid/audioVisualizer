@@ -123,7 +123,7 @@ function stopRecording() {
     stopButton.disabled = true;
     // updateStatus('');
     // document.querySelector(".welcome-container").style.display = "flex";
-    window.location.href = "/public/welcome.html";
+    window.location.href = "/public/dashboard.html";
     // showWelcomeScreen()
     hideError();
     // stopRecordingFile();
