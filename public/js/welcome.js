@@ -37,7 +37,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 if (welcomeContent) {
                     welcomeContent.style.display = 'flex'; // Show the main content
-                    document.querySelector(".top-line").style.display = "inline";
+                    // document.querySelector(".top-line").style.display = "inline";
                     // Type the welcome text one letter at a time
                     let index = 0;
                     const welcomeElement = document.getElementsByClassName("onboarding-instruction")[0]; // Access the first element
@@ -159,7 +159,7 @@ function handleMessage(event) {
 
 // init function
 async function init(e) {
-    let urlValue = e.textContent;
+    let urlValue = e.id;
     // const startButton = document.getElementById('startButton');
     const stopButton = document.getElementById('stopButton');
 
@@ -219,10 +219,10 @@ async function init(e) {
         // Update status and redirect to onboarding page
         updateStatus('Connected');
 
-        if(urlValue == "Start Affirmation"){
+        if(urlValue == "start_affirmation"){
             window.location.href = '/public/affirmation.html'; // Redirect to onboarding page
         }
-        else if(urlValue == "Start Conversation"){
+        else if(urlValue == "start_conversation"){
             window.location.href = '/public/conversation.html'; // Redirect to onboarding page
         }
         else if(urlValue == "OnBoarding"){

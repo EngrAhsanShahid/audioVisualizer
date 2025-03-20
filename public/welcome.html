@@ -19,8 +19,8 @@
       
     <div id="loader-container"></div>
     <!-- New line and text at the top -->
-    <div class="top-line" style="display: none;">
-        <span>Continue <a id="OnBoarding" onclick="init(this); userclicked(this)">OnBoarding</a> for more visualization</span>
+    <div class="top-line" style="display: none;" hidden>
+        <span>Continue <a id="OnBoarding" onclick="init(this); userclicked(this)">OnBoarding</a> for more personalization</span>
     </div>
     <div class="welcome-container" style="display: none;">
 
@@ -31,7 +31,7 @@
             <button id="startButton" class="start-btn" onclick="init()" style="display: none !important;">Start</button>
         </div> -->
         <div class="container">
-            <button id="start_affirmation" class="btn" onclick="init(this); userclicked(this)">Start Affirmation</button>
+            <button id="start_affirmation" class="btn" onclick="init(this); userclicked(this)">Start Onboarding</button>
             <button id="start_conversation" class="btn" onclick="init(this); userclicked(this)">Start Conversation</button>
             <!-- <button id="" class="btn" onclick="logout()">logout</button> -->
             <!-- <select class="dropdown">
@@ -39,6 +39,7 @@
                 <option value="2">My Voice</option>
             </select> -->
             <div class="custom-select">
+                <label for="">Selected Voice: </label>
                 <select id="dropdown">
                     <option value="dashboard">Alloy</option>
                     <option value="settings">My Voice</option>
