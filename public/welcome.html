@@ -34,10 +34,16 @@
             <button id="start_affirmation" class="btn" onclick="init(this); userclicked(this)">Start Affirmation</button>
             <button id="start_conversation" class="btn" onclick="init(this); userclicked(this)">Start Conversation</button>
             <!-- <button id="" class="btn" onclick="logout()">logout</button> -->
-            <select class="dropdown">
+            <!-- <select class="dropdown">
                 <option value="1">Alloy</option>
                 <option value="2">My Voice</option>
-            </select>
+            </select> -->
+            <div class="custom-select">
+                <select id="dropdown">
+                    <option value="dashboard">Alloy</option>
+                    <option value="settings">My Voice</option>
+                </select>
+            </div>          
         </div> 
         <br>       
         <div id="status" class="status"></div>

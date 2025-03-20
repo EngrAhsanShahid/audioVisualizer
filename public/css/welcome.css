@@ -106,9 +106,77 @@ h1:hover {
 .dropdown {
   border: 1px solid #ccc;
   border-radius: 5px;
-  background-color: white;
+  background-color: #90a489;
 }
 
+.custom-select {
+  position: relative;
+  width: 200px;
+}
+
+select {
+  appearance: none;
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  background: white;
+  border-radius: 8px;
+  border: 2px solid #90a489;
+  cursor: pointer;
+  outline: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.custom-select::after {
+  content: "▼"; /* Default arrow */
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #90a489;
+  pointer-events: none;
+  transition: transform 0.3s ease, content 0.3s;
+}
+
+/* When select is clicked (focus-within works for dropdowns) */
+.custom-select:focus-within::after {
+  transform: translateY(-50%) rotate(180deg);
+  content: "▲"; /* Change to up arrow */
+}
+
+select:focus {
+  border-color: #90a489;
+}
+
+select:focus {
+  border-color: #90a489;
+  box-shadow: 0px 4px 10px rgba(37, 99, 235, 0.3);
+}
+
+/* Style options inside the dropdown */
+select option {
+  padding: 10px;
+  background: white;
+  color: #333;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Hover effect for options */
+select option:hover {
+  background: #2563eb;
+  color: white;
+}
+
+/* Style selected option */
+select option:checked {
+  background: #90a489;
+  color: white;
+  font-weight: bold;
+}
 /* Styling for the Start Button at the Center */
 .start-btn {
   background-color: #a8c9ab;
