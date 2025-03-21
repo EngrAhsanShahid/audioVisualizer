@@ -25,7 +25,7 @@ async function redirectToWelcome(e) {
         localStorage.setItem("username", username);
 
         // Redirect to the welcome page
-        window.location.href = './public/dashboard.html';
+        window.location.href = '/dashboard.html';
     } catch (error) {
         alert(error.message); // Show error message if login fails
     }

@@ -219,14 +219,14 @@ async function init(e) {
         // Update status and redirect to onboarding page
         updateStatus('Connected');
 
-        if(urlValue == "start_affirmation"){
-            window.location.href = '/public/affirmation.html'; // Redirect to onboarding page
+        if(urlValue == "start_onboarding"){
+            window.location.href = '/onboarding.html'; // Redirect to onboarding page
         }
         else if(urlValue == "start_conversation"){
-            window.location.href = '/public/conversation.html'; // Redirect to onboarding page
+            window.location.href = '/conversation.html'; // Redirect to onboarding page
         }
         else if(urlValue == "OnBoarding"){
-            window.location.href = '/public/onboarding.html'; // Redirect to onboarding page
+            window.location.href = '/onboarding.html'; // Redirect to onboarding page
         }
         // Start microphone and enable stop button
         startTheMic();

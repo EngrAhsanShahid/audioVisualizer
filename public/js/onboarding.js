@@ -123,7 +123,7 @@ function stopRecording() {
     stopButton.disabled = true;
     // updateStatus('');
     // document.querySelector(".welcome-container").style.display = "flex";
-    window.location.href = "/public/dashboard.html";
+    window.location.href = "/dashboard.html";
     // showWelcomeScreen()
     hideError();
     // stopRecordingFile();
@@ -322,7 +322,7 @@ function testingFunction() {
     // document.querySelector(".welcome-container").style.display = "flex";
     // hideError();
     // stopRecordingFile();
-    window.location.href = '/public/dashboard.html';
+    window.location.href = '/dashboard.html';
 }
 
 function micOnFunction(){
