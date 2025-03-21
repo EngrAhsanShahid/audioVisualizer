@@ -1,3 +1,21 @@
+document.addEventListener("DOMContentLoaded", function () {
+    // Retrieve data from localStorage
+    let storedData = localStorage.getItem("hasVisited");  // Example of retrieving a specific item
+
+    console.log("Retrieved hasVisited:", storedData);  // Debugging
+
+    if (storedData === "true") {
+        let accessToken = localStorage.getItem("access_token"); // Retrieve token separately
+        console.log("Access Token:", accessToken);
+
+        if (accessToken) {
+            window.location.href = "/dashboard.html";  // Redirect if both conditions match
+        }
+    }
+});
+
+
+
 async function redirectToWelcome(e) {
     e.preventDefault(); // Prevent the default form submission
 

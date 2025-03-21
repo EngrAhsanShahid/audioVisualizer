@@ -17,6 +17,7 @@ let totalRecordedTime = 0; // Track total speech time in seconds
 const SAMPLE_RATE = 44100; // Default WebRTC sample rate (might vary)
 const CHUNK_DURATION = 4096 / SAMPLE_RATE; // Duration of each audio chunk
 let CLONING_REQUIRED = true;
+
 // onboarding.js
 async function initOnboarding() {
     try {
@@ -91,7 +92,16 @@ async function initOnboarding() {
 
 // // Call initOnboarding when the page loads
 window.addEventListener('DOMContentLoaded', () => {
-    initOnboarding();
+    // Retrieve stored user data from localStorage
+    const access_token = localStorage.getItem("access_token");
+    // Check if user data exists and contains the correct access_token
+    if (!access_token) {
+        // Redirect to login page if the access_token is missing or incorrect
+        window.location.href = "/";
+    }
+    else{
+        initOnboarding();
+    }    
 });
 
 function stopRecording() {
