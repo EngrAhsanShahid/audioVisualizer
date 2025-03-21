@@ -103,6 +103,14 @@ h1:hover {
   transform: translateY(-2px);
 }
 
+.btn:disabled {
+  background-color: #ccc; /* Light gray background */
+  color: #666; /* Darker text */
+  cursor: not-allowed; /* Change cursor to indicate it's disabled */
+  opacity: 0.6; /* Reduce opacity */
+}
+
+
 .dropdown {
   border: 1px solid #ccc;
   border-radius: 5px;

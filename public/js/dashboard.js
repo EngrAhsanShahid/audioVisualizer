@@ -8,6 +8,13 @@ const statusDiv = document.getElementById('status');
 const errorDiv = document.getElementById('error');
 
 window.addEventListener('DOMContentLoaded', () => {
+    // Usage example:
+    const identity = getJwtIdentity();
+    console.log("identity=>",identity);
+    let r_q_a = identity.userIdentity.r_q_a;
+    let t_r_q = identity.userIdentity.t_r_q;
+
+
     // Retrieve stored user data from localStorage
     const access_token = localStorage.getItem("access_token");
     // Check if user data exists and contains the correct access_token
@@ -16,9 +23,26 @@ window.addEventListener('DOMContentLoaded', () => {
         window.location.href = "/";
     }
     const username = localStorage.getItem("username") || "Guest";
-    const welcomeText = `Welcome ${username}!`;
-    const onboardingText = `To proceed further, we need to onboard you by understanding you. Click start
-            when you're ready.`;
+    const welcomeText = `Hello ${username}!`;
+    let onboardingText = "";
+    if(r_q_a == 0){
+        onboardingText = `Let's get you onboarded! Answer a few quick questions to personalize your experience and unlock the conversational module.`
+        document.getElementById("start_conversation").disabled = true;
+        document.getElementById("dropdown").disabled = true;
+    }
+    else if(r_q_a > 0 && r_q_a < t_r_q){
+        onboardingText = `To access the conversational module, please complete your onboarding by answering the remaining {num_of_remaining__required_questions} required questions.`;
+        document.getElementById("start_onboarding").textContent = "Continue Onboarding";
+        document.getElementById("start_conversation").disabled = true;
+        document.getElementById("dropdown").disabled = true;
+    }
+    else if(r_q_a >= t_r_q){
+        onboardingText = `You can Continue Onboarding anytime to answer optional questions and further enhance personalization in the conversational module.`;
+        document.getElementById("start_onboarding").textContent = "Continue Onboarding";
+        document.getElementById("start_conversation").disabled = false;
+        document.getElementById("dropdown").disabled = false;
+    }
+
     // document.getElementById("username").textContent = username;
     const loaderContainer = document.getElementById('loader-container');
     const welcomeContent = document.querySelector('.welcome-container'); // Selects the welcome content container
@@ -327,6 +351,27 @@ function showError(message) {
 
 function hideError() {
     errorDiv.style.display = 'none';
+}
+
+
+function getJwtIdentity() {
+    const token = localStorage.getItem("access_token");
+    
+    if (!token) {
+        console.error("No token found in localStorage.");
+        return null;
+    }
+
+    try {
+        const base64Url = token.split('.')[1]; // Extract the payload part
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const decodedData = JSON.parse(atob(base64)); // Decode Base64 payload
+
+        return decodedData;
+    } catch (error) {
+        console.error("Invalid JWT token:", error);
+        return null;
+    }
 }
 
 
