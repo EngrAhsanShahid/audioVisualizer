@@ -11,6 +11,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // Usage example:
     const identity = getJwtIdentity();
     console.log("identity=>",identity);
+    identity.userIdentity.r_q_a = 0;
     let r_q_a = identity.userIdentity.r_q_a;
     let t_r_q = identity.userIdentity.t_r_q;
 
@@ -30,7 +31,7 @@ window.addEventListener('DOMContentLoaded', () => {
         document.getElementById("start_conversation").disabled = true;
         document.getElementById("dropdown").disabled = true;
     }
-    else if(r_q_a > 0 && r_q_a < t_r_q){
+    else if(r_q_a > 0 && < t_r_q){
         onboardingText = `To access the conversational module, please complete your onboarding by answering the remaining {num_of_remaining__required_questions} required questions.`;
         document.getElementById("start_onboarding").textContent = "Continue Onboarding";
         document.getElementById("start_conversation").disabled = true;
