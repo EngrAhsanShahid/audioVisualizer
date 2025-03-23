@@ -23,7 +23,7 @@ async function initConversation() {
         updateStatus('Initializing WebRTC...');
 
         const accessToken = localStorage.getItem('access_token');
-        const tokenResponse = await fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/session/", {
+        const tokenResponse = await fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/session/conversation", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${accessToken}`,

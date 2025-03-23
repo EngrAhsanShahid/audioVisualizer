@@ -7,12 +7,30 @@ let isPaused = false;
 const statusDiv = document.getElementById('status');
 const errorDiv = document.getElementById('error');
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
     // Usage example:
+
+    const response = await fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/auth/refresh-token", {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+            "Content-Type": "application/json"
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error("Token refresh failed");
+    }
+
+    const data = await response.json();
+    localStorage.setItem("access_token", data.access_token);
+
+
     const identity = getJwtIdentity();
     console.log("identity=>",identity);
     let r_q_a = identity.userIdentity.r_q_a;
     let t_r_q = identity.userIdentity.t_r_q;
+    let remaining_required_questions = t_r_q - r_q_a;
 
 
     // Retrieve stored user data from localStorage
@@ -31,13 +49,13 @@ window.addEventListener('DOMContentLoaded', () => {
         document.getElementById("dropdown").disabled = true;
     }
     else if(r_q_a > 0 && r_q_a < t_r_q){
-        onboardingText = `To access the conversational module, please complete your onboarding by answering the remaining {num_of_remaining__required_questions} required questions.`;
+        onboardingText = `To access the conversational module, please complete your onboarding by answering the remaining '${remaining_required_questions}' required questions.`;
         document.getElementById("start_onboarding").textContent = "Continue Onboarding";
         document.getElementById("start_conversation").disabled = true;
         document.getElementById("dropdown").disabled = true;
     }
     else if(r_q_a >= t_r_q){
-        onboardingText = `You can Continue Onboarding anytime to answer optional questions and further enhance personalization in the conversational module.`;
+        onboardingText = `You can continue onboarding anytime to answer optional questions and further enhance personalization in the conversational module.`;
         document.getElementById("start_onboarding").textContent = "Continue Onboarding";
         document.getElementById("start_conversation").disabled = false;
         document.getElementById("dropdown").disabled = false;

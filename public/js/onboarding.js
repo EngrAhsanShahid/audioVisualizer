@@ -326,12 +326,13 @@ function testingFunction() {
         dataChannel = null;
     }
 
-    startButton.disabled = false;
-    stopButton.disabled = true;
-    updateStatus('');
+    // startButton.disabled = false;
+    // stopButton.disabled = true;
+    // updateStatus('');
     // document.querySelector(".welcome-container").style.display = "flex";
     // hideError();
     // stopRecordingFile();
+    console.log("sending to dashboard...")
     window.location.href = '/dashboard.html';
 }
 
@@ -454,6 +455,7 @@ try {
     }
 } catch (error) {
     console.error('Error handling skip onboarding: ' + error.message);
+    console.log("error is: ",error)
 }
 }
 

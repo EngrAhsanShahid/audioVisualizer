@@ -113,7 +113,10 @@
 
 /* Reduce font size if text exceeds 18 characters */
 .btn.long-text {
-  font-size: 16px; /* Smaller font size */
+  /* font-size: 16px; Smaller font size */
+  font-size: 16px;
+    width: 60vw;
+    max-width: 300px;
 }
 /* General Body Styling */
 body {
