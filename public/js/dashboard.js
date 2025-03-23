@@ -375,3 +375,8 @@ function getJwtIdentity() {
 }
 
 
+document.querySelectorAll(".btn").forEach(button => {
+    if (button.textContent.length >= 16) {
+        button.classList.add("long-text");
+    }
+});
