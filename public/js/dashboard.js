@@ -78,6 +78,8 @@ window.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById("welcome-text").textContent = welcomeText;
 
                 if (welcomeContent) {
+                    document.getElementById("hamburger").hidden = false;
+
                     welcomeContent.style.display = 'flex'; // Show the main content
                     // document.querySelector(".top-line").style.display = "inline";
                     // Type the welcome text one letter at a time
@@ -319,6 +321,33 @@ async function startTheMic() {
         // console.error('Initialization error:', error);
         updateStatus('Failed to connect');
     }
+}
+
+// 🎤 Start Microphone Visualization
+function startMic() {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            analyserMic = audioContext.createAnalyser();
+            analyserMic.fftSize = 512;
+
+            microphone = audioContext.createMediaStreamSource(stream);
+            microphone.connect(analyserMic);
+
+            const bufferLength = analyserMic.frequencyBinCount;
+            dataArrayMic = new Uint8Array(bufferLength);
+
+            canvasMic = document.getElementById("waveform");
+            canvasCtxMic = canvasMic.getContext("2d");
+
+            setupCanvas(canvasMic);
+            drawWaveMic();
+            // startRecording('https://httpbin.org/post');
+        })
+        .catch(error => console.error("Microphone access denied:", error));
 }
 
 function stopRecording() {
