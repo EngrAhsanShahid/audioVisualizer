@@ -125,7 +125,7 @@ body {
   #audioVisualizer {
     animation: fadeIn 2s forwards;
   }
-  #stopButton {
+  /* #stopButton {
     /* position: fixed; */
     /* margin-left: -15%; */
     /* margin-top: -50%; */
@@ -141,14 +141,14 @@ body {
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin-left: 2%;
-  }
+  } */
   
-  .buttonDiv{
+  /* .buttonDiv{
     display: flex;
     justify-content: center;
     /* justify-content: space-evenly; */
     /* margin-top: 20px; */
-  }
+  } */
   
   #stopButton:hover {
     background-color: #e60000;
@@ -209,7 +209,7 @@ body {
     background-color: red;
   }
   
-  #micButton {
+  /* #micButton {
     width: 80px;
     height: 80px;
     border: none;
@@ -221,7 +221,7 @@ body {
     font-size: 32px;
     color: white;
     transition: background 0.3s ease-in-out;
-  }
+  } */
   
   .logout-button {
     padding: 15px 0px;
@@ -254,6 +254,68 @@ body {
       fill: rgb(144, 164, 137); /* Set the initial color (e.g., blue) */
       opacity: 0.7;
   }
+
+  .buttonDiv {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Space between buttons */
+    margin-top: 20px;
+}
+
+/* Microphone Button */
+#micButton {
+    width: 80px;
+    height: 80px;
+    border: none;
+    border-radius: 50%;
+    /*background: linear-gradient(135deg, #4CAF50, #2E7D32); /* Green gradient */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 32px;
+    color: white;
+    transition: transform 0.2s ease-in-out;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.mic-on {
+    background: linear-gradient(135deg, #4CAF50, #2E7D32); /* Green gradient */
+}
+.mic-off {
+  background: linear-gradient(135deg, #E53935, #B71C1C); /* Red gradient */
+}
+#micButton:active {
+    transform: scale(0.9);
+}
+
+/* Stop Button */
+#stopButton {
+    width: 80px;
+    height: 80px;
+    font-size: 20px;
+    background: linear-gradient(135deg, #E53935, #B71C1C); /* Red gradient */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+#stopButton:active {
+    transform: scale(0.9);
+}
+
+/* Icon inside the microphone button */
+#micIcon {
+    transition: transform 0.2s ease-in-out;
+}
+
+#micButton:active #micIcon {
+    transform: scale(0.85);
+}
+
   /* .waves-container {
     position: fixed;
     bottom: 0;
