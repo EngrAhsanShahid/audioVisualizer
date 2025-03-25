@@ -7,7 +7,14 @@ let isPaused = false;
 const statusDiv = document.getElementById('status');
 const errorDiv = document.getElementById('error');
 
-window.addEventListener('DOMContentLoaded', async () => {
+window.addEventListener('DOMContentLoaded', async () => {    
+    // Retrieve stored user data from localStorage
+    const access_token = localStorage.getItem("access_token");
+    // Check if user data exists and contains the correct access_token
+    if (!access_token) {
+        // Redirect to login page if the access_token is missing or incorrect
+        window.location.href = "/";
+    }
     // Usage example:
 
     const response = await fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/auth/refresh-token", {
@@ -33,13 +40,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     let remaining_required_questions = t_r_q - r_q_a;
 
 
-    // Retrieve stored user data from localStorage
-    const access_token = localStorage.getItem("access_token");
-    // Check if user data exists and contains the correct access_token
-    if (!access_token) {
-        // Redirect to login page if the access_token is missing or incorrect
-        window.location.href = "/";
-    }
+
     const username = localStorage.getItem("username") || "Guest";
     const welcomeText = `Hello ${username}!`;
     let onboardingText = "";
