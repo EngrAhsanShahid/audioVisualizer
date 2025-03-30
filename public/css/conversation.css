@@ -125,34 +125,10 @@ body {
   #audioVisualizer {
     animation: fadeIn 2s forwards;
   }
-  #stopButton {
-    /* position: fixed; */
-    /* margin-left: -15%; */
-    /* margin-top: -50%; */
-    /* padding: 5vh 5vh; */
-    padding: 10px 15px;
-    width: 80px;
-    height: 80px;
-    font-size: 20px;
-    background-color: red;
-    color: white;
-    border: none;
-    border-radius: 10%;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-left: 2%;
-  }
   
-  .buttonDiv{
-    display: flex;
-    justify-content: center;
-    /* justify-content: space-evenly; */
-    /* margin-top: 20px; */
-  }
-  
-  #stopButton:hover {
+  /* #stopButton:hover {
     background-color: #e60000;
-  }
+  } */
   
   #startButtonDiv,
   #status {
@@ -196,31 +172,6 @@ body {
         transform: translate(-50%, -50%) scale(2);
         opacity: 0;
     }
-  }
-  
-  
-  
-  
-  .mic-on {
-    background-color: green;
-  }
-  
-  .mic-off {
-    background-color: red;
-  }
-  
-  #micButton {
-    width: 80px;
-    height: 80px;
-    border: none;
-    border-radius: 10%;
-    /* display: flex;
-    align-items: center;
-    justify-content: center; */
-    cursor: pointer;
-    font-size: 32px;
-    color: white;
-    transition: background 0.3s ease-in-out;
   }
   
   .logout-button {
@@ -275,4 +226,74 @@ body {
               background: #90A489;
               z-index: 1;
           } */
-  
+/* Microphone Button */
+#micButton {
+  width: 80px;
+  height: 80px;
+  border: none;
+  border-radius: 50%;
+  /* background: #90a489; Primary green color */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 32px;
+  color: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid #2e4f2e; /* Dark green border */
+}
+.mic-on {
+  background: #90a489; /* Green when on */
+  box-shadow: 0 0 15px rgba(144, 164, 137, 0.7);
+}
+
+.mic-off {
+  background: #e57373; /* Soft red when off */
+  box-shadow: 0 0 15px rgba(229, 115, 115, 0.5);
+}
+#micButton:active {
+    transform: scale(0.9);
+}
+
+/* Stop Button */
+#stopButton {
+  width: 80px;
+  height: 80px;
+  border: none;
+  border-radius: 50%;
+  background: #e57373; /* Soft red when off */
+  box-shadow: 0 0 15px rgba(229, 115, 115, 0.5);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid #2e4f2e; /* Dark green border */
+}
+
+#stopButton:hover {
+  background: #e57373; /* Darker green on hover */
+  transform: scale(1.05);
+}
+
+#stopButton:active {
+  transform: scale(0.95);
+}
+
+/* Icon inside the microphone button */
+#micIcon {
+    transition: transform 0.2s ease-in-out;
+}
+
+#micButton:active #micIcon {
+    transform: scale(0.85);
+}
+
+.buttonDiv {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Space between buttons */
+  margin-top: 20px;
+}

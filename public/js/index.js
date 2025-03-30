@@ -49,23 +49,23 @@ async function redirectToWelcome(e) {
     }
 }
 
-function userclicked(element){
-    // Get selected dropdown value
-    let voiceSelected = document.querySelector(".dropdown").value;
+// function userclicked(element){
+//     // Get selected dropdown value
+//     let voiceSelected = document.querySelector(".dropdown").value;
 
-    // Get clicked button ID
-    let buttonClicked = element.id;
+//     // Get clicked button ID
+//     let buttonClicked = element.id;
 
-    // Create the required output object
-    let output = {
-        voiceSelected: voiceSelected,
-        buttonClicked: buttonClicked
-    };
+//     // Create the required output object
+//     let output = {
+//         voiceSelected: voiceSelected,
+//         buttonClicked: buttonClicked
+//     };
 
-    console.log(output); // Log the output or use it as needed
-    return output;
+//     console.log(output); // Log the output or use it as needed
+//     return output;
     
-}
+// }
 
 function logout(){
     localStorage.removeItem("access_token");

@@ -68,7 +68,7 @@ async function initOnboarding() {
             method: "POST",
             body: offer.sdp,
             headers: {
-                Authorization: `Bearer a${EPHEMERAL_KEY}`,
+                Authorization: `Bearer ${EPHEMERAL_KEY}`,
                 "Content-Type": "application/sdp"
             },
         });

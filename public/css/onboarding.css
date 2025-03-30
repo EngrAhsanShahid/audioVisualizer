@@ -264,26 +264,29 @@ body {
 
 /* Microphone Button */
 #micButton {
-    width: 80px;
-    height: 80px;
-    border: none;
-    border-radius: 50%;
-    /*background: linear-gradient(135deg, #4CAF50, #2E7D32); /* Green gradient */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 32px;
-    color: white;
-    transition: transform 0.2s ease-in-out;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+  width: 80px;
+  height: 80px;
+  border: none;
+  border-radius: 50%;
+  /* background: #90a489; Primary green color */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 32px;
+  color: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid #2e4f2e; /* Dark green border */
+}
+.mic-on {
+  background: #90a489; /* Green when on */
+  box-shadow: 0 0 15px rgba(144, 164, 137, 0.7);
 }
 
-.mic-on {
-    background: linear-gradient(135deg, #4CAF50, #2E7D32); /* Green gradient */
-}
 .mic-off {
-  background: linear-gradient(135deg, #E53935, #B71C1C); /* Red gradient */
+  background: #e57373; /* Soft red when off */
+  box-shadow: 0 0 15px rgba(229, 115, 115, 0.5);
 }
 #micButton:active {
     transform: scale(0.9);
@@ -291,20 +294,28 @@ body {
 
 /* Stop Button */
 #stopButton {
-    width: 80px;
-    height: 80px;
-    font-size: 20px;
-    background: linear-gradient(135deg, #E53935, #B71C1C); /* Red gradient */
-    color: white;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+  width: 80px;
+  height: 80px;
+  border: none;
+  border-radius: 50%;
+  background: #e57373; /* Soft red when off */
+  box-shadow: 0 0 15px rgba(229, 115, 115, 0.5);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid #2e4f2e; /* Dark green border */
+}
+
+#stopButton:hover {
+  background: #e57373; /* Darker green on hover */
+  transform: scale(1.05);
 }
 
 #stopButton:active {
-    transform: scale(0.9);
+  transform: scale(0.95);
 }
 
 /* Icon inside the microphone button */
