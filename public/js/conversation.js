@@ -731,45 +731,6 @@ function setupDataChannel() {
     dataChannel.addEventListener("message", handleMessage);
 }
 
-// Message sending functions
-// function sendSessionUpdate() {
-
-//     const sessionUpdateEvent = {
-//         "type": "session.update",
-//         "session": {
-//             "tools": [{
-//                 "type": "function",
-//                 "name": "get_weather",
-//                 "description": "Get the current weather. Works only for Earth",
-//                 "parameters": {
-//                     "type": "object",
-//                     "properties": {
-//                         "location": { "type": "string" }
-//                     },
-//                     "required": ["location"]
-//                 }
-//             },
-//             {
-//                 "type": "function",
-//                 "name": "update_user_progress",
-//                 "description": "Always use this tool to updates & store user progress in database during onboarding when specific cataogory is completed",
-//                 "parameters": {
-//                     "type": "object",
-//                     "properties": {
-//                         "catagory_id": { "type": "string" },
-//                         "user_response_summary": { "type": "string" }
-//                     },
-//                     "required": ["catagory_id", "user_response_summary"]
-//                 }
-//             }
-//             ],
-//             "tool_choice": "auto",
-//             "modalities": ["audio", "text"]
-//             // "modalities": ["text"]
-//         }
-//     };
-//     sendMessage(sessionUpdateEvent);
-// }
 
 function sendInitialMessage() {
     const conversationMessage = {

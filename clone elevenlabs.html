@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Text to Speech Test</title>
+</head>
+<body>
+  <h1>Text to Speech Test</h1>
+  <textarea id="text-input" rows="4" cols="50" placeholder="Enter text here..."></textarea>
+  <br>
+  <button id="generate-btn">Generate Speech</button>
+  <br><br>
+  <audio id="audio-player" controls></audio>
+
+  <script>
+    document.getElementById('generate-btn').addEventListener('click', async () => {
+      const text = document.getElementById('text-input').value;
+      if (!text) {
+        alert('Please enter some text.');
+        return;
+      }
+
+      try {
+        // POST the text to your FastAPI endpoint
+        const response = await fetch(
+          'https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/voice/stream-cloned-voice',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ text })
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok: ' + response.statusText);
+        }
+
+        // Read the MP3 data as an ArrayBuffer
+        const mp3Buffer = await response.arrayBuffer();
+        // Create a Blob with the correct MIME type
+        const mp3Blob = new Blob([mp3Buffer], { type: 'audio/mpeg' });
+        // Create an object URL for the Blob
+        const audioUrl = URL.createObjectURL(mp3Blob);
+        // Set the audio source and play it
+        const audioPlayer = document.getElementById('audio-player');
+        audioPlayer.src = audioUrl;
+        audioPlayer.play();
+
+      } catch (error) {
+        console.error('Error generating speech:', error);
+        alert('Error generating speech: ' + error.message);
+      }
+    });
+  </script>
+</body>
+</html>
