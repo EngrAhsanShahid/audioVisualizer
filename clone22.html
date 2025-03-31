@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Stream Cloned Voice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+        }
+
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 16px;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+
+        audio {
+            margin-top: 20px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>🔊 Stream Cloned Voice</h2>
+
+    <input type="text" id="tts-input" placeholder="Enter text to speak..." />
+    <button onclick="handleTTS()">Submit</button>
+
+    <audio id="streamingAudioElementForElevenLabs" controls autoplay></audio>
+
+    <script>
+        async function streamingAudioElementForElevenLabs(text) {
+            const response = await fetch(
+                'https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/voice/stream-cloned-voice',
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text })
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.statusText);
+            }
+
+            const audioBlob = await response.blob();
+
+            // Create or reuse the <audio> element
+            let audioEl = document.getElementById('streamingAudioElementForElevenLabs');
+            if (!audioEl) {
+                audioEl = document.createElement('audio');
+                audioEl.id = 'streamingAudioElementForElevenLabs';
+                audioEl.controls = true;
+                audioEl.autoplay = true;
+                document.body.appendChild(audioEl);
+            }
+
+            // Set and play the audio
+            const objectUrl = URL.createObjectURL(audioBlob);
+            audioEl.src = objectUrl;
+            audioEl.play();
+
+            // Cleanup memory
+            audioEl.onloadeddata = () => {
+                URL.revokeObjectURL(objectUrl);
+            };
+        }
+
+        function handleTTS() {
+            const input = document.getElementById('tts-input');
+            const text = input.value.trim();
+            if (!text) {
+                alert("Please enter some text.");
+                return;
+            }
+            streamingAudioElementForElevenLabs(text);
+        }
+    </script>
+
+</body>
+
+</html>

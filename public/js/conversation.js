@@ -358,8 +358,146 @@ function micOnFunction(){
 
 
 // Message handling functions
+
+// async function streamingAudioElementForElevenLabs(text) {
+//     const response = await fetch(
+//         'https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/voice/stream-cloned-voice',
+//         {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify({ text })
+//         }
+//     );
+
+//     if (!response.ok) {
+//         throw new Error('Network response was not ok: ' + response.statusText);
+//     }
+
+//     const audioBlob = await response.blob();
+
+//     // Create or reuse the <audio> element
+//     let audioEl = document.getElementById('streamingAudioElementForElevenLabs');
+//     if (!audioEl) {
+//         audioEl = document.createElement('audio');
+//         audioEl.id = 'streamingAudioElementForElevenLabs';
+//         audioEl.controls = true;
+//         audioEl.autoplay = true;
+//         document.body.appendChild(audioEl);
+//     }
+
+//     // Set and play the audio
+//     const objectUrl = URL.createObjectURL(audioBlob);
+//     audioEl.src = objectUrl;
+//     audioEl.play();
+
+//     // Cleanup memory
+//     audioEl.onloadeddata = () => {
+//         URL.revokeObjectURL(objectUrl);
+//     };
+// }
+
+let elevenLabsStreamAbortController = null;
+async function streamingAudioElementForElevenLabs(text, retryAttempt = 0) {
+    const MAX_RETRIES = 1;
+  
+    try {
+      const response = await fetch(
+        'https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/voice/stream-cloned-voice',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+          },
+          body: JSON.stringify({ text })
+        }
+      );
+  
+      if (!response.ok || !response.body) {
+        if (response.status === 500 && retryAttempt < MAX_RETRIES) {
+          console.warn('Server error (500), retrying in 2 seconds...');
+          await new Promise((res) => setTimeout(res, 2000));
+          return streamingAudioElementForElevenLabs(text, retryAttempt + 1);
+        }
+        throw new Error('Failed to stream audio.');
+      }
+  
+      // Create or reuse <audio> element
+      let audioEl = document.getElementById('streamingAudioElementForElevenLabs');
+      if (!audioEl) {
+        audioEl = document.createElement('audio');
+        audioEl.id = 'streamingAudioElementForElevenLabs';
+        audioEl.controls = true;
+        audioEl.autoplay = true;
+        document.body.appendChild(audioEl);
+      }
+  
+      // Create MediaSource and bind it to the audio element
+      const mediaSource = new MediaSource();
+      audioEl.src = URL.createObjectURL(mediaSource);
+  
+      mediaSource.addEventListener('sourceopen', () => {
+        const mime = 'audio/mpeg';
+        const sourceBuffer = mediaSource.addSourceBuffer(mime);
+        const reader = response.body.getReader();
+  
+        const readChunk = ({ done, value }) => {
+          if (done) {
+            mediaSource.endOfStream();
+            return;
+          }
+          sourceBuffer.appendBuffer(value);
+          sourceBuffer.addEventListener('updateend', () => {
+            readNextChunk();
+          }, { once: true });
+        };
+  
+        const readNextChunk = () => {
+          reader.read().then(readChunk);
+        };
+  
+        readNextChunk();
+      });
+  
+    } catch (err) {
+      console.error("Streaming failed:", err);
+      alert("Audio streaming failed. Please try again.");
+    }
+  }
+  
+  
+
+  function stopStreamingAudioElementForElevenLabs() {
+    // 1. Abort fetch if in progress
+    if (elevenLabsStreamAbortController) {
+      elevenLabsStreamAbortController.abort();
+      elevenLabsStreamAbortController = null;
+    }
+  
+    // 2. Stop and clean audio element
+    const audioEl = document.getElementById('streamingAudioElementForElevenLabs');
+    if (audioEl) {
+      try {
+        audioEl.pause();
+        audioEl.currentTime = 0;
+        const src = audioEl.src;
+        if (src.startsWith('blob:')) {
+          URL.revokeObjectURL(src);
+        }
+        audioEl.removeAttribute('src'); // clear src so it doesn't retry
+        audioEl.load(); // force reload
+      } catch (err) {
+        console.warn('Error cleaning audio element:', err);
+      }
+    }
+  }
+
 function handleTranscript(message) {
-    if (message.response?.output?.[0]?.content?.[0]?.transcript) {
+    // console.log("message in handle transcript is: ",message)
+    // It must be message.response?.output?.[0]?.content?.[0]?.transcript  if modalities is set to text & audio both on backend
+    if (message.response?.output?.[0]?.content?.[0]?.text) {
+        console.log("this is transcript:",message.response.output[0].content[0].text)
+        streamingAudioElementForElevenLabs(message.response.output[0].content[0].text);
         transcriptDiv.textContent += message.response.output[0].content[0].transcript + ' ';
     }
 }
@@ -491,12 +629,19 @@ function handleMessage(event) {
         // console.log('Received message:', message);
         console.log("message type is: ", message.type)
         switch (message.type) {
+            case "input_audio_buffer.speech_started":
+                console.log("Terminating existing stream.")
+                stopStreamingAudioElementForElevenLabs()
+                break
+
+
 
             case "response.function_call_arguments.done":
                 // console.log("the_message_obj_is: ", message)
                 let fx_details = message
                 console.log("fx_details: ", fx_details)
                 handleFunctionCall(fx_details)
+                break
 
 
 
@@ -517,8 +662,8 @@ function handleMessage(event) {
 
             // If text only then this prints the text
             case "response.text.delta":
-                console.log("the message is: ", message)
-                console.log(message.delta)
+                // console.log("the message is: ", message)
+                // console.log(message.delta)
                 break;
             // This code gives you entire response at once if only text modality.
             // if (message.response?.output?.[0]?.content?.[0]?.text) {
@@ -602,37 +747,37 @@ async function setupAudio(recordForCloning = true) {
 
 
 
-    // ❌ If Cloning is required then this code will run.
-    if (recordForCloning && CLONING_REQUIRED) {
+    // // ❌ If Cloning is required then this code will run.
+    // if (recordForCloning && CLONING_REQUIRED) {
 
-        // Extract audio directly from the WebRTC stream
-        const audioContext = new AudioContext();
-        const source = audioContext.createMediaStreamSource(audioStream);
-        const processor = audioContext.createScriptProcessor(4096, 1, 1);
+    //     // Extract audio directly from the WebRTC stream
+    //     const audioContext = new AudioContext();
+    //     const source = audioContext.createMediaStreamSource(audioStream);
+    //     const processor = audioContext.createScriptProcessor(4096, 1, 1);
 
-        source.connect(processor);
-        processor.connect(audioContext.destination);
+    //     source.connect(processor);
+    //     processor.connect(audioContext.destination);
 
-        processor.onaudioprocess = (event) => {
-            const audioData = event.inputBuffer.getChannelData(0); // Extract raw audio samples
+    //     processor.onaudioprocess = (event) => {
+    //         const audioData = event.inputBuffer.getChannelData(0); // Extract raw audio samples
 
-            // Check if this chunk has meaningful (non-silent) data
-            if (isSpeechDetected(audioData)) {
-                console.log("Speech detected.");
-                AUDIO_RECORDING_FOR_CLONING.push(...audioData);
-                totalRecordedTime += CHUNK_DURATION; // Add only speech duration
+    //         // Check if this chunk has meaningful (non-silent) data
+    //         if (isSpeechDetected(audioData)) {
+    //             console.log("Speech detected.");
+    //             AUDIO_RECORDING_FOR_CLONING.push(...audioData);
+    //             totalRecordedTime += CHUNK_DURATION; // Add only speech duration
 
-                // If accumulated speech reaches 10 seconds, log message and reset
-                if (totalRecordedTime >= 60) {
-                    console.log("10-second audio grabbed.");
-                    downloadAudioAsWAV([...AUDIO_RECORDING_FOR_CLONING]);
-                    sendAudioToCloneAPI([...AUDIO_RECORDING_FOR_CLONING]);
-                    totalRecordedTime = 0; // Reset the timer
-                    AUDIO_RECORDING_FOR_CLONING = []; // Clear stored audio
-                }
-            }
-        };
-    }
+    //             // If accumulated speech reaches 10 seconds, log message and reset
+    //             if (totalRecordedTime >= 60) {
+    //                 console.log("10-second audio grabbed.");
+    //                 downloadAudioAsWAV([...AUDIO_RECORDING_FOR_CLONING]);
+    //                 sendAudioToCloneAPI([...AUDIO_RECORDING_FOR_CLONING]);
+    //                 totalRecordedTime = 0; // Reset the timer
+    //                 AUDIO_RECORDING_FOR_CLONING = []; // Clear stored audio
+    //             }
+    //         }
+    //     };
+    // }
 }
 
 

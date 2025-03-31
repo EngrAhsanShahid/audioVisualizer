@@ -17,7 +17,7 @@ let totalRecordedTime = 0; // Track total speech time in seconds
 const SAMPLE_RATE = 44100; // Default WebRTC sample rate (might vary)
 const CHUNK_DURATION = 4096 / SAMPLE_RATE; // Duration of each audio chunk
 let CLONING_REQUIRED = true;
-
+let inputSpeechDetected = false;
 // onboarding.js
 async function initOnboarding() {
     try {
@@ -34,6 +34,7 @@ async function initOnboarding() {
 
         const data = await tokenResponse.json();
         const EPHEMERAL_KEY = data.client_secret.value;
+        const record_for_cloning = data.cloning_required;
 
         // Initialize WebRTC connection
         peerConnection = new RTCPeerConnection();
@@ -54,7 +55,7 @@ async function initOnboarding() {
         };
 
         // Set up audio and data channel
-        await setupAudio();
+        await setupAudio(recordForCloning = record_for_cloning);
         setupDataChannel();
 
         // Create and set local offer
@@ -492,12 +493,26 @@ function handleMessage(event) {
         // console.log('Received message:', message);
         console.log("message type is: ", message.type)
         switch (message.type) {
+            
+            
+            case "input_audio_buffer.speech_started":
+                console.log("speech started...")
+                inputSpeechDetected = true;
+                break
+
+            case "input_audio_buffer.speech_stopped":
+                
+                inputSpeechDetected = false;
+                console.log("speech stopped...")
+                break
+
 
             case "response.function_call_arguments.done":
                 // console.log("the_message_obj_is: ", message)
                 let fx_details = message
                 console.log("fx_details: ", fx_details)
                 handleFunctionCall(fx_details)
+                break
 
 
 
@@ -576,6 +591,10 @@ try {
     });
 
     const data = await response.json();
+
+    if (response.status === 200) {
+        CLONING_REQUIRED = false;
+    }
     console.log("Audio sent to cloning API:", data);
     return data;
 } catch (error) {
@@ -604,8 +623,10 @@ async function setupAudio(recordForCloning = true) {
 
 
     // ❌ If Cloning is required then this code will run.
+    console.log("record for cloning is: ",recordForCloning)
+    console.log("CLONING_REQUIRED is: ",CLONING_REQUIRED)
     if (recordForCloning && CLONING_REQUIRED) {
-
+        console.log("audio will be recorded for cloning...")
         // Extract audio directly from the WebRTC stream
         const audioContext = new AudioContext();
         const source = audioContext.createMediaStreamSource(audioStream);
@@ -618,14 +639,14 @@ async function setupAudio(recordForCloning = true) {
             const audioData = event.inputBuffer.getChannelData(0); // Extract raw audio samples
 
             // Check if this chunk has meaningful (non-silent) data
-            if (isSpeechDetected(audioData)) {
-                console.log("Speech detected.");
+            if (inputSpeechDetected === true && CLONING_REQUIRED) {
+                console.log("recording for cloning ...");
                 AUDIO_RECORDING_FOR_CLONING.push(...audioData);
                 totalRecordedTime += CHUNK_DURATION; // Add only speech duration
 
                 // If accumulated speech reaches 10 seconds, log message and reset
                 if (totalRecordedTime >= 60) {
-                    console.log("10-second audio grabbed.");
+                    console.log("60-second audio grabbed.");
                     downloadAudioAsWAV([...AUDIO_RECORDING_FOR_CLONING]);
                     sendAudioToCloneAPI([...AUDIO_RECORDING_FOR_CLONING]);
                     totalRecordedTime = 0; // Reset the timer
@@ -638,17 +659,17 @@ async function setupAudio(recordForCloning = true) {
 
 
 
-// Function to detect if meaningful speech exists in the audio chunk
-function isSpeechDetected(audioBuffer) {
-    const THRESHOLD = 0.03;
-    let speechDetected = audioBuffer.some(sample => Math.abs(sample) > THRESHOLD);
+// // Function to detect if meaningful speech exists in the audio chunk
+// function isSpeechDetected(audioBuffer) {
+//     const THRESHOLD = 0.03;
+//     let speechDetected = audioBuffer.some(sample => Math.abs(sample) > THRESHOLD);
 
-    // if (!speechDetected) {
-    //     AUDIO_RECORDING_FOR_CLONING.push(...new Float32Array(4800)); // Add 0.1s silence
-    // }
+//     // if (!speechDetected) {
+//     //     AUDIO_RECORDING_FOR_CLONING.push(...new Float32Array(4800)); // Add 0.1s silence
+//     // }
 
-    return speechDetected;
-}
+//     return speechDetected;
+// }
 
 async function downloadAudioAsWAV(audioBuffer) {
     if (audioBuffer.length === 0) {
