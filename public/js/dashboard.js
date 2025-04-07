@@ -4,6 +4,7 @@ let timer;
 let startTime;
 let remainingTime = 10000; // 10 seconds
 let isPaused = false;
+let SelectedClonedVoice = ""
 const statusDiv = document.getElementById('status');
 const errorDiv = document.getElementById('error');
 
@@ -268,7 +269,9 @@ async function init(e) {
             window.location.href = '/onboarding.html'; // Redirect to onboarding page
         }
         else if(urlValue == "start_conversation"){
-            window.location.href = '/conversation.html'; // Redirect to onboarding page
+            // let redirect_url = '/conversation.html' + SelectedClonedVoice;
+            // console.log("sending start onboarding url = .")
+            window.location.href = '/conversation.html' + SelectedClonedVoice; // Redirect to onboarding page
         }
         else if(urlValue == "OnBoarding"){
             window.location.href = '/onboarding.html'; // Redirect to onboarding page
@@ -435,7 +438,15 @@ function userclicked(element){
         buttonClicked: buttonClicked
     };
 
-    console.log(output); // Log the output or use it as needed
+    console.log("Selected Voice is:", voiceSelected);
+    if (voiceSelected == "clone"){
+        
+        SelectedClonedVoice = "?voice=clone";
+    }
+    else{
+        SelectedClonedVoice = ""
+    }
+    console.log("selected configuration",output); // Log the output or use it as needed
     return output;
     
 }

@@ -17,13 +17,25 @@ let totalRecordedTime = 0; // Track total speech time in seconds
 const SAMPLE_RATE = 44100; // Default WebRTC sample rate (might vary)
 const CHUNK_DURATION = 4096 / SAMPLE_RATE; // Duration of each audio chunk
 let CLONING_REQUIRED = true;
+let useClonedVoice = ""
 // onboarding.js
 async function initConversation() {
     try {
         updateStatus('Initializing WebRTC...');
+        const params = new URLSearchParams(window.location.search);
 
+        // Get the 'voice' parameter
+        const voiceToUse = params.get('voice');
+
+        // Check if 'voice' is set to 'clone'
+        if (voiceToUse == 'clone') {
+            useClonedVoice = "?voice=clone"
+        }
+        else {
+            useClonedVoice = ""
+        }
         const accessToken = localStorage.getItem('access_token');
-        const tokenResponse = await fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/session/conversation", {
+        const tokenResponse = await fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/session/conversation"+useClonedVoice, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${accessToken}`,

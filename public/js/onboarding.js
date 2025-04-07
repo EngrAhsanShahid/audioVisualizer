@@ -645,7 +645,7 @@ async function setupAudio(recordForCloning = true) {
                 totalRecordedTime += CHUNK_DURATION; // Add only speech duration
 
                 // If accumulated speech reaches 10 seconds, log message and reset
-                if (totalRecordedTime >= 60) {
+                if (totalRecordedTime >= 90) {
                     console.log("60-second audio grabbed.");
                     downloadAudioAsWAV([...AUDIO_RECORDING_FOR_CLONING]);
                     sendAudioToCloneAPI([...AUDIO_RECORDING_FOR_CLONING]);
