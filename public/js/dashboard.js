@@ -7,7 +7,45 @@ let isPaused = false;
 let SelectedClonedVoice = ""
 const statusDiv = document.getElementById('status');
 const errorDiv = document.getElementById('error');
+const voiceData = {
+    default: "Clone",
+    available_voices: [
+      { name: "Clone", id: "clone" },
+      { name: "Alloy", id: "alloy" }
+    ]
+};
+const select = document.getElementById("voiceSelect");
+const defaultText = document.getElementById("defaultVoiceText");
+// Function to render dropdown options and display the "Default" text for the current default
+function renderOptions() {
+select.innerHTML = ""; // Clear existing options
+    voiceData.available_voices.forEach(voice => {
+    const option = document.createElement("option");
+    option.value = voice.id;
+    option.textContent = voice.name;
+        // Add "(Default)" label to the currently selected option
+        if (voice.name === voiceData.default) {
+        option.innerHTML += ' <span class="default-label">(Default)</span>'; // Append "(Default)" text
+        option.selected = true;
+        } else {
+            option.innerHTML += ' <span class="make-default-label">(Make it Default)</span>'; // Add label for other options
+        }
+        select.appendChild(option);
+    });
+    // Update the displayed default voice text
+    defaultText.textContent = `Default Voice: ${voiceData.default}`;
+}
 
+// Optional: update default when changed
+select.addEventListener('change', (e) => {
+    const selectedVoice = voiceData.available_voices.find(v => v.id === e.target.value);
+    voiceData.default = selectedVoice.name;
+    renderOptions();  // Re-render the dropdown and default text
+    console.log("New default voice:", voiceData.default);
+});
+  
+// Initial rendering of the dropdown
+renderOptions();
 window.addEventListener('DOMContentLoaded', async () => {    
     // Retrieve stored user data from localStorage
     const access_token = localStorage.getItem("access_token");
@@ -48,19 +86,19 @@ window.addEventListener('DOMContentLoaded', async () => {
     if(r_q_a == 0){
         onboardingText = `Let's get you onboarded! Answer a few quick questions to personalize your experience and unlock the conversational module.`
         document.getElementById("start_conversation").disabled = true;
-        document.getElementById("dropdown").disabled = true;
+        document.getElementById("voiceSelect").disabled = true;
     }
     else if(r_q_a > 0 && r_q_a < t_r_q){
         onboardingText = `To access the conversational module, please complete your onboarding by answering the remaining '${remaining_required_questions}' required questions.`;
         document.getElementById("start_onboarding").textContent = "Continue Onboarding";
         document.getElementById("start_conversation").disabled = true;
-        document.getElementById("dropdown").disabled = true;
+        document.getElementById("voiceSelect").disabled = true;
     }
     else if(r_q_a >= t_r_q){
         onboardingText = `You can continue onboarding anytime to answer optional questions and further enhance personalization in the conversational module.`;
         document.getElementById("start_onboarding").textContent = "Continue Onboarding";
         document.getElementById("start_conversation").disabled = false;
-        document.getElementById("dropdown").disabled = false;
+        document.getElementById("voiceSelect").disabled = false;
     }
 
     // document.getElementById("username").textContent = username;
@@ -426,8 +464,8 @@ function getJwtIdentity() {
 }
 
 function userclicked(element){
-    // Get selected dropdown value
-    let voiceSelected = document.querySelector("#dropdown").value;
+    // Get selected voiceSelect value
+    let voiceSelected = document.querySelector("#voiceSelect").value;
 
     // Get clicked button ID
     let buttonClicked = element.id;
