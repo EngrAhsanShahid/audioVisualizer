@@ -442,6 +442,11 @@ async function streamingAudioElementForElevenLabs(text, retryAttempt = 0) {
         audioEl.controls = true;
         audioEl.autoplay = true;
         document.body.appendChild(audioEl);
+
+        // Add event listener for visualization
+        audioEl.addEventListener('play', () => {
+            processElevenLabsAudioForVisualization(audioEl);
+        });        
       }
   
       // Create MediaSource and bind it to the audio element
@@ -486,11 +491,18 @@ async function streamingAudioElementForElevenLabs(text, retryAttempt = 0) {
       elevenLabsStreamAbortController = null;
     }
   
+    // Clean up audio context connections
+    if (analyserServer) {
+        analyserServer.disconnect();
+    }
+
     // 2. Stop and clean audio element
     const audioEl = document.getElementById('streamingAudioElementForElevenLabs');
     if (audioEl) {
       try {
         audioEl.pause();
+        audioEl.src = '';
+        audioEl.load();
         audioEl.currentTime = 0;
         const src = audioEl.src;
         if (src.startsWith('blob:')) {
@@ -1095,6 +1107,30 @@ function setupCanvas() {
     //     canvas.width = canvas.clientWidth || 800;
     //     canvas.height = canvas.clientHeight || 300;
     // }, 100);
+}
+
+function processElevenLabsAudioForVisualization(audioElement) {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    
+    // Create an audio source from the audio element
+    const source = audioContext.createMediaElementSource(audioElement);
+    
+    // Set up the analyzer for visualization
+    analyserServer = audioContext.createAnalyser();
+    analyserServer.fftSize = 1024;
+    
+    // Connect the audio source to analyzer and destination
+    source.connect(analyserServer);
+    source.connect(audioContext.destination);
+    
+    // Initialize data array for visualization
+    const bufferLength = analyserServer.fftSize;
+    dataArrayServer = new Uint8Array(bufferLength);
+    
+    // Start the visualization
+    drawWaveServer();
 }
 // function startButton() {
 //     const statusElement = document.getElementById("status");

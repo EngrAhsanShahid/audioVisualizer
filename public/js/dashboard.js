@@ -8,7 +8,7 @@ let SelectedClonedVoice = ""
 const statusDiv = document.getElementById('status');
 const errorDiv = document.getElementById('error');
 const voiceData = {
-    default: "Clone",
+    default: localStorage.getItem("defaultVoice") || "Clone", // Load from localStorage or fallback
     available_voices: [
       { name: "Clone", id: "clone" },
       { name: "Alloy", id: "alloy" }
@@ -40,6 +40,7 @@ select.innerHTML = ""; // Clear existing options
 select.addEventListener('change', (e) => {
     const selectedVoice = voiceData.available_voices.find(v => v.id === e.target.value);
     voiceData.default = selectedVoice.name;
+    localStorage.setItem("defaultVoice", selectedVoice.name); // Save to localStorage
     renderOptions();  // Re-render the dropdown and default text
     console.log("New default voice:", voiceData.default);
 });
