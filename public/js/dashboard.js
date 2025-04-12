@@ -7,47 +7,134 @@ let isPaused = false;
 let SelectedClonedVoice = ""
 const statusDiv = document.getElementById('status');
 const errorDiv = document.getElementById('error');
-const voiceData = {
-    default: localStorage.getItem("defaultVoice") || "Clone", // Load from localStorage or fallback
-    available_voices: [
-      { name: "Clone", id: "clone" },
-      { name: "Alloy", id: "alloy" }
-    ]
+// Replace the existing voiceData declaration with this
+let voiceData = {
+    default: null, // Will be populated from API
+    available_voices: [] // Will be populated from API
 };
 const select = document.getElementById("voiceSelect");
 const defaultText = document.getElementById("defaultVoiceText");
-// Function to render dropdown options and display the "Default" text for the current default
-function renderOptions() {
-select.innerHTML = ""; // Clear existing options
-    voiceData.available_voices.forEach(voice => {
-    const option = document.createElement("option");
-    option.value = voice.id;
-    option.textContent = voice.name;
-        // Add "(Default)" label to the currently selected option
-        if (voice.name === voiceData.default) {
-        option.innerHTML += ' <span class="default-label">(Default)</span>'; // Append "(Default)" text
-        option.selected = true;
-        } else {
-            option.innerHTML += ' <span class="make-default-label">(Make it Default)</span>'; // Add label for other options
+// Function to fetch available voices from API
+async function fetchAvailableVoices() {
+    try {
+        const response = await fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/voice/get_available_voices", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch available voices");
         }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error fetching voices:", error);
+        showError('Error fetching available voices');
+        return null;
+    }
+}
+
+// Function to set default voice via API
+async function setDefaultVoice(voiceId) {
+    try {
+        const response = await fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/voice/set_default_voice", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ voice_id: voiceId })
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to set default voice");
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error setting default voice:", error);
+        showError('Error setting default voice');
+        return null;
+    }
+}
+
+
+// Updated renderOptions function
+async function renderOptions() {
+    const voicesResponse = await fetchAvailableVoices();
+    if (!voicesResponse || !voicesResponse.success) {
+        return;
+    }
+
+    // Update voiceData with API response
+    voiceData.available_voices = voicesResponse.voices.map(voice => ({
+        name: voice.name,
+        id: voice.id,
+        type: voice.type,
+        isDefault: voice.default || false
+    }));
+
+    // Find the default voice
+    const defaultVoice = voicesResponse.voices.find(voice => voice.default) || 
+                         voicesResponse.voices.find(voice => voice.id === "alloy") || 
+                         voicesResponse.voices[0];
+    
+    voiceData.default = defaultVoice ? defaultVoice.name : "Alloy";
+
+    // Clear and rebuild the select options
+    select.innerHTML = "";
+    voiceData.available_voices.forEach(voice => {
+        const option = document.createElement("option");
+        option.value = voice.id;
+        option.textContent = voice.name;
+        
+        if (voice.isDefault || voice.name === voiceData.default) {
+            option.innerHTML += ' <span class="default-label">(Default)</span>';
+            option.selected = true;
+            voiceData.default = voice.name; // Ensure consistency
+            localStorage.setItem("defaultVoice", voice.name);
+        } else {
+            option.innerHTML += ' <span class="make-default-label">(Make it Default)</span>';
+        }
+        
         select.appendChild(option);
     });
+
     // Update the displayed default voice text
     defaultText.textContent = `Default Voice: ${voiceData.default}`;
 }
 
-// Optional: update default when changed
-select.addEventListener('change', (e) => {
-    const selectedVoice = voiceData.available_voices.find(v => v.id === e.target.value);
-    voiceData.default = selectedVoice.name;
-    localStorage.setItem("defaultVoice", selectedVoice.name); // Save to localStorage
-    renderOptions();  // Re-render the dropdown and default text
-    console.log("New default voice:", voiceData.default);
+// Updated select event listener
+select.addEventListener('change', async (e) => {
+    const voiceId = e.target.value;
+    const selectedVoice = voiceData.available_voices.find(v => v.id === voiceId);
+    
+    if (!selectedVoice) return;
+
+    // Call API to set default voice
+    const result = await setDefaultVoice(voiceId);
+    
+    if (result && result.success) {
+        // Update local state only if API call succeeded
+        voiceData.default = selectedVoice.name;
+        localStorage.setItem("defaultVoice", selectedVoice.name);
+        renderOptions();  // Re-render the dropdown and default text
+        console.log("New default voice:", voiceData.default);
+    } else {
+        // Revert the selection if API call failed
+        renderOptions();
+    }
 });
   
-// Initial rendering of the dropdown
-renderOptions();
+
 window.addEventListener('DOMContentLoaded', async () => {    
+    // After authentication succeeds, render the voice options
+    await renderOptions();
     // Retrieve stored user data from localStorage
     const access_token = localStorage.getItem("access_token");
     // Check if user data exists and contains the correct access_token
@@ -308,9 +395,13 @@ async function init(e) {
             window.location.href = '/onboarding.html'; // Redirect to onboarding page
         }
         else if(urlValue == "start_conversation"){
-            // let redirect_url = '/conversation.html' + SelectedClonedVoice;
-            // console.log("sending start onboarding url = .")
-            window.location.href = '/conversation.html' + SelectedClonedVoice; // Redirect to onboarding page
+            // Get selected voice
+            const voiceSelected = document.querySelector("#voiceSelect").value;
+            const selectedVoice = voiceData.available_voices.find(v => v.id === voiceSelected);
+            
+            // Only add query parameter if voice type is 'clone'
+            const queryParam = selectedVoice && selectedVoice.type === "clone" ? "?voice=clone" : "";
+            window.location.href = `/conversation.html${queryParam}`;
         }
         else if(urlValue == "OnBoarding"){
             window.location.href = '/onboarding.html'; // Redirect to onboarding page
@@ -478,16 +569,17 @@ function userclicked(element){
     };
 
     console.log("Selected Voice is:", voiceSelected);
-    if (voiceSelected == "clone"){
-        
+    
+    // Find the selected voice to check its type
+    const selectedVoice = voiceData.available_voices.find(v => v.id === voiceSelected);
+    if (selectedVoice && selectedVoice.type === "clone") {
         SelectedClonedVoice = "?voice=clone";
-    }
-    else{
+    } else {
         SelectedClonedVoice = ""
     }
-    console.log("selected configuration",output); // Log the output or use it as needed
-    return output;
     
+    console.log("selected configuration", output);
+    return output;
 }
 
 
