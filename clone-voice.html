@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clone Voice</title>
+    <link rel="stylesheet" href="/public/css/clone-voice.css">
+    <link rel="icon" href="/static/logo.svg" type="image/x-icon">
+</head>
+<body>
+    <div class="clone-voice-container">
+        <h1 class="onboarding-heading">Clone Voice</h1>
+        
+        <div class="option-selector">
+            <button id="uploadOption" class="option-btn active">Upload Audio</button>
+            <button id="recordOption" class="option-btn">Record Voice</button>
+        </div>
+        
+        <!-- Upload Section -->
+        <div id="uploadSection" class="section active">
+            <input type="file" id="audioUpload" accept=".mp3,.wav,.ogg,.webm" hidden>
+            <label for="audioUpload" class="upload-btn">Choose Audio File</label>
+            <div id="fileName">No file selected</div>
+            <div class="requirements">
+                <p>Requirements:</p>
+                <ul>
+                    <li>Formats: MP3, WAV, OGG, WEBM</li>
+                    <li>Duration: 2-5 minutes</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Record Section -->
+        <div id="recordSection" class="section">
+            <div class="text-to-read">
+                <p>Please read this paragraph aloud in your normal voice. Speak clearly and at a natural pace.</p>
+                <p class="paragragh-text">“Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, 
+                  nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies 
+                  nisl nisl eget nisl. Nullam auctor, nisl eget ultricies tincidunt, nisl 
+                  nisl aliquam nisl, eget ultricies nisl nisl eget nisl.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb”</p>
+            </div>
+            
+            <div class="recording-controls">
+                <button id="recordBtn" class="record-btn">Start Recording</button>
+                <div id="timer">00:00</div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button id="cloneBtn" class="clone-btn" disabled>Clone Voice</button>
+        </div>
+        
+        <div id="status"></div>
+        <div id="error"></div>
+    </div>
+
+    <script src="/public/js/clone-voice.js"></script>
+</body>
+</html>

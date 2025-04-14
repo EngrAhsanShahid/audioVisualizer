@@ -7,6 +7,7 @@ let isPaused = false;
 let SelectedClonedVoice = ""
 const statusDiv = document.getElementById('status');
 const errorDiv = document.getElementById('error');
+
 // Replace the existing voiceData declaration with this
 let voiceData = {
     default: null, // Will be populated from API
@@ -64,7 +65,6 @@ async function setDefaultVoice(voiceId) {
 }
 
 
-// Updated renderOptions function
 async function renderOptions() {
     const voicesResponse = await fetchAvailableVoices();
     if (!voicesResponse || !voicesResponse.success) {
@@ -91,15 +91,13 @@ async function renderOptions() {
     voiceData.available_voices.forEach(voice => {
         const option = document.createElement("option");
         option.value = voice.id;
-        option.textContent = voice.name;
+        // Use consistent label length
+        option.textContent = voice.name + (voice.isDefault ? " (Default)" : "");
         
         if (voice.isDefault || voice.name === voiceData.default) {
-            option.innerHTML += ' <span class="default-label">(Default)</span>';
             option.selected = true;
-            voiceData.default = voice.name; // Ensure consistency
+            voiceData.default = voice.name;
             localStorage.setItem("defaultVoice", voice.name);
-        } else {
-            option.innerHTML += ' <span class="make-default-label">(Make it Default)</span>';
         }
         
         select.appendChild(option);
@@ -588,3 +586,16 @@ document.querySelectorAll(".btn").forEach(button => {
         button.classList.add("long-text");
     }
 });
+
+function redirectToCloneVoice() {
+    // Get the main container
+    const container = document.querySelector('body');
+    
+    // Add fade-out class
+    container.classList.add('fade-out');
+    
+    // Redirect after animation completes
+    setTimeout(() => {
+        window.location.href = 'clone-voice.html';
+    }, 500); // Match this duration with the animation time
+}

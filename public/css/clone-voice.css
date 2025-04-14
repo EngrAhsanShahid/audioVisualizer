@@ -1,0 +1,148 @@
+body {
+    font-family: 'Nunito', sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    background-color: #f8f9fa;
+    opacity: 0;
+    transition: opacity 1s ease-in;    
+}
+
+body.fade-in {
+    opacity: 1;
+}
+
+.clone-voice-container {
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    transition: opacity 0.5s ease; /* Add this line */
+    opacity: 1; /* Add this line */
+    /* ... keep your existing styles ... */    
+}
+
+h1 {
+    color: #2e4f2e;
+    margin-bottom: 20px;
+}
+
+.option-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.option-btn {
+    padding: 10px 15px;
+    background-color: #e0e0e0;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+.option-btn.active {
+    background-color: #a8c9ab;
+    color: white;
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+.upload-btn {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #a8c9ab;
+    color: white;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.requirements {
+    text-align: left;
+    margin-top: 20px;
+}
+
+.text-to-read {
+    background-color: #f0f8ff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.recording-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.record-btn {
+    padding: 10px 15px;
+    background-color: #a8c9ab;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+.record-btn.recording {
+    background-color: #e74c3c;
+}
+
+.clone-btn {
+    padding: 10px 15px;
+    background-color: #a8c9ab;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.clone-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+#status, #error {
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+#error {
+    color: #e74c3c;
+}
+
+.paragragh-text {
+    /* Limit to 40 characters per line */
+    max-width: 40ch;
+    /* Allow text to wrap naturally */
+    white-space: normal;
+    word-wrap: break-word;
+    /* Make container scrollable if content overflows vertically */
+    overflow-y: auto;
+    /* Visual styling */
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    line-height: 1.5;
+    /* Ensure proper rendering of quotation marks */
+    quotes: "“" "”";
+    height: 200px;
+  }
+  
+  /* For mobile responsiveness */
+  @media (max-width: 600px) {
+    .paragraph-text {
+      max-width: 100%;
+      font-size: 14px;
+    }
+  }

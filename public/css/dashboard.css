@@ -524,6 +524,15 @@ canvas {
   border: none;
 }
 
+/* Add this to dashboard.css */
+.fade-out {
+  animation: fadeOut 0.5s ease forwards;
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
 
 /* .waves-container {
   position: fixed;
