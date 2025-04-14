@@ -14,7 +14,7 @@ let voiceData = {
     available_voices: [] // Will be populated from API
 };
 const select = document.getElementById("voiceSelect");
-const defaultText = document.getElementById("defaultVoiceText");
+// const defaultText = document.getElementById("defaultVoiceText");
 // Function to fetch available voices from API
 async function fetchAvailableVoices() {
     try {
@@ -86,48 +86,115 @@ async function renderOptions() {
     
     voiceData.default = defaultVoice ? defaultVoice.name : "Alloy";
 
-    // Clear and rebuild the select options
+    // Get the custom select container
+    const customSelect = document.querySelector('.custom-select');
+    customSelect.innerHTML = `
+        <label for="voiceSelect">Selected Voice: </label>
+        <div class="select-box">
+            <div class="select-selected" id="selected-voice">
+                ${voiceData.default}
+            </div>
+            <div class="select-items" id="voice-options"></div>
+        </div>
+        <select id="voiceSelect" style="display: none;"></select>
+    `;
+
+    // Create hidden select options (for form submission if needed)
+    const select = document.getElementById("voiceSelect");
     select.innerHTML = "";
+    
+    // Create custom dropdown options
+    const voiceOptions = document.getElementById("voice-options");
+    voiceOptions.innerHTML = "";
+    
+    let defaultSelected = false;
     voiceData.available_voices.forEach(voice => {
+        // Add to hidden select
         const option = document.createElement("option");
         option.value = voice.id;
-        // Use consistent label length
-        option.textContent = voice.name + (voice.isDefault ? " (Default)" : "");
-        
+        option.textContent = voice.name;
         if (voice.isDefault || voice.name === voiceData.default) {
             option.selected = true;
-            voiceData.default = voice.name;
-            localStorage.setItem("defaultVoice", voice.name);
+            defaultSelected = true;
+        }
+        select.appendChild(option);
+        
+        // Add to custom dropdown
+        const voiceItem = document.createElement("div");
+        voiceItem.className = "select-item";
+        voiceItem.dataset.value = voice.id;
+        
+        if (voice.isDefault || (!defaultSelected && voice.name === voiceData.default)) {
+            voiceItem.innerHTML = `
+                <span>${voice.name}</span>
+                <span class="default-text">Default</span>
+            `;
+            document.getElementById("selected-voice").textContent = voice.name;
+            defaultSelected = true;
+        } else {
+            voiceItem.innerHTML = `
+                <span>${voice.name}</span>
+                <button class="make-default-btn" data-id="${voice.id}">Make Default</button>
+            `;
         }
         
-        select.appendChild(option);
+        voiceOptions.appendChild(voiceItem);
     });
 
     // Update the displayed default voice text
-    defaultText.textContent = `Default Voice: ${voiceData.default}`;
+    // defaultText.textContent = `Default Voice: ${voiceData.default}`;
+
+    // Add event listeners
+    const selectedVoiceElement = document.getElementById("selected-voice");
+    selectedVoiceElement.addEventListener("click", function(e) {
+        e.stopPropagation();
+        voiceOptions.classList.toggle("show");
+        selectedVoiceElement.classList.toggle("active");
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", function(e) {
+        if (!e.target.closest('.select-box')) {
+            voiceOptions.classList.remove("show");
+            selectedVoiceElement.classList.remove("active");
+        }
+    });
+
+    // Handle make default button clicks
+    document.querySelectorAll(".make-default-btn").forEach(btn => {
+        btn.addEventListener("click", async (e) => {
+            e.stopPropagation();
+            const voiceId = btn.dataset.id;
+            const selectedVoice = voiceData.available_voices.find(v => v.id === voiceId);
+            
+            if (!selectedVoice) return;
+
+            // Call API to set default voice
+            const result = await setDefaultVoice(voiceId);
+            
+            if (result && result.success) {
+                // Update UI
+                renderOptions();
+            }
+        });
+    });
+
+    // Handle selecting a voice (without making it default)
+    document.querySelectorAll(".select-item").forEach(item => {
+        item.addEventListener("click", function(e) {
+            if (!e.target.classList.contains('make-default-btn')) {
+                const voiceId = item.dataset.value;
+                const voice = voiceData.available_voices.find(v => v.id === voiceId);
+                if (voice) {
+                    selectedVoiceElement.textContent = voice.name;
+                    document.getElementById("voiceSelect").value = voiceId;
+                    voiceOptions.classList.remove("show");
+                    selectedVoiceElement.classList.remove("active");
+                }
+            }
+        });
+    });
 }
-
-// Updated select event listener
-select.addEventListener('change', async (e) => {
-    const voiceId = e.target.value;
-    const selectedVoice = voiceData.available_voices.find(v => v.id === voiceId);
-    
-    if (!selectedVoice) return;
-
-    // Call API to set default voice
-    const result = await setDefaultVoice(voiceId);
-    
-    if (result && result.success) {
-        // Update local state only if API call succeeded
-        voiceData.default = selectedVoice.name;
-        localStorage.setItem("defaultVoice", selectedVoice.name);
-        renderOptions();  // Re-render the dropdown and default text
-        console.log("New default voice:", voiceData.default);
-    } else {
-        // Revert the selection if API call failed
-        renderOptions();
-    }
-});
   
 
 window.addEventListener('DOMContentLoaded', async () => {    
