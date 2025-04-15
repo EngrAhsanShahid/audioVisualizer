@@ -11,87 +11,65 @@
     <div class="clone-voice-container">
         <h1 class="onboarding-heading">Clone Voice</h1>
         
-        <div class="option-selector">
-            <button id="uploadOption" class="option-btn active">Upload Audio</button>
-            <button id="recordOption" class="option-btn">Record Voice</button>
-        </div>
-        
-        <!-- Upload Section -->
-        <div id="uploadSection" class="section active">
-            <input type="file" id="audioUpload" accept=".mp3,.wav,.ogg,.webm" hidden>
-            <label for="audioUpload" class="upload-btn">Choose Audio File</label>
-            <div id="fileName">No file selected</div>
-            <div class="requirements">
-                <p>Requirements:</p>
+        <!-- Main Upload Box -->
+        <div id="uploadBox" class="main-box">
+            <div class="upload-instructions">
                 <ul>
-                    <li>Formats: MP3, WAV, OGG, WEBM</li>
-                    <li>Duration: 2-5 minutes</li>
+                    <li>Avoid noisy environments</li>
+                    <li>Background sounds interfere with recording quality results.</li>
+                    <li>Audio length is in between 45 Seconds to 5 mintues.</li>
                 </ul>
             </div>
-        </div>
-        
-        <!-- Record Section -->
-        <div id="recordSection" class="section">
-            <div class="text-to-read">
-                <p>Please read this paragraph aloud in your normal voice. Speak clearly and at a natural pace.</p>
-                <p class="paragragh-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, nisl nisl aliquam nisl.
-
-                  Vivamus euismod, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.
-                  
-                  Phasellus euismod, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.
-                  
-                  Curabitur euismod, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.
-                  
-                  Sed euismod, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.
-                  
-                  Donec euismod, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.
-                  
-                  Fusce euismod, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.
-                  
-                  Aenean euismod, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.
-                  
-                  Pellentesque euismod, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.
-                  
-                  Maecenas euismod, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.
-                  
-                  [Continuing this pattern...]
-                  
-                  Proin euismod, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.
-                  
-                  Etiam euismod, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.
-                  
-                  Aliquam euismod, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.
-                  
-                  Vestibulum euismod, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.
-                  
-                  Mauris euismod, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.
-                  
-                  [Continuing until 200 paragraphs...]
-                  
-                  Finibus euismod, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.
-                  
-                  Ultricies euismod, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.
-                  
-                  Bonorum euismod, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.
-                  
-                  Malorum euismod, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.
-                  
-                  [Final paragraph...]
-                  Temporibus euismod, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl</p>
+            <input type="file" id="audioUpload" accept=".mp3,.wav,.ogg,.webm" hidden>
+            <label for="audioUpload" class="upload-area">
+                <div class="upload-icon">📁</div>
+                <p>Click to upload</p>
+                <p class="small-text">Audio files, up to 10MB each</p>
+            </label>
+            <div id="fileName" class="file-name">No file selected</div>
+           
+            <div class="divider">
+                <span>or</span>
             </div>
             
-            <div class="recording-controls">
-                <button id="recordBtn" class="record-btn">Start Recording</button>
-                <div id="timer">00:00</div>
+            <button id="startRecordBtn" class="record-option-btn">
+                <span class="record-icon">🎤</span> Record your voice
+            </button>
+        </div>
+        
+        <!-- Record Screen (hidden initially) -->
+        <div id="recordScreen" class="record-screen" style="display:none;">
+            <div class="text-to-read">
+                <p>Please read this paragraph aloud in your normal voice:</p>
+                <div class="paragraph-text">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula. Donec lobortis risus a elit. Etiam tempor. Ut ullamcorper, ligula eu tempor congue, eros est euismod turpis, id tincidunt sapien risus a quam.
+
+Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra.
+
+Proin nec tellus eu libero sollicitudin posuere. Sed nonummy lacinia eros. Nullam arcu ante, malesuada vel, aliquam et, tincidunt ut, lacus. Suspendisse potenti. Nunc urna. Nullam lobortis, turpis lobortis placerat vehicula, ipsum lacus bibendum dolor, sit amet pretium odio magna eget risus.
+
+Fusce pharetra convallis urna. Quisque ullamcorper placerat ipsum. Cras nibh. Morbi vel justo vitae lacus tincidunt ultrices. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. In hac habitasse platea dictumst. Integer tempus convallis augue. Etiam facilisis. Nunc elementum fermentum wisi. Aenean placerat.
+                </div>
             </div>
+            
+            <div class="recording-container">
+                <div class="waveform" id="waveform"></div>
+                <div class="recording-controls">
+                    <button id="recordBtn" class="record-btn">Start Recording</button>
+                    <div id="timer">00:00</div>
+                </div>
+            </div>
+            
+            <button id="backToUploadBtn" class="back-btn">Back to Upload</button>
         </div>
         
         <div class="action-buttons">
             <button id="cloneBtn" class="clone-btn" disabled>Clone Voice</button>
         </div>
-        
         <div id="status"></div>
-        <div id="error"></div>
+        <div id="error"></div>         
     </div>
 
     <script src="/public/js/clone-voice.js"></script>

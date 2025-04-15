@@ -2,9 +2,11 @@ body {
     font-family: 'Nunito', sans-serif;
     margin: 0;
     padding: 20px;
+    min-height: 100vh;
     display: flex;
-    justify-content: center;
-    background-color: #f8f9fa;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(to bottom right, #F5F5DC, #FAF9F6);
     opacity: 0;
     transition: opacity 1s ease-in;    
 }
@@ -17,9 +19,8 @@ body.fade-in {
     width: 100%;
     max-width: 600px;
     text-align: center;
-    transition: opacity 0.5s ease; /* Add this line */
-    opacity: 1; /* Add this line */
-    /* ... keep your existing styles ... */    
+    transition: opacity 0.5s ease;
+    opacity: 1;
 }
 
 h1 {
@@ -27,53 +28,149 @@ h1 {
     margin-bottom: 20px;
 }
 
-.option-selector {
-    display: flex;
-    gap: 10px;
+/* Main Box */
+.main-box {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
+    /* margin-top: 16%; */
 }
 
-.option-btn {
-    padding: 10px 15px;
-    background-color: #e0e0e0;
-    border: none;
-    border-radius: 30px;
+/* Upload Section */
+.upload-instructions {
+    background: #f0f8ff;
+    padding: 1%;
+    border-radius: 8px;
+    margin-bottom: 2%;
+    text-align: left;
+}
+
+.upload-instructions > ul > li{
+    padding: 1%;
+}
+.upload-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #a8c9ab;
+    border-radius: 8px;
+    padding: 30px;
+    margin-bottom: 15px;
     cursor: pointer;
+    transition: background 0.2s;
 }
 
-.option-btn.active {
-    background-color: #a8c9ab;
-    color: white;
+.upload-area:hover {
+    background: #f0f8ff;
 }
 
-.section {
-    display: none;
-}
-
-.section.active {
-    display: block;
-}
-
-.upload-btn {
-    display: inline-block;
-    padding: 10px 15px;
-    background-color: #a8c9ab;
-    color: white;
-    border-radius: 30px;
-    cursor: pointer;
+.upload-icon {
+    font-size: 40px;
     margin-bottom: 10px;
 }
 
-.requirements {
-    text-align: left;
-    margin-top: 20px;
+.small-text {
+    font-size: 12px;
+    color: #666;
+}
+
+.file-name {
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+/* Divider */
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    color: #666;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #ddd;
+}
+
+.divider span {
+    padding: 0 10px;
+}
+
+/* Record Option Button */
+.record-option-btn {
+
+    font-size: 16px;
+    /* width: 60vw; */
+    /* max-width: 300px; */
+
+    width: 100%;
+    padding: 15px;
+    /* background-color: #f0f8ff; */
+    background-color: #a8c9ab;
+    /* border: 2px solid #a8c9ab; */
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    /* color: #2e4f2e; */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.2s;
+}
+
+.record-option-btn:hover {
+    background-color: #e0f0e0;
+}
+
+.record-icon {
+    font-size: 20px;
+}
+
+/* Record Screen */
+.record-screen {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }
 
 .text-to-read {
-    background-color: #f0f8ff;
-    padding: 15px;
-    border-radius: 8px;
+    /* text-align: left; */
     margin-bottom: 20px;
+}
+
+.recording-container {
+    margin-top: 20px;
+}
+
+.waveform {
+    height: 80px;
+    /* background: #f0f8ff; */
+    border-radius: 8px;
+    margin-bottom: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.waveform::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #a8c9ab;
+    transform: translateY(-50%);
 }
 
 .recording-controls {
@@ -81,16 +178,34 @@ h1 {
     justify-content: center;
     align-items: center;
     gap: 15px;
-    margin-bottom: 20px;
 }
 
-.record-btn {
-    padding: 10px 15px;
-    background-color: #a8c9ab;
-    color: white;
+.paragraph-text {
+    max-width: 100%;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-y: auto;
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    line-height: 1.5;
+    height: 200px;
+    text-align: left;
+}
+
+/* Buttons */
+.record-btn, .clone-btn, .back-btn {
+    padding: 12px 25px;
     border: none;
     border-radius: 30px;
     cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.record-btn {
+    background-color: #a8c9ab;
+    color: white;
 }
 
 .record-btn.recording {
@@ -98,13 +213,8 @@ h1 {
 }
 
 .clone-btn {
-    padding: 10px 15px;
-    background-color: #a8c9ab;
+    background-color: #2e4f2e;
     color: white;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    margin-top: 20px;
 }
 
 .clone-btn:disabled {
@@ -112,6 +222,20 @@ h1 {
     cursor: not-allowed;
 }
 
+.back-btn {
+    background-color: #e0e0e0;
+    color: #333;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.action-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Status and Error */
 #status, #error {
     margin-top: 15px;
     font-weight: bold;
@@ -121,28 +245,17 @@ h1 {
     color: #e74c3c;
 }
 
-.paragragh-text {
-    /* Limit to 40 characters per line */
-    max-width: 40ch;
-    /* Allow text to wrap naturally */
-    white-space: normal;
-    word-wrap: break-word;
-    /* Make container scrollable if content overflows vertically */
-    overflow-y: auto;
-    /* Visual styling */
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    line-height: 1.5;
-    /* Ensure proper rendering of quotation marks */
-    quotes: "“" "”";
-    height: 200px;
-  }
-  
-  /* For mobile responsiveness */
-  @media (max-width: 600px) {
-    .paragraph-text {
-      max-width: 100%;
-      font-size: 14px;
+/* For mobile responsiveness */
+@media (max-width: 600px) {
+    .main-box, .record-screen {
+        padding: 20px;
     }
-  }
+    
+    .upload-area {
+        padding: 20px;
+    }
+    
+    .paragraph-text {
+        height: 150px;
+    }
+}
