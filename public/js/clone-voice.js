@@ -11,6 +11,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const recordingControls = document.getElementById('recordingControls');
         const trashBtn = document.getElementById('trashBtn');
 
+        const uploadPreviewScreen = document.getElementById('uploadPreviewScreen');
+        const backToUploadBtnFromPreview = document.getElementById('backToUploadBtnFromPreview');
+        const previewAudioPlayer = document.getElementById('previewAudioPlayer');
+        const previewFileName = document.getElementById('previewFileName');
+        const trashUploadBtn = document.getElementById('trashUploadBtn');        
         // DOM Elements
         const uploadBox = document.getElementById('uploadBox');
         const recordScreen = document.getElementById('recordScreen');
@@ -36,21 +41,42 @@ document.addEventListener('DOMContentLoaded', function() {
         let hasUploadedFile = false;
         let isRecording = false;
         
-        // Switch to record screen
-        startRecordBtn.addEventListener('click', () => {
+        // Switch to record screen with fade effect
+        startRecordBtn.addEventListener('click', async () => {
+            // Fade out current screen
+            document.body.classList.add('fade-out');
+            
+            // Wait for fade out to complete
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Switch screens
             uploadBox.style.display = 'none';
             recordScreen.style.display = 'block';
+            
+            // Fade in new screen
+            document.body.classList.remove('fade-out');
+            
+            // Reset UI elements
             recordBtn.textContent = 'Start Recording';
             waveform.style.display = 'block';
             recordingControls.style.display = 'flex';
             audioPlayerContainer.style.display = 'none';
         });
         
-        // Update the backToUploadBtn handler to reset everything
-        backToUploadBtn.addEventListener('click', () => {
+        // Back to upload screen with fade effect
+        backToUploadBtn.addEventListener('click', async () => {
+            // Fade out current screen
+            document.body.classList.add('fade-out');
+            
+            // Wait for fade out to complete
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Switch screens
             recordScreen.style.display = 'none';
             uploadBox.style.display = 'block';
-            cloneBtn.disabled = true;
+            
+            // Fade in new screen
+            document.body.classList.remove('fade-out');
             
             // Reset recording state
             if (isRecording) {
@@ -65,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
             audioPlayer.src = '';
             timer.textContent = '00:00';
             seconds = 0;
+            cloneBtn.disabled = true;
         });
         
         backToDashboardBtn.addEventListener('click', () => {
@@ -96,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (!validTypes.includes(file.type) && !validExtensions.includes(fileExt)) {
                 showError('Invalid file type. Please upload an audio file (MP3, WAV, OGG, WEBM).');
+                cloneBtn.disabled = true;
                 return;
             }
             
@@ -103,17 +131,20 @@ document.addEventListener('DOMContentLoaded', function() {
             audio.src = URL.createObjectURL(file);
             audio.onloadedmetadata = function() {
                 const duration = audio.duration;
-                if (duration < 45 || duration > 300) {  // Changed from 120 to 45
+                if (duration < 45 || duration > 300) {
                     showError('Audio must be between 45 seconds and 5 minutes long.');
                     cloneBtn.disabled = true;
                 } else {
                     clearError();
-                    cloneBtn.disabled = false;
+                    hasUploadedFile = true;
+                    showUploadPreview(file);
+                    cloneBtn.disabled = false; // Explicitly enable the button
                 }
             };
             
             audio.onerror = function() {
                 showError('The selected file is not a valid audio file.');
+                cloneBtn.disabled = true;
             };
         }
         
@@ -390,5 +421,70 @@ document.addEventListener('DOMContentLoaded', function() {
         function clearError() {
             error.textContent = '';
         }
+
+        async function showUploadPreview(file) {
+            // Fade out current screen
+            document.body.classList.add('fade-out');
+            
+            // Wait for fade out to complete
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Switch screens
+            uploadBox.style.display = 'none';
+            uploadPreviewScreen.style.display = 'block';
+            
+            // Fade in new screen
+            document.body.classList.remove('fade-out');
+            
+            // Set up preview
+            previewFileName.textContent = file.name;
+            previewAudioPlayer.src = URL.createObjectURL(file);
+            hasUploadedFile = true;
+            cloneBtn.disabled = false; // Ensure button is enabled
+        }  
+        
+        // Add event listener for back button from preview:
+        backToUploadBtnFromPreview.addEventListener('click', async () => {
+            // Fade out current screen
+            document.body.classList.add('fade-out');
+            
+            // Wait for fade out to complete
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Switch screens
+            uploadPreviewScreen.style.display = 'none';
+            uploadBox.style.display = 'block';
+            
+            // Fade in new screen
+            document.body.classList.remove('fade-out');
+            
+            // Reset state
+            audioUpload.value = '';
+            fileName.textContent = 'No file selected';
+            cloneBtn.disabled = true;
+            hasUploadedFile = false;
+        }); 
+        
+        // Add event listener for trash button in preview:
+        trashUploadBtn.addEventListener('click', async () => {
+            // Fade out current screen
+            document.body.classList.add('fade-out');
+            
+            // Wait for fade out to complete
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Switch screens
+            uploadPreviewScreen.style.display = 'none';
+            uploadBox.style.display = 'block';
+            
+            // Fade in new screen
+            document.body.classList.remove('fade-out');
+            
+            // Reset state
+            audioUpload.value = '';
+            fileName.textContent = 'No file selected';
+            cloneBtn.disabled = true;
+            hasUploadedFile = false;
+        });        
     }
 });

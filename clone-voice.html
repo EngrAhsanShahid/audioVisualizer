@@ -70,14 +70,33 @@ Fusce pharetra convallis urna. Quisque ullamcorper placerat ipsum. Cras nibh. Mo
                     <button id="recordBtn" class="record-btn">Start Recording</button>
                     <div id="timer">00:00</div>
                 </div>
+
+                <div class="action-buttons">
+                    <button id="cloneBtn" class="clone-btn" disabled>Clone Voice</button>
+                </div>                
             </div>
             
             <!-- <button id="backToUploadBtn" class="back-btn">Back to Upload</button> -->
         </div>
-        
-        <div class="action-buttons">
-            <button id="cloneBtn" class="clone-btn" disabled>Clone Voice</button>
+        <!-- Upload Preview Screen (hidden initially) -->
+        <div id="uploadPreviewScreen" class="record-screen" style="display:none;">
+            <button id="backToUploadBtnFromPreview" class="back-btn">←</button>
+            <div class="text-to-read">
+                <p>Audio file ready for cloning:</p>
+                <div class="file-name" id="previewFileName"></div>
+                <div class="audio-player-container">
+                    <audio controls class="audio-player" id="previewAudioPlayer"></audio>
+                    <div class="player-controls">
+                        <button class="trash-btn" id="trashUploadBtn">🗑️</button>
+                    </div>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button id="cloneBtn" class="clone-btn">Clone Voice</button>
+            </div>
         </div>
+
+
         <div id="status"></div>
         <div id="error"></div>         
     </div>

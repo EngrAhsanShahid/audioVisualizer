@@ -1,14 +1,14 @@
 body {
     font-family: 'Nunito', sans-serif;
     margin: 0;
-    padding: 20px;
+    /* padding: 20px; */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     background: linear-gradient(to bottom right, #F5F5DC, #FAF9F6);
     opacity: 0;
-    transition: opacity 1s ease-in;    
+    transition: opacity 0.5s ease-in;    
 }
 
 body.fade-in {
@@ -41,9 +41,9 @@ h1 {
 /* Upload Section */
 .upload-instructions {
     background: #f7f4e8;
-    padding: 1%;
+    /* padding: 1%; */
     border-radius: 8px;
-    margin-bottom: 2%;
+    /* margin-bottom: 2%; */
     text-align: left;
 }
 
@@ -265,7 +265,7 @@ h1 {
     color: #2e4f2e;
     margin-top: 0;
     width: auto;
-    padding: 5px;
+    /* padding: 5px; */
     border: none;
     font-size: 24px;
     display: block; /* Ensure it takes full width */
@@ -302,4 +302,16 @@ h1 {
     align-items: center;
     justify-content: center;
     margin-top: 10px;
+}
+
+body.fade-out {
+    opacity: 0;
+}
+
+.clone-voice-container {
+    transition: opacity 0.5s ease;
+}
+
+.clone-voice-container.fade-out {
+    opacity: 0;
 }
