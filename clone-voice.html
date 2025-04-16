@@ -13,6 +13,7 @@
         
         <!-- Main Upload Box -->
         <div id="uploadBox" class="main-box">
+            <button id="backToDashboardBtn" class="back-btn">←</button>
             <div class="upload-instructions">
                 <ul>
                     <li>Avoid noisy environments</li>
@@ -24,7 +25,7 @@
             <label for="audioUpload" class="upload-area">
                 <div class="upload-icon">📁</div>
                 <p>Click to upload</p>
-                <p class="small-text">Audio files, up to 10MB each</p>
+                <p class="small-text">Audio files only</p>
             </label>
             <div id="fileName" class="file-name">No file selected</div>
            
@@ -39,6 +40,7 @@
         
         <!-- Record Screen (hidden initially) -->
         <div id="recordScreen" class="record-screen" style="display:none;">
+            <button id="backToUploadBtn" class="back-btn">←</button>
             <div class="text-to-read">
                 <p>Please read this paragraph aloud in your normal voice:</p>
                 <div class="paragraph-text">
@@ -56,13 +58,21 @@ Fusce pharetra convallis urna. Quisque ullamcorper placerat ipsum. Cras nibh. Mo
             
             <div class="recording-container">
                 <div class="waveform" id="waveform"></div>
-                <div class="recording-controls">
+                
+                <div class="audio-player-container" id="audioPlayerContainer">
+                    <audio controls class="audio-player" id="audioPlayer"></audio>
+                    <div class="player-controls">
+                        <button class="trash-btn" id="trashBtn">🗑️</button>
+                    </div>
+                </div>
+                
+                <div class="recording-controls" id="recordingControls">
                     <button id="recordBtn" class="record-btn">Start Recording</button>
                     <div id="timer">00:00</div>
                 </div>
             </div>
             
-            <button id="backToUploadBtn" class="back-btn">Back to Upload</button>
+            <!-- <button id="backToUploadBtn" class="back-btn">Back to Upload</button> -->
         </div>
         
         <div class="action-buttons">

@@ -5,7 +5,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     else { 
         document.body.classList.add('fade-in');
-        
+        // Add these variables at the top with your other variables
+        const audioPlayerContainer = document.getElementById('audioPlayerContainer');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const recordingControls = document.getElementById('recordingControls');
+        const trashBtn = document.getElementById('trashBtn');
+
         // DOM Elements
         const uploadBox = document.getElementById('uploadBox');
         const recordScreen = document.getElementById('recordScreen');
@@ -35,19 +40,36 @@ document.addEventListener('DOMContentLoaded', function() {
         startRecordBtn.addEventListener('click', () => {
             uploadBox.style.display = 'none';
             recordScreen.style.display = 'block';
+            recordBtn.textContent = 'Start Recording';
+            waveform.style.display = 'block';
+            recordingControls.style.display = 'flex';
+            audioPlayerContainer.style.display = 'none';
         });
         
-        // Back to upload screen
+        // Update the backToUploadBtn handler to reset everything
         backToUploadBtn.addEventListener('click', () => {
             recordScreen.style.display = 'none';
             uploadBox.style.display = 'block';
             cloneBtn.disabled = true;
-            // Stop recording if active
+            
+            // Reset recording state
             if (isRecording) {
                 stopRecording();
             }
+            
+            // Reset player UI
+            waveform.style.display = 'block';
+            recordingControls.style.display = 'flex';
+            audioPlayerContainer.style.display = 'none';
+            audioChunks = [];
+            audioPlayer.src = '';
+            timer.textContent = '00:00';
+            seconds = 0;
         });
         
+        backToDashboardBtn.addEventListener('click', () => {
+            window.location.href = 'dashboard.html';
+        });
         // File Upload Handling
         audioUpload.addEventListener('change', function(e) {
             const file = e.target.files[0];
@@ -81,8 +103,8 @@ document.addEventListener('DOMContentLoaded', function() {
             audio.src = URL.createObjectURL(file);
             audio.onloadedmetadata = function() {
                 const duration = audio.duration;
-                if (duration < 120 || duration > 300) {
-                    showError('Audio must be between 2 and 5 minutes long.');
+                if (duration < 45 || duration > 300) {  // Changed from 120 to 45
+                    showError('Audio must be between 45 seconds and 5 minutes long.');
                     cloneBtn.disabled = true;
                 } else {
                     clearError();
@@ -106,60 +128,114 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
+        // In your startRecording() function:
         async function startRecording() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                
-                // Set up audio context and analyzer for waveform
+        
+                // Initialize audio context and analyser FIRST
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 analyser = audioContext.createAnalyser();
                 const source = audioContext.createMediaStreamSource(stream);
                 source.connect(analyser);
                 analyser.fftSize = 256;
                 
-                mediaRecorder = new MediaRecorder(stream);
+                // Then initialize media recorder
+                const mimeType = MediaRecorder.isTypeSupported('audio/webm') 
+                    ? 'audio/webm' 
+                    : 'audio/mp4';
+                mediaRecorder = new MediaRecorder(stream, { mimeType });
                 audioChunks = [];
                 
-                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-                mediaRecorder.onstop = () => {
-                    clearError();
-                    stopWaveform();
-                    updateCloneButton();
+                // Set up event handlers
+                mediaRecorder.ondataavailable = e => {
+                    console.log("Data available:", e.data.size);
+                    audioChunks.push(e.data);
                 };
                 
-                mediaRecorder.start();
+                mediaRecorder.onstop = () => {
+                    console.log("Recording stopped");
+                    try {
+                        if (audioChunks.length > 0) {
+                            const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType });
+                            const audioUrl = URL.createObjectURL(audioBlob);
+                            audioPlayer.src = audioUrl;
+                            
+                            // Update UI
+                            waveform.style.display = 'none';
+                            recordingControls.style.display = 'none';
+                            audioPlayerContainer.style.display = 'flex';
+                            audioPlayerContainer.style.alignItems = 'self-start';
+                            cloneBtn.disabled = false;
+                            console.log("Audio player updated");
+                        }
+                    } catch (error) {
+                        console.error("Error processing recording:", error);
+                        showError("Could not process recording");
+                    }
+                };
+                
+                mediaRecorder.start(100); // Collect data every 100ms
+                console.log("Recording started");
+                
+                // Update UI
                 recordBtn.classList.add('recording');
                 recordBtn.textContent = 'Stop Recording';
                 isRecording = true;
                 startTimer();
                 startWaveform();
                 
-                // Clear any uploaded file
-                if (hasUploadedFile) {
-                    audioUpload.value = '';
-                    fileName.textContent = 'No file selected';
-                    hasUploadedFile = false;
-                }
-                
-                updateCloneButton();
             } catch (err) {
-                showError('Microphone access denied.');
+                console.error("Recording error:", err);
+                showError('Microphone access denied or error occurred');
             }
         }
         
+        // Modify the stopRecording function
         function stopRecording() {
             if (mediaRecorder && mediaRecorder.state !== 'inactive') {
                 mediaRecorder.stop();
             }
             recordBtn.classList.remove('recording');
-            recordBtn.textContent = 'Start Recording';
             isRecording = false;
             stopTimer();
+            
             if (mediaRecorder && mediaRecorder.stream) {
                 mediaRecorder.stream.getTracks().forEach(track => track.stop());
             }
+            
+            // Show audio player and hide waveform/controls
+            if (audioChunks.length > 0) {
+                const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType });
+                const audioUrl = URL.createObjectURL(audioBlob);
+                audioPlayer.src = audioUrl;
+                
+                waveform.style.display = 'none';
+                recordingControls.style.display = 'none';
+                audioPlayerContainer.style.display = 'flex';
+                audioPlayerContainer.style.alignContent = 'self-start';
+            }
+            stopWaveform();
         }
         
+        // Add trash button handler
+        trashBtn.addEventListener('click', function() {
+            // Reset everything
+            audioChunks = [];
+            audioPlayer.src = '';
+            
+            // Show recording controls
+            waveform.style.display = 'block';
+            recordingControls.style.display = 'flex';
+            audioPlayerContainer.style.display = 'none';
+            recordBtn.textContent = 'Start Recording';
+            // Reset timer
+            timer.textContent = '00:00';
+            seconds = 0;
+            
+            // Update clone button state
+            updateCloneButton();
+        });        
         function startTimer() {
             seconds = 0;
             updateTimer();
@@ -183,19 +259,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         function startWaveform() {
+            if (!analyser) {
+                console.error("Analyser not initialized!");
+                return;
+            }
+        
             const bufferLength = analyser.frequencyBinCount;
             dataArray = new Uint8Array(bufferLength);
             
-            function drawWaveform() {
-                if (!analyser) return;
+            // Clear previous canvas if any
+            waveform.innerHTML = '';
+            const canvas = document.createElement('canvas');
+            canvas.width = waveform.offsetWidth;
+            canvas.height = waveform.offsetHeight;
+            waveform.appendChild(canvas);
+            
+            const ctx = canvas.getContext('2d');
+            
+            function draw() {
+                if (!isRecording) return;
                 
+                requestAnimationFrame(draw);
                 analyser.getByteTimeDomainData(dataArray);
-                
-                waveform.innerHTML = '';
-                const canvas = document.createElement('canvas');
-                canvas.width = waveform.offsetWidth;
-                canvas.height = waveform.offsetHeight;
-                const ctx = canvas.getContext('2d');
                 
                 ctx.fillStyle = 'transparent';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -222,18 +307,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 ctx.lineTo(canvas.width, canvas.height / 2);
                 ctx.stroke();
-                
-                waveform.appendChild(canvas);
-                
-                if (isRecording) {
-                    requestAnimationFrame(drawWaveform);
-                }
             }
             
-            drawWaveform();
+            draw();
         }
         
         function stopWaveform() {
+            isRecording = false;
             waveform.innerHTML = '';
         }
         

@@ -30,7 +30,7 @@ h1 {
 
 /* Main Box */
 .main-box {
-    background: white;
+    background: #f6f6e5;
     border-radius: 12px;
     padding: 30px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -40,7 +40,7 @@ h1 {
 
 /* Upload Section */
 .upload-instructions {
-    background: #f0f8ff;
+    background: #f7f4e8;
     padding: 1%;
     border-radius: 8px;
     margin-bottom: 2%;
@@ -137,7 +137,7 @@ h1 {
 
 /* Record Screen */
 .record-screen {
-    background: white;
+    background: #f7f4e8;
     border-radius: 12px;
     padding: 30px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -185,7 +185,7 @@ h1 {
     white-space: normal;
     word-wrap: break-word;
     overflow-y: auto;
-    background: #f8f9fa;
+    background: #e8f7f2;
     padding: 15px;
     border-radius: 8px;
     line-height: 1.5;
@@ -194,7 +194,7 @@ h1 {
 }
 
 /* Buttons */
-.record-btn, .clone-btn, .back-btn {
+.record-btn, .clone-btn{
     padding: 12px 25px;
     border: none;
     border-radius: 30px;
@@ -222,12 +222,12 @@ h1 {
     cursor: not-allowed;
 }
 
-.back-btn {
+/* .back-btn {
     background-color: #e0e0e0;
     color: #333;
     margin-top: 20px;
     width: 100%;
-}
+} */
 
 .action-buttons {
     margin-top: 20px;
@@ -258,4 +258,48 @@ h1 {
     .paragraph-text {
         height: 150px;
     }
+}
+
+.back-btn {
+    background-color: transparent;
+    color: #2e4f2e;
+    margin-top: 0;
+    width: auto;
+    padding: 5px;
+    border: none;
+    font-size: 24px;
+    display: block; /* Ensure it takes full width */
+    text-align: left; /* Align arrow to left */    
+}
+
+.back-btn:hover {
+    background-color: transparent;
+    color: #1a2e1a;
+}
+
+/* Add these new styles */
+.audio-player-container {
+    display: none;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.audio-player {
+    width: 100%;
+}
+
+.trash-btn {
+    background: none;
+    border: none;
+    color: #e74c3c;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.player-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
 }
