@@ -8,7 +8,7 @@ body {
     align-items: center;
     background: linear-gradient(to bottom right, #F5F5DC, #FAF9F6);
     opacity: 0;
-    transition: opacity 0.5s ease-in;    
+    transition: opacity 0.2s ease-in;    
 }
 
 body.fade-in {
@@ -267,7 +267,7 @@ h1 {
     width: auto;
     /* padding: 5px; */
     border: none;
-    font-size: 24px;
+    /* font-size: 24px; */
     display: block; /* Ensure it takes full width */
     text-align: left; /* Align arrow to left */    
 }
@@ -314,4 +314,46 @@ body.fade-out {
 
 .clone-voice-container.fade-out {
     opacity: 0;
+}
+
+/* Notification Styles */
+.notification {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateX(-120%);
+    transition: transform 0.3s ease-out;
+    z-index: 1000;
+    max-width: 300px;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    background-color: #2e4f2e;
+}
+
+.notification.error {
+    background-color: #e74c3c;
+}
+
+.notification.info {
+    background-color: #3498db;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-120%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
 }

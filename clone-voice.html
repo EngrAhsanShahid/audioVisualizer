@@ -6,6 +6,7 @@
     <title>Clone Voice</title>
     <link rel="stylesheet" href="/public/css/clone-voice.css">
     <link rel="icon" href="/static/logo.svg" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
     <div class="clone-voice-container">
@@ -13,7 +14,7 @@
         
         <!-- Main Upload Box -->
         <div id="uploadBox" class="main-box">
-            <button id="backToDashboardBtn" class="back-btn">←</button>
+            <button id="backToDashboardBtn" class="back-btn"><i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></button>
             <div class="upload-instructions">
                 <ul>
                     <li>Avoid noisy environments</li>
@@ -40,7 +41,8 @@
         
         <!-- Record Screen (hidden initially) -->
         <div id="recordScreen" class="record-screen" style="display:none;">
-            <button id="backToUploadBtn" class="back-btn">←</button>
+            <button id="backToUploadBtn" class="back-btn"><i class="fa fa-arrow-left fa-lg" aria-hidden="true"></i></button>
+            
             <div class="text-to-read">
                 <p>Please read this paragraph aloud in your normal voice:</p>
                 <div class="paragraph-text">
@@ -70,35 +72,16 @@ Fusce pharetra convallis urna. Quisque ullamcorper placerat ipsum. Cras nibh. Mo
                     <button id="recordBtn" class="record-btn">Start Recording</button>
                     <div id="timer">00:00</div>
                 </div>
-
-                <div class="action-buttons">
-                    <button id="cloneBtn" class="clone-btn" disabled>Clone Voice</button>
-                </div>                
             </div>
             
             <!-- <button id="backToUploadBtn" class="back-btn">Back to Upload</button> -->
         </div>
-        <!-- Upload Preview Screen (hidden initially) -->
-        <div id="uploadPreviewScreen" class="record-screen" style="display:none;">
-            <button id="backToUploadBtnFromPreview" class="back-btn">←</button>
-            <div class="text-to-read">
-                <p>Audio file ready for cloning:</p>
-                <div class="file-name" id="previewFileName"></div>
-                <div class="audio-player-container">
-                    <audio controls class="audio-player" id="previewAudioPlayer"></audio>
-                    <div class="player-controls">
-                        <button class="trash-btn" id="trashUploadBtn">🗑️</button>
-                    </div>
-                </div>
-            </div>
-            <div class="action-buttons">
-                <button id="cloneBtn" class="clone-btn">Clone Voice</button>
-            </div>
+        
+        <div class="action-buttons">
+            <button id="cloneBtn" class="clone-btn" disabled>Clone Voice</button>
         </div>
-
-
-        <div id="status"></div>
-        <div id="error"></div>         
+        <!-- <div id="status"></div>
+        <div id="error"></div>          -->
     </div>
 
     <script src="/public/js/clone-voice.js"></script>

@@ -11,11 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const recordingControls = document.getElementById('recordingControls');
         const trashBtn = document.getElementById('trashBtn');
 
-        const uploadPreviewScreen = document.getElementById('uploadPreviewScreen');
-        const backToUploadBtnFromPreview = document.getElementById('backToUploadBtnFromPreview');
-        const previewAudioPlayer = document.getElementById('previewAudioPlayer');
-        const previewFileName = document.getElementById('previewFileName');
-        const trashUploadBtn = document.getElementById('trashUploadBtn');        
         // DOM Elements
         const uploadBox = document.getElementById('uploadBox');
         const recordScreen = document.getElementById('recordScreen');
@@ -123,7 +118,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (!validTypes.includes(file.type) && !validExtensions.includes(fileExt)) {
                 showError('Invalid file type. Please upload an audio file (MP3, WAV, OGG, WEBM).');
-                cloneBtn.disabled = true;
                 return;
             }
             
@@ -131,20 +125,19 @@ document.addEventListener('DOMContentLoaded', function() {
             audio.src = URL.createObjectURL(file);
             audio.onloadedmetadata = function() {
                 const duration = audio.duration;
-                if (duration < 45 || duration > 300) {
-                    showError('Audio must be between 45 seconds and 5 minutes long.');
+                if (duration < 45 || duration > 300) {  // Changed from 120 to 45
+                    // showError('Audio must be between 45 seconds and 5 minutes long.');
+                    showNotification('Your error messageAudio must be between 45 seconds and 5 minutes long.', 'error');
                     cloneBtn.disabled = true;
                 } else {
-                    clearError();
-                    hasUploadedFile = true;
-                    showUploadPreview(file);
-                    cloneBtn.disabled = false; // Explicitly enable the button
+                    // clearError();
+                    // cloneBtn.disabled = false;
+                    updateCloneButton();
                 }
             };
             
             audio.onerror = function() {
                 showError('The selected file is not a valid audio file.');
-                cloneBtn.disabled = true;
             };
         }
         
@@ -298,7 +291,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const bufferLength = analyser.frequencyBinCount;
             dataArray = new Uint8Array(bufferLength);
             
-            // Clear previous canvas if any
             waveform.innerHTML = '';
             const canvas = document.createElement('canvas');
             canvas.width = waveform.offsetWidth;
@@ -307,25 +299,35 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const ctx = canvas.getContext('2d');
             
+            // For smoothing the wave
+            let previousValues = new Array(bufferLength).fill(128);
+            const smoothingFactor = 0.8;
+            
             function draw() {
                 if (!isRecording) return;
                 
                 requestAnimationFrame(draw);
                 analyser.getByteTimeDomainData(dataArray);
                 
-                ctx.fillStyle = 'transparent';
+                // Clear canvas with slight fade
+                ctx.fillStyle = 'rgba(246, 246, 229, 0.1)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 
+                // Apply smoothing and draw wave
+                ctx.beginPath();
                 ctx.lineWidth = 2;
                 ctx.strokeStyle = '#2e4f2e';
-                ctx.beginPath();
                 
                 const sliceWidth = canvas.width / bufferLength;
+                const centerY = canvas.height / 2;
                 let x = 0;
                 
                 for (let i = 0; i < bufferLength; i++) {
-                    const v = dataArray[i] / 128.0;
-                    const y = v * canvas.height / 2;
+                    // Smooth the values
+                    previousValues[i] = previousValues[i] * smoothingFactor + 
+                                      dataArray[i] * (1 - smoothingFactor);
+                    
+                    const y = centerY + (previousValues[i] - 128) / 128 * (canvas.height * 2.5);
                     
                     if (i === 0) {
                         ctx.moveTo(x, y);
@@ -336,7 +338,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     x += sliceWidth;
                 }
                 
-                ctx.lineTo(canvas.width, canvas.height / 2);
+                ctx.stroke();
+                
+                // Draw center reference line
+                ctx.beginPath();
+                ctx.strokeStyle = 'rgba(46, 79, 46, 0.2)';
+                ctx.moveTo(0, centerY);
+                ctx.lineTo(canvas.width, centerY);
                 ctx.stroke();
             }
             
@@ -354,7 +362,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Clone Button - Send to API
         cloneBtn.addEventListener('click', async function() {
-            status.textContent = 'Processing voice clone...';
+            // status.textContent = 'Processing voice clone...';
+            showNotification('Processing voice clone...', 'info');
             cloneBtn.disabled = true;
             
             try {
@@ -397,7 +406,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 const result = await response.json();
-                status.textContent = 'Voice cloned successfully!';
+                // status.textContent = 'Voice cloned successfully!';
+                showNotification('Voice cloned successfully!', 'success');
             
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
@@ -405,7 +415,8 @@ document.addEventListener('DOMContentLoaded', function() {
             } catch (error) {
                 console.error('Clone error:', error);
                 status.textContent = '';
-                showError(error.message);
+                // showError(error.message);
+                showNotification(error.message, 'error');
                 cloneBtn.disabled = false;
             }
         });
@@ -422,69 +433,31 @@ document.addEventListener('DOMContentLoaded', function() {
             error.textContent = '';
         }
 
-        async function showUploadPreview(file) {
-            // Fade out current screen
-            document.body.classList.add('fade-out');
-            
-            // Wait for fade out to complete
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
-            // Switch screens
-            uploadBox.style.display = 'none';
-            uploadPreviewScreen.style.display = 'block';
-            
-            // Fade in new screen
-            document.body.classList.remove('fade-out');
-            
-            // Set up preview
-            previewFileName.textContent = file.name;
-            previewAudioPlayer.src = URL.createObjectURL(file);
-            hasUploadedFile = true;
-            cloneBtn.disabled = false; // Ensure button is enabled
-        }  
+        function showNotification(message, type = 'info') {
+            // Remove any existing notifications
+            const existing = document.querySelector('.notification');
+            if (existing) {
+                existing.remove();
+            }
         
-        // Add event listener for back button from preview:
-        backToUploadBtnFromPreview.addEventListener('click', async () => {
-            // Fade out current screen
-            document.body.classList.add('fade-out');
-            
-            // Wait for fade out to complete
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
-            // Switch screens
-            uploadPreviewScreen.style.display = 'none';
-            uploadBox.style.display = 'block';
-            
-            // Fade in new screen
-            document.body.classList.remove('fade-out');
-            
-            // Reset state
-            audioUpload.value = '';
-            fileName.textContent = 'No file selected';
-            cloneBtn.disabled = true;
-            hasUploadedFile = false;
-        }); 
+            // Create new notification
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
         
-        // Add event listener for trash button in preview:
-        trashUploadBtn.addEventListener('click', async () => {
-            // Fade out current screen
-            document.body.classList.add('fade-out');
-            
-            // Wait for fade out to complete
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
-            // Switch screens
-            uploadPreviewScreen.style.display = 'none';
-            uploadBox.style.display = 'block';
-            
-            // Fade in new screen
-            document.body.classList.remove('fade-out');
-            
-            // Reset state
-            audioUpload.value = '';
-            fileName.textContent = 'No file selected';
-            cloneBtn.disabled = true;
-            hasUploadedFile = false;
-        });        
+            // Trigger animation
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+        
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 5000);
+        }        
     }
 });
