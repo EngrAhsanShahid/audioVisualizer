@@ -357,3 +357,17 @@ body.fade-out {
     from { opacity: 1; }
     to { opacity: 0; }
 }
+
+/* Add to clone-voice.css */
+.upload-success-container {
+    display: none;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.uploaded-audio-container {
+    display: flex;
+    /* flex-direction: column; */
+    width: 100%;
+    align-items: flex-start;
+}

@@ -3,8 +3,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!access_token) {
         window.location.href = "/";
     }
-    else { 
+    else {
         document.body.classList.add('fade-in');
+        const uploadSuccessContainer = document.getElementById('uploadSuccessContainer');
+        const uploadedAudioPlayer = document.getElementById('uploadedAudioPlayer');
+        const uploadTrashBtn = document.getElementById('uploadTrashBtn');
+        const divider = document.querySelector('.divider');        
         // Add these variables at the top with your other variables
         const audioPlayerContainer = document.getElementById('audioPlayerContainer');
         const audioPlayer = document.getElementById('audioPlayer');
@@ -125,17 +129,37 @@ document.addEventListener('DOMContentLoaded', function() {
             audio.src = URL.createObjectURL(file);
             audio.onloadedmetadata = function() {
                 const duration = audio.duration;
-                if (duration < 45 || duration > 300) {  // Changed from 120 to 45
-                    // showError('Audio must be between 45 seconds and 5 minutes long.');
-                    showNotification('Your error messageAudio must be between 45 seconds and 5 minutes long.', 'error');
+                if (duration < 45 || duration > 300) {
+                    showNotification('Audio must be between 45 seconds and 5 minutes long.', 'error');
                     cloneBtn.disabled = true;
                 } else {
-                    // clearError();
-                    // cloneBtn.disabled = false;
-                    updateCloneButton();
+                    showNotification('Valid audio file detected', 'success');
+                    // Show player and hide other elements
+                    divider.style.display = 'none';
+                    startRecordBtn.style.display = 'none';
+                    uploadSuccessContainer.style.display = 'block';
+                    uploadedAudioPlayer.src = URL.createObjectURL(file);
+                    cloneBtn.disabled = false;
                 }
             };
-            
+
+            uploadTrashBtn.addEventListener('click', function() {
+                // Reset upload state
+                audioUpload.value = '';
+                fileName.textContent = 'No file selected';
+                hasUploadedFile = false;
+                
+                // Hide player and show original elements
+                uploadSuccessContainer.style.display = 'none';
+                divider.style.display = 'flex';
+                startRecordBtn.style.display = 'flex';
+                
+                // Reset audio player
+                uploadedAudioPlayer.src = '';
+                
+                // Update clone button
+                updateCloneButton();
+            });
             audio.onerror = function() {
                 showError('The selected file is not a valid audio file.');
             };
@@ -406,15 +430,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 const result = await response.json();
-                // status.textContent = 'Voice cloned successfully!';
                 showNotification('Voice cloned successfully!', 'success');
-            
+                
+                // Reset UI after successful clone
                 setTimeout(() => {
+                    // If coming from upload
+                    if (hasUploadedFile) {
+                        audioUpload.value = '';
+                        fileName.textContent = 'No file selected';
+                        uploadSuccessContainer.style.display = 'none';
+                        divider.style.display = 'flex';
+                        startRecordBtn.style.display = 'flex';
+                        uploadedAudioPlayer.src = '';
+                    }
+                    // If coming from recording
+                    else {
+                        audioChunks = [];
+                        audioPlayer.src = '';
+                        waveform.style.display = 'block';
+                        recordingControls.style.display = 'flex';
+                        audioPlayerContainer.style.display = 'none';
+                        timer.textContent = '00:00';
+                        seconds = 0;
+                    }
+                    
+                    hasUploadedFile = false;
                     window.location.href = 'dashboard.html';
                 }, 1500);
             } catch (error) {
                 console.error('Clone error:', error);
-                status.textContent = '';
+                // status.textContent = '';
                 // showError(error.message);
                 showNotification(error.message, 'error');
                 cloneBtn.disabled = false;
