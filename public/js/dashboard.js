@@ -68,6 +68,7 @@ async function setDefaultVoice(voiceId) {
 async function renderOptions() {
     const voicesResponse = await fetchAvailableVoices();
     if (!voicesResponse || !voicesResponse.success) {
+        showError('Failed to load voice options');
         return;
     }
 
@@ -79,14 +80,15 @@ async function renderOptions() {
         isDefault: voice.default || false
     }));
 
-    // Find the default voice
-    const defaultVoice = voicesResponse.voices.find(voice => voice.default) || 
-                         voicesResponse.voices.find(voice => voice.id === "alloy") || 
-                         voicesResponse.voices[0];
+    // 1. Find default voice, 2. Fallback to Alloy, 3. Fallback to first voice
+    const defaultVoice = voicesResponse.voices.find(v => v.default) || 
+                        voicesResponse.voices.find(v => v.id === "alloy") || 
+                        voicesResponse.voices[0];
     
+    // Force Alloy if no voices exist (shouldn't happen but safe fallback)
     voiceData.default = defaultVoice ? defaultVoice.name : "Alloy";
 
-    // Get the custom select container
+    // Create UI elements
     const customSelect = document.querySelector('.custom-select');
     customSelect.innerHTML = `
         <label for="voiceSelect">Selected Voice: </label>
@@ -99,7 +101,7 @@ async function renderOptions() {
         <select id="voiceSelect" style="display: none;"></select>
     `;
 
-    // Create hidden select options (for form submission if needed)
+    // Create hidden select options
     const select = document.getElementById("voiceSelect");
     select.innerHTML = "";
     
@@ -107,15 +109,13 @@ async function renderOptions() {
     const voiceOptions = document.getElementById("voice-options");
     voiceOptions.innerHTML = "";
     
-    let defaultSelected = false;
     voiceData.available_voices.forEach(voice => {
         // Add to hidden select
         const option = document.createElement("option");
         option.value = voice.id;
         option.textContent = voice.name;
-        if (voice.isDefault || voice.name === voiceData.default) {
+        if (voice.id === defaultVoice?.id) {
             option.selected = true;
-            defaultSelected = true;
         }
         select.appendChild(option);
         
@@ -124,20 +124,17 @@ async function renderOptions() {
         voiceItem.className = "select-item";
         voiceItem.dataset.value = voice.id;
         
-        if (voice.isDefault || (!defaultSelected && voice.name === voiceData.default)) {
+        if (voice.id === defaultVoice?.id) {
             voiceItem.innerHTML = `
                 <span>${voice.name}</span>
                 <span class="default-text">Default</span>
             `;
-            document.getElementById("selected-voice").textContent = voice.name;
-            defaultSelected = true;
         } else {
             voiceItem.innerHTML = `
                 <span>${voice.name}</span>
                 <button class="make-default-btn" data-id="${voice.id}">Make Default</button>
             `;
         }
-        
         voiceOptions.appendChild(voiceItem);
     });
 

@@ -215,6 +215,7 @@ h1 {
 .clone-btn {
     background-color: #2e4f2e;
     color: white;
+    display: none; 
 }
 
 .clone-btn:disabled {
@@ -316,48 +317,39 @@ body.fade-out {
     opacity: 0;
 }
 
-/* Update the notification styles */
 .notification {
     position: fixed;
-    bottom: 20px;
-    left: 20px;
+    top: 90%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-150%, -50%); /* Start off-screen left */
     padding: 15px 25px;
     border-radius: 8px;
     color: white;
     font-weight: bold;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transform: translateX(-120%);
-    transition: transform 0.3s ease-out;
     z-index: 1000;
-    width: 300px; /* Fixed width */
-    max-width: 80%; /* Maximum width relative to viewport */
-    word-wrap: break-word; /* Ensure long words break */
-    white-space: normal; /* Allow text to wrap */
-    /* Remove max-width: 300px; as it's redundant with width */
+    width: 300px;
+    max-width: 80%;
+    word-wrap: break-word;
+    white-space: normal;
+    transition: transform 0.3s ease-out;
+    text-align: center;
 }
 
-/* Keep all other notification styles the same */
 .notification.show {
-    transform: translateX(0);
+    transform: translate(-50%, -50%); /* Center position */
 }
 
-.notification.success {
-    background-color: #2e4f2e;
-}
+/* Keep existing color classes */
+.notification.success { background-color: #2e4f2e; }
+.notification.error { background-color: #e74c3c; }
+.notification.info { background-color: #3498db; }
 
-.notification.error {
-    background-color: #e74c3c;
-}
-
-.notification.info {
-    background-color: #3498db;
-}
-
+/* Update animation */
 @keyframes slideIn {
-    from { transform: translateX(-120%); }
-    to { transform: translateX(0); }
+    from { transform: translate(-150%, -50%); }
+    to { transform: translate(-50%, -50%); }
 }
-
 @keyframes fadeOut {
     from { opacity: 1; }
     to { opacity: 0; }
@@ -376,3 +368,19 @@ body.fade-out {
     width: 100%;
     align-items: flex-start;
 }
+
+/* Loading spinner */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  /* .processing .spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 8px;
+  } */

@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     else {
         document.body.classList.add('fade-in');
+        toggleCloneButton(false);
         const uploadSuccessContainer = document.getElementById('uploadSuccessContainer');
         const uploadedAudioPlayer = document.getElementById('uploadedAudioPlayer');
         const uploadTrashBtn = document.getElementById('uploadTrashBtn');
@@ -122,6 +123,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (!validTypes.includes(file.type) && !validExtensions.includes(fileExt)) {
                 showNotification('Invalid file type. Please upload an audio file (MP3, WAV, OGG, WEBM).', 'error');
+                divider.style.display = 'flex';  // Keep divider visible
+                startRecordBtn.style.display = 'flex';  // Keep record button visible
+                uploadSuccessContainer.style.display = 'none';  // Hide player
+                toggleCloneButton(false);  // Hide clone button                
                 return;
             }
             
@@ -129,17 +134,21 @@ document.addEventListener('DOMContentLoaded', function() {
             audio.src = URL.createObjectURL(file);
             audio.onloadedmetadata = function() {
                 const duration = audio.duration;
-                if (duration < 45 || duration > 300) {
-                    showNotification('Audio must be between 45 seconds and 5 minutes long.', 'error');
-                    cloneBtn.disabled = true;
-                } else {
+                if (duration >= 45 && duration <= 300) {  // Valid duration
                     showNotification('Valid audio file detected', 'success');
-                    // Show player and hide other elements
                     divider.style.display = 'none';
                     startRecordBtn.style.display = 'none';
                     uploadSuccessContainer.style.display = 'block';
                     uploadedAudioPlayer.src = URL.createObjectURL(file);
-                    cloneBtn.disabled = false;
+                    toggleCloneButton(true);  // Show clone button for valid files
+                } else {  // Invalid duration
+                    showNotification('Audio must be between 45 seconds and 5 minutes long.', 'error');
+                    divider.style.display = 'flex';  // Keep divider visible
+                    startRecordBtn.style.display = 'flex';  // Keep record button visible
+                    uploadSuccessContainer.style.display = 'none';  // Hide player
+                    toggleCloneButton(false);  // Hide clone button
+                    audioUpload.value = '';  // Clear the invalid file
+                    fileName.textContent = 'No file selected';
                 }
             };
 
@@ -158,7 +167,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 uploadedAudioPlayer.src = '';
                 
                 // Update clone button
-                updateCloneButton();
+                // updateCloneButton();
+                toggleCloneButton(false);
             });
             audio.onerror = function() {
                 showNotification('Invalid audio file. Please try again.', 'error');
@@ -214,8 +224,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             recordingControls.style.display = 'none';
                             audioPlayerContainer.style.display = 'flex';
                             audioPlayerContainer.style.alignItems = 'self-start';
-                            cloneBtn.disabled = false;
+                            // cloneBtn.disabled = false;
                             console.log("Audio player updated");
+                            toggleCloneButton(true);
                         }
                     } catch (error) {
                         console.error("Error processing recording:", error);
@@ -282,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function() {
             seconds = 0;
             
             // Update clone button state
-            updateCloneButton();
+            toggleCloneButton(false);
         });        
         function startTimer() {
             seconds = 0;
@@ -386,10 +397,17 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Clone Button - Send to API
         cloneBtn.addEventListener('click', async function() {
+            document.getElementById('processingStatus').style.display = 'block';            
             // status.textContent = 'Processing voice clone...';
             showNotification('Processing voice clone...', 'info');
             cloneBtn.disabled = true;
-            
+            // Show processing state
+            cloneBtn.innerHTML = `
+                <span class="spinner"></span>
+                Processing...
+            `;
+            cloneBtn.classList.add('processing');
+            cloneBtn.disabled = true;            
             try {
                 let audioBlob;
                 
@@ -453,19 +471,26 @@ document.addEventListener('DOMContentLoaded', function() {
                         timer.textContent = '00:00';
                         seconds = 0;
                     }
-                    
+                    // On error/success:
+                    document.getElementById('processingStatus').style.display = 'none';                    
                     hasUploadedFile = false;
                     window.location.href = 'dashboard.html';
                 }, 1500);
             } catch (error) {
-                console.error('Clone error:', error);
-                // status.textContent = '';
-                showNotification(error.message, 'error');
+                // Reset button on error
+                cloneBtn.innerHTML = 'Clone Voice';
+                cloneBtn.classList.remove('processing');
                 cloneBtn.disabled = false;
+                showNotification(error.message, 'error');
             }
         });
         
-        
+
+        function toggleCloneButton(show) {
+            const cloneBtn = document.getElementById('cloneBtn');
+            cloneBtn.style.display = show ? 'block' : 'none';
+        }
+
         function clearError() {
             error.textContent = '';
         }
@@ -494,7 +519,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(() => {
                     notification.remove();
                 }, 300);
-            }, 5000);
+            }, 1000);
         }        
     }
 });
