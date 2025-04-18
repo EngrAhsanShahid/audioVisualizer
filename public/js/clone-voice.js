@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const fileExt = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
             
             if (!validTypes.includes(file.type) && !validExtensions.includes(fileExt)) {
-                showError('Invalid file type. Please upload an audio file (MP3, WAV, OGG, WEBM).');
+                showNotification('Invalid file type. Please upload an audio file (MP3, WAV, OGG, WEBM).', 'error');
                 return;
             }
             
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateCloneButton();
             });
             audio.onerror = function() {
-                showError('The selected file is not a valid audio file.');
+                showNotification('Invalid audio file. Please try again.', 'error');
             };
         }
         
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     } catch (error) {
                         console.error("Error processing recording:", error);
-                        showError("Could not process recording");
+                        showNotification("Error processing recording", "error");
                     }
                 };
                 
@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
             } catch (err) {
                 console.error("Recording error:", err);
-                showError('Microphone access denied or error occurred');
+                showNotification('Microphone access denied or error occurred', 'error');
             }
         }
         
@@ -460,19 +460,11 @@ document.addEventListener('DOMContentLoaded', function() {
             } catch (error) {
                 console.error('Clone error:', error);
                 // status.textContent = '';
-                // showError(error.message);
                 showNotification(error.message, 'error');
                 cloneBtn.disabled = false;
             }
         });
         
-        function showError(message) {
-            error.textContent = message;
-            error.style.display = 'block';
-            setTimeout(() => {
-                error.style.display = 'none';
-            }, 5000);
-        }
         
         function clearError() {
             error.textContent = '';

@@ -316,7 +316,7 @@ body.fade-out {
     opacity: 0;
 }
 
-/* Notification Styles */
+/* Update the notification styles */
 .notification {
     position: fixed;
     bottom: 20px;
@@ -329,9 +329,14 @@ body.fade-out {
     transform: translateX(-120%);
     transition: transform 0.3s ease-out;
     z-index: 1000;
-    max-width: 300px;
+    width: 300px; /* Fixed width */
+    max-width: 80%; /* Maximum width relative to viewport */
+    word-wrap: break-word; /* Ensure long words break */
+    white-space: normal; /* Allow text to wrap */
+    /* Remove max-width: 300px; as it's redundant with width */
 }
 
+/* Keep all other notification styles the same */
 .notification.show {
     transform: translateX(0);
 }
