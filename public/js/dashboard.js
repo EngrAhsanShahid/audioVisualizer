@@ -394,64 +394,7 @@ function handleMessage(event) {
 // init function
 async function init(e) {
     let urlValue = e.id;
-    // const startButton = document.getElementById('startButton');
-    const stopButton = document.getElementById('stopButton');
 
-    // if (!startButton || !stopButton) {
-    //     console.error('Start or Stop button not found in the DOM.');
-    //     return;
-    // }
-
-    // startButton.disabled = true;
-    // stopButton.disabled = true;
-
-    try {
-        updateStatus('Initializing...');
-
-        const accessToken = localStorage.getItem('access_token');
-        const tokenResponse = await fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/session/", {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${accessToken}`,
-                "Content-Type": "application/json"
-            }
-        });
-
-        const data = await tokenResponse.json();
-        const EPHEMERAL_KEY = data.client_secret.value;
-
-        // Initialize WebRTC connection
-        peerConnection = new RTCPeerConnection();
-
-        // Set up audio and data channel
-        await setupAudio(); // Ensure setupAudio is defined or imported
-        setupDataChannel();
-
-        // Create and set local offer
-        const offer = await peerConnection.createOffer();
-        await peerConnection.setLocalDescription(offer);
-
-        // Send offer to server
-        const baseUrl = "https://api.openai.com/v1/realtime";
-        const model = "gpt-4o-realtime-preview-2024-12-17";
-        const sdpResponse = await fetch(`${baseUrl}?model=${model}`, {
-            method: "POST",
-            body: offer.sdp,
-            headers: {
-                Authorization: `Bearer ${EPHEMERAL_KEY}`,
-                "Content-Type": "application/sdp"
-            },
-        });
-
-        // Set server's answer
-        const answer = {
-            type: "answer",
-            sdp: await sdpResponse.text(),
-        };
-        await peerConnection.setRemoteDescription(answer);
-
-        // Update status and redirect to onboarding page
-        updateStatus('Connected');
 
         if(urlValue == "start_onboarding"){
             window.location.href = '/onboarding.html'; // Redirect to onboarding page
@@ -468,16 +411,8 @@ async function init(e) {
         else if(urlValue == "OnBoarding"){
             window.location.href = '/onboarding.html'; // Redirect to onboarding page
         }
-        // Start microphone and enable stop button
-        startTheMic();
-        stopButton.disabled = false;
-        hideError();
-    } catch (error) {
-        // startButton.disabled = false;
-        stopButton.disabled = true;
-        showError('Error: ' + error.message);
-        console.error('Initialization error:', error);
-    }
+       
+    
 }
 
 async function startTheMic() {

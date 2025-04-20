@@ -34,6 +34,7 @@ async function initConversation() {
         else {
             useClonedVoice = ""
         }
+        console.log("connecting to a server 2")
         const accessToken = localStorage.getItem('access_token');
         const tokenResponse = await fetch("https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/session/conversation"+useClonedVoice, {
             method: "GET",
@@ -517,7 +518,7 @@ async function streamingAudioElementForElevenLabs(text, retryAttempt = 0) {
   }
 
 function handleTranscript(message) {
-    // console.log("message in handle transcript is: ",message)
+    console.log("message in handle transcript is: ",message)
     // It must be message.response?.output?.[0]?.content?.[0]?.transcript  if modalities is set to text & audio both on backend
     if (message.response?.output?.[0]?.content?.[0]?.text) {
         console.log("this is transcript:",message.response.output[0].content[0].text)
@@ -1115,15 +1116,15 @@ function processElevenLabsAudioForVisualization(audioElement) {
     }
     
     // Create an audio source from the audio element
-    const source = audioContext.createMediaElementSource(audioElement);
+    // const source = audioContext.createMediaElementSource(audioElement);
     
-    // Set up the analyzer for visualization
-    analyserServer = audioContext.createAnalyser();
-    analyserServer.fftSize = 1024;
+    // // Set up the analyzer for visualization
+    // analyserServer = audioContext.createAnalyser();
+    // analyserServer.fftSize = 1024;
     
-    // Connect the audio source to analyzer and destination
-    source.connect(analyserServer);
-    source.connect(audioContext.destination);
+    // // Connect the audio source to analyzer and destination
+    // source.connect(analyserServer);
+    // source.connect(audioContext.destination);
     
     // Initialize data array for visualization
     const bufferLength = analyserServer.fftSize;

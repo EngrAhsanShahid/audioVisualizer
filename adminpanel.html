@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Admin Dashboard</title>
+  <style>
+    :root {
+      --primary: #1e88e5;
+      --danger: #e53935;
+      --warning: #fbc02d;
+      --bg: #f9f9f9;
+      --border-radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: #333;
+    }
+
+    header {
+      background-color: var(--primary);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    form {
+      display: grid;
+      gap: 15px;
+      margin-bottom: 30px;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    form input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: var(--border-radius);
+    }
+
+    form input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    form button {
+      grid-column: span 2;
+      padding: 12px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    form button:hover {
+      background: #1565c0;
+    }
+
+    #status {
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    ul#userList {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul#userList li {
+      background: #f0f4ff;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .user-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .actions button {
+      margin-left: 8px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .actions .delete {
+      background: var(--danger);
+      color: white;
+    }
+
+    .actions .clear {
+      background: var(--warning);
+      color: #333;
+    }
+
+    .user-details {
+      display: none;
+      padding-top: 10px;
+    }
+
+    .user-details table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .user-details th, .user-details td {
+      text-align: left;
+      padding: 6px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .user-details h4 {
+      margin-top: 15px;
+      margin-bottom: 5px;
+    }
+
+    @media (max-width: 600px) {
+      form {
+        grid-template-columns: 1fr;
+      }
+
+      form button {
+        grid-column: span 1;
+      }
+
+      .actions {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .actions button {
+        margin: 5px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>User Management Panel</h1>
+  </header>
+
+  <div class="container">
+    <div id="status"></div>
+
+    <h2>Create New User</h2>
+    <form id="createUserForm">
+      <input type="text" placeholder="Username" id="username" required />
+      <input type="email" placeholder="Email" id="email" required />
+      <input type="text" placeholder="First Name" id="firstName" required />
+      <input type="text" placeholder="Last Name" id="lastName" required />
+      <input type="password" placeholder="Password" id="password" required />
+      <button type="submit">Create User</button>
+    </form>
+
+    <h2>All Users</h2>
+    <button onclick="fetchUsers()">🔄 Refresh User List</button>
+    <ul id="userList"></ul>
+  </div>
+
+  <script>
+    const BASE_URL = "https://aef9dd6d-fb52-456e-9e21-f5e2f54be901-00-2e96ef993fwys.kirk.replit.dev/auth";
+    const statusDiv = document.getElementById("status");
+
+    const showStatus = (msg, isError = false) => {
+      statusDiv.style.color = isError ? "red" : "green";
+      statusDiv.textContent = msg;
+      setTimeout(() => statusDiv.textContent = "", 4000);
+    };
+
+    document.getElementById("createUserForm").onsubmit = async (e) => {
+      e.preventDefault();
+
+      const data = {
+        username: document.getElementById("username").value,
+        email: document.getElementById("email").value,
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        password: document.getElementById("password").value,
+      };
+
+      try {
+        const res = await fetch(`${BASE_URL}/api/create-user`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+        if (res.ok) {
+          showStatus("✅ User created successfully");
+          e.target.reset();
+          fetchUsers();
+        } else {
+          showStatus(`❌ ${result.detail || "Failed to create user"}`, true);
+        }
+      } catch (err) {
+        console.error(err);
+        showStatus("❌ Error creating user", true);
+      }
+    };
+
+    async function fetchUsers() {
+      try {
+        const res = await fetch(`${BASE_URL}/api/get-users`);
+        const users = await res.json();
+
+        const list = document.getElementById("userList");
+        list.innerHTML = "";
+
+        users.forEach(user => {
+          const li = document.createElement("li");
+
+          const detailsHTML = `
+            <div class="user-details">
+              <strong>Full Info</strong><br/>
+              <div><strong>First Name:</strong> ${user.firstName}</div>
+              <div><strong>Last Name:</strong> ${user.lastName}</div>
+              <div><strong>Email:</strong> ${user.email}</div>
+              <div><strong>Username:</strong> ${user.username}</div>
+              <div><strong>Password:</strong> ${user.password}</div>
+              <h4>Onboarding Progress</h4>
+              ${Object.entries(user.onboarding_progress || {}).length > 0 ? `
+                <table>
+                  <tr><th>Question ID</th><th>Answer</th></tr>
+                  ${Object.entries(user.onboarding_progress || {}).map(([key, val]) => `
+                    <tr>
+                      <td>${key}</td>
+                      <td>${val || '—'}</td>
+                    
+                    </tr>
+                  `).join('')}
+                </table>
+              ` : '<p>No onboarding data</p>'}
+            </div>`;
+
+          li.innerHTML = `
+            <div class="user-header" onclick="toggleDetails(this)">
+              <span>${user.username} (${user.email})</span>
+              <span class="actions">
+                <button class="delete" onclick="event.stopPropagation(); deleteUser('${user.username}')">Delete</button>
+                <button class="clear" onclick="event.stopPropagation(); clearOnboarding('${user.username}')">Clear Onboarding</button>
+              </span>
+            </div>
+            ${detailsHTML}
+          `;
+
+          list.appendChild(li);
+        });
+      } catch (err) {
+        console.error(err);
+        showStatus("❌ Error fetching users", true);
+      }
+    }
+
+    function toggleDetails(header) {
+      const details = header.nextElementSibling;
+      details.style.display = details.style.display === 'block' ? 'none' : 'block';
+    }
+
+    async function deleteUser(username) {
+      if (!confirm(`Are you sure you want to delete "${username}"?`)) return;
+      const res = await fetch(`${BASE_URL}/api/delete-user/${username}`, { method: "DELETE" });
+      if (res.ok) {
+        showStatus(`✅ Deleted ${username}`);
+        fetchUsers();
+      } else {
+        showStatus(`❌ Failed to delete ${username}`, true);
+      }
+    }
+
+    async function clearOnboarding(username) {
+      const res = await fetch(`${BASE_URL}/api/clear-onboarding/${username}`, { method: "PATCH" });
+      if (res.ok) {
+        showStatus(`✅ Onboarding cleared for ${username}`);
+        fetchUsers();
+      } else {
+        showStatus(`❌ Failed to clear onboarding`, true);
+      }
+    }
+
+    fetchUsers();
+  </script>
+</body>
+</html>
