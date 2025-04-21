@@ -236,13 +236,21 @@ window.addEventListener('DOMContentLoaded', async () => {
     if(r_q_a == 0){
         onboardingText = `Let's get you onboarded! Answer a few quick questions to personalize your experience and unlock the conversational module.`
         document.getElementById("start_conversation").disabled = true;
-        document.getElementById("voiceSelect").disabled = true;
+        // document.getElementById("voiceSelect").disabled = true;
+        document.querySelectorAll('.select-selected').forEach(el => {
+            el.style.pointerEvents = 'none';
+            el.style.opacity = '0.6';
+        });        
     }
     else if(r_q_a > 0 && r_q_a < t_r_q){
         onboardingText = `To access the conversational module, please complete your onboarding by answering the remaining '${remaining_required_questions}' required questions.`;
         document.getElementById("start_onboarding").textContent = "Continue Onboarding";
         document.getElementById("start_conversation").disabled = true;
-        document.getElementById("voiceSelect").disabled = true;
+        // document.getElementById("voiceSelect").disabled = true;
+        document.querySelectorAll('.select-selected').forEach(el => {
+            el.style.pointerEvents = 'none';
+            el.style.opacity = '0.6';
+        });         
     }
     else if(r_q_a >= t_r_q){
         onboardingText = `You can continue onboarding anytime to answer optional questions and further enhance personalization in the conversational module.`;
