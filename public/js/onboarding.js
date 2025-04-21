@@ -622,39 +622,39 @@ async function setupAudio(recordForCloning = true) {
 
 
 
-    // ❌ If Cloning is required then this code will run.
-    console.log("record for cloning is: ",recordForCloning)
-    console.log("CLONING_REQUIRED is: ",CLONING_REQUIRED)
-    if (recordForCloning && CLONING_REQUIRED) {
-        console.log("audio will be recorded for cloning...")
-        // Extract audio directly from the WebRTC stream
-        const audioContext = new AudioContext();
-        const source = audioContext.createMediaStreamSource(audioStream);
-        const processor = audioContext.createScriptProcessor(4096, 1, 1);
+    // // ❌ If Cloning is required then this code will run.
+    // console.log("record for cloning is: ",recordForCloning)
+    // console.log("CLONING_REQUIRED is: ",CLONING_REQUIRED)
+    // if (recordForCloning && CLONING_REQUIRED) {
+    //     console.log("audio will be recorded for cloning...")
+    //     // Extract audio directly from the WebRTC stream
+    //     const audioContext = new AudioContext();
+    //     const source = audioContext.createMediaStreamSource(audioStream);
+    //     const processor = audioContext.createScriptProcessor(4096, 1, 1);
 
-        source.connect(processor);
-        processor.connect(audioContext.destination);
+    //     source.connect(processor);
+    //     processor.connect(audioContext.destination);
 
-        processor.onaudioprocess = (event) => {
-            const audioData = event.inputBuffer.getChannelData(0); // Extract raw audio samples
+    //     processor.onaudioprocess = (event) => {
+    //         const audioData = event.inputBuffer.getChannelData(0); // Extract raw audio samples
 
-            // Check if this chunk has meaningful (non-silent) data
-            if (inputSpeechDetected === true && CLONING_REQUIRED) {
-                console.log("recording for cloning ...");
-                AUDIO_RECORDING_FOR_CLONING.push(...audioData);
-                totalRecordedTime += CHUNK_DURATION; // Add only speech duration
+    //         // Check if this chunk has meaningful (non-silent) data
+    //         if (inputSpeechDetected === true && CLONING_REQUIRED) {
+    //             console.log("recording for cloning ...");
+    //             AUDIO_RECORDING_FOR_CLONING.push(...audioData);
+    //             totalRecordedTime += CHUNK_DURATION; // Add only speech duration
 
-                // If accumulated speech reaches 10 seconds, log message and reset
-                if (totalRecordedTime >= 90) {
-                    console.log("60-second audio grabbed.");
-                    downloadAudioAsWAV([...AUDIO_RECORDING_FOR_CLONING]);
-                    sendAudioToCloneAPI([...AUDIO_RECORDING_FOR_CLONING]);
-                    totalRecordedTime = 0; // Reset the timer
-                    AUDIO_RECORDING_FOR_CLONING = []; // Clear stored audio
-                }
-            }
-        };
-    }
+    //             // If accumulated speech reaches 10 seconds, log message and reset
+    //             if (totalRecordedTime >= 90) {
+    //                 console.log("60-second audio grabbed.");
+    //                 downloadAudioAsWAV([...AUDIO_RECORDING_FOR_CLONING]);
+    //                 sendAudioToCloneAPI([...AUDIO_RECORDING_FOR_CLONING]);
+    //                 totalRecordedTime = 0; // Reset the timer
+    //                 AUDIO_RECORDING_FOR_CLONING = []; // Clear stored audio
+    //             }
+    //         }
+    //     };
+    // }
 }
 
 
