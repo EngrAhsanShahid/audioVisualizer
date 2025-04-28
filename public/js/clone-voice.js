@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     else {
         document.body.classList.add('fade-in');
         toggleCloneButton(false);
+        const downloadBtn = document.getElementById('downloadBtn');
         const uploadSuccessContainer = document.getElementById('uploadSuccessContainer');
         const uploadedAudioPlayer = document.getElementById('uploadedAudioPlayer');
         const uploadTrashBtn = document.getElementById('uploadTrashBtn');
@@ -41,6 +42,40 @@ document.addEventListener('DOMContentLoaded', function() {
         let hasUploadedFile = false;
         let isRecording = false;
         
+
+        // Add this with your other event listeners
+        downloadBtn.addEventListener('click', downloadRecordedAudio);
+
+        // Add this function to handle the download
+        function downloadRecordedAudio() {
+            if (!audioPlayer.src) {
+                showNotification('No recording available to download', 'error');
+                return;
+            }
+
+            // Create a temporary anchor element
+            const a = document.createElement('a');
+            a.href = audioPlayer.src;
+            
+            // Set the download filename with timestamp
+            const now = new Date();
+            const timestamp = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}-${now.getHours().toString().padStart(2,'0')}${now.getMinutes().toString().padStart(2,'0')}`;
+            
+            // Use the recorded MIME type for proper file extension
+            const extension = 'mp3';            
+            a.download = `my-recording-${timestamp}.${extension}`;
+            
+            // Trigger the download
+            document.body.appendChild(a);
+            a.click();
+            
+            // Clean up
+            setTimeout(() => {
+                document.body.removeChild(a);
+            }, 100);
+            
+            showNotification('Recording downloaded', 'success');
+        }        
         // Switch to record screen with fade effect
         startRecordBtn.addEventListener('click', async () => {
             // Fade out current screen
@@ -115,10 +150,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 'audio/wav',
                 'audio/ogg',
                 'audio/webm',
-                'audio/x-wav'
+                'audio/x-wav',
+                'audio/aac',
+                'audio/flac',
+                'audio/aiff',
+                'audio/x-aiff',
+                'audio/x-m4a',
+
             ];
             
-            const validExtensions = ['.mp3', '.wav', '.ogg', '.webm'];
+            const validExtensions = ['.mp3', '.wav', '.ogg', '.webm', '.aac', '.flac', '.aiff', '.m4a', 'x-aiff'];
             const fileExt = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
             
             if (!validTypes.includes(file.type) && !validExtensions.includes(fileExt)) {
@@ -211,6 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     audioChunks.push(e.data);
                 };
                 
+                // Update your mediaRecorder.onstop to enable the download button
                 mediaRecorder.onstop = () => {
                     console.log("Recording stopped");
                     try {
@@ -223,9 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             waveform.style.display = 'none';
                             recordingControls.style.display = 'none';
                             audioPlayerContainer.style.display = 'flex';
-                            audioPlayerContainer.style.alignItems = 'self-start';
-                            // cloneBtn.disabled = false;
-                            console.log("Audio player updated");
+                            downloadBtn.disabled = false; // Enable download button
                             toggleCloneButton(true);
                         }
                     } catch (error) {
@@ -277,24 +317,27 @@ document.addEventListener('DOMContentLoaded', function() {
             stopWaveform();
         }
         
+        downloadBtn.disabled = true;
         // Add trash button handler
         trashBtn.addEventListener('click', function() {
             // Reset everything
             audioChunks = [];
             audioPlayer.src = '';
+            downloadBtn.disabled = true;
             
             // Show recording controls
             waveform.style.display = 'block';
             recordingControls.style.display = 'flex';
             audioPlayerContainer.style.display = 'none';
             recordBtn.textContent = 'Start Recording';
+            
             // Reset timer
             timer.textContent = '00:00';
             seconds = 0;
             
             // Update clone button state
             toggleCloneButton(false);
-        });        
+        });     
         function startTimer() {
             seconds = 0;
             updateTimer();
@@ -519,7 +562,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(() => {
                     notification.remove();
                 }, 300);
-            }, 1000);
+            }, 5000);
         }        
     }
 });

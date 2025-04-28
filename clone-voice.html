@@ -22,7 +22,12 @@
                     <li>Audio length is in between 45 Seconds to 5 mintues.</li>
                 </ul>
             </div>
-            <input type="file" id="audioUpload" accept=".mp3,.wav,.ogg,.webm" hidden>
+            <input 
+                type="file" 
+                id="audioUpload" 
+                accept=".mp3,.wav,.ogg,.webm,.aac,.flac,.m4a,.opus,.aiff,.alac,.dsd,.wma" 
+                hidden
+            >
             <label for="audioUpload" class="upload-area">
                 <div class="upload-icon">📁</div>
                 <p>Click to upload</p>
@@ -71,7 +76,8 @@ Fusce pharetra convallis urna. Quisque ullamcorper placerat ipsum. Cras nibh. Mo
                 <div class="audio-player-container" id="audioPlayerContainer">
                     <audio controls class="audio-player" id="audioPlayer"></audio>
                     <div class="player-controls">
-                        <button class="trash-btn" id="trashBtn">🗑️</button>
+                        <button class="trash-btn" id="trashBtn"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                        <button class="download-btn" id="downloadBtn"><i class="fa fa-download" aria-hidden="true"></i></button>
                     </div>
                 </div>
                 
