@@ -145,75 +145,70 @@ document.addEventListener('DOMContentLoaded', function() {
         
         function validateAudioFile(file) {
             const validTypes = [
-                'audio/mpeg',
-                'audio/mp3',
-                'audio/wav',
-                'audio/ogg',
-                'audio/webm',
-                'audio/x-wav',
-                'audio/aac',
-                'audio/flac',
-                'audio/aiff',
-                'audio/x-aiff',
-                'audio/x-m4a',
-
+                'audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg', 'audio/webm', 
+                'audio/x-wav', 'audio/aac', 'audio/flac', 'audio/aiff', 'audio/x-aiff',
+                'audio/x-m4a', 'audio/x-ms-wma',
             ];
             
-            const validExtensions = ['.mp3', '.wav', '.ogg', '.webm', '.aac', '.flac', '.aiff', '.m4a', 'x-aiff'];
+            const validExtensions = ['.mp3', '.wav', '.ogg', '.webm', '.aac', '.flac', '.aiff', '.m4a', '.wma'];
             const fileExt = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
             
+            // Check MIME type OR extension
             if (!validTypes.includes(file.type) && !validExtensions.includes(fileExt)) {
-                showNotification('Invalid file type. Please upload an audio file (MP3, WAV, OGG, WEBM).', 'error');
-                divider.style.display = 'flex';  // Keep divider visible
-                startRecordBtn.style.display = 'flex';  // Keep record button visible
-                uploadSuccessContainer.style.display = 'none';  // Hide player
-                toggleCloneButton(false);  // Hide clone button                
+                showNotification('Invalid file type. Please upload a supported audio file.', 'error');
+                resetUploadUI();
                 return;
             }
-            
+        
+            // If the file is .wma or .aiff, skip playback validation (since browsers may not support it)
+            if (fileExt === '.wma' || fileExt === '.aiff') {
+                divider.style.display = 'none';
+                startRecordBtn.style.display = 'none';
+                uploadSuccessContainer.style.display = 'block';
+                uploadedAudioPlayer.src = URL.createObjectURL(file);
+                toggleCloneButton(true);
+                return;
+            }
+        
+            // For other formats, proceed with duration check
             const audio = new Audio();
             audio.src = URL.createObjectURL(file);
             audio.onloadedmetadata = function() {
                 const duration = audio.duration;
-                if (duration >= 45 && duration <= 300) {  // Valid duration
+                if (duration >= 45 && duration <= 300) {
                     showNotification('Valid audio file detected', 'success');
                     divider.style.display = 'none';
                     startRecordBtn.style.display = 'none';
                     uploadSuccessContainer.style.display = 'block';
                     uploadedAudioPlayer.src = URL.createObjectURL(file);
-                    toggleCloneButton(true);  // Show clone button for valid files
-                } else {  // Invalid duration
+                    toggleCloneButton(true);
+                } else {
                     showNotification('Audio must be between 45 seconds and 5 minutes long.', 'error');
-                    divider.style.display = 'flex';  // Keep divider visible
-                    startRecordBtn.style.display = 'flex';  // Keep record button visible
-                    uploadSuccessContainer.style.display = 'none';  // Hide player
-                    toggleCloneButton(false);  // Hide clone button
-                    audioUpload.value = '';  // Clear the invalid file
-                    fileName.textContent = 'No file selected';
+                    resetUploadUI();
                 }
             };
-
-            uploadTrashBtn.addEventListener('click', function() {
-                // Reset upload state
-                audioUpload.value = '';
-                fileName.textContent = 'No file selected';
-                hasUploadedFile = false;
-                
-                // Hide player and show original elements
-                uploadSuccessContainer.style.display = 'none';
-                divider.style.display = 'flex';
-                startRecordBtn.style.display = 'flex';
-                
-                // Reset audio player
-                uploadedAudioPlayer.src = '';
-                
-                // Update clone button
-                // updateCloneButton();
-                toggleCloneButton(false);
-            });
             audio.onerror = function() {
-                showNotification('Invalid audio file. Please try again.', 'error');
+                // If playback fails but the file type is valid, still accept it (server will validate)
+                if (validExtensions.includes(fileExt)) {
+                    divider.style.display = 'none';
+                    startRecordBtn.style.display = 'none';
+                    uploadSuccessContainer.style.display = 'block';
+                    uploadedAudioPlayer.src = URL.createObjectURL(file);
+                    toggleCloneButton(true);
+                } else {
+                    showNotification('Invalid audio file. Please try again.', 'error');
+                    resetUploadUI();
+                }
             };
+        }
+        
+        function resetUploadUI() {
+            divider.style.display = 'flex';
+            startRecordBtn.style.display = 'flex';
+            uploadSuccessContainer.style.display = 'none';
+            toggleCloneButton(false);
+            audioUpload.value = '';
+            fileName.textContent = 'No file selected';
         }
         
         // Recording Functionality
