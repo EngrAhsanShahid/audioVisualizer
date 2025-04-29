@@ -38,7 +38,7 @@
                 <div class="uploaded-audio-container">
                     <audio controls class="audio-player" id="uploadedAudioPlayer"></audio>
                     <div class="player-controls">
-                        <button class="trash-btn" id="uploadTrashBtn">🗑️</button>
+                        <button class="trash-btn" id="uploadTrashBtn"><i class="fa fa-trash" aria-hidden="true"></i></button>
                     </div>
                 </div>
             </div>           
@@ -47,7 +47,7 @@
             </div>
             
             <button id="startRecordBtn" class="record-option-btn">
-                <span class="record-icon">🎤</span> Record your voice
+                <span class="record-icon"><i class="fa fa-microphone" aria-hidden="true"></i></span> Record your voice
             </button>
         </div>
         
@@ -74,7 +74,9 @@ Fusce pharetra convallis urna. Quisque ullamcorper placerat ipsum. Cras nibh. Mo
                 <div class="waveform" id="waveform"></div>
                 
                 <div class="audio-player-container" id="audioPlayerContainer">
-                    <audio controls class="audio-player" id="audioPlayer"></audio>
+                    <audio controls class="audio-player" id="audioPlayer">
+                        <!-- Browser will automatically populate controls -->
+                    </audio>
                     <div class="player-controls">
                         <button class="trash-btn" id="trashBtn"><i class="fa fa-trash" aria-hidden="true"></i></button>
                         <button class="download-btn" id="downloadBtn"><i class="fa fa-download" aria-hidden="true"></i></button>
