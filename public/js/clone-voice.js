@@ -376,20 +376,27 @@ document.addEventListener('DOMContentLoaded', function() {
             let previousValues = new Array(bufferLength).fill(128);
             const smoothingFactor = 0.8;
             
+            // Gradient for the waveform
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+            gradient.addColorStop(0, '#4CAF50');  // Green
+            // gradient.addColorStop(0.5, '#2196F3'); // Blue
+            // gradient.addColorStop(1, '#9C27B0');  // Purple
+            
             function draw() {
                 if (!isRecording) return;
                 
                 requestAnimationFrame(draw);
                 analyser.getByteTimeDomainData(dataArray);
                 
-                // Clear canvas with slight fade
-                ctx.fillStyle = 'rgba(246, 246, 229, 0.1)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                // Clear canvas with transparent background
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
-                // Apply smoothing and draw wave
+                // Draw the main waveform
                 ctx.beginPath();
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = '#2e4f2e';
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = gradient;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
                 
                 const sliceWidth = canvas.width / bufferLength;
                 const centerY = canvas.height / 2;
@@ -400,7 +407,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     previousValues[i] = previousValues[i] * smoothingFactor + 
                                       dataArray[i] * (1 - smoothingFactor);
                     
-                    const y = centerY + (previousValues[i] - 128) / 128 * (canvas.height * 2.5);
+                    const y = centerY + (previousValues[i] - 128) / 128 * (canvas.height * 0.4);
                     
                     if (i === 0) {
                         ctx.moveTo(x, y);
@@ -411,14 +418,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     x += sliceWidth;
                 }
                 
+                // Add glow effect
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = '#4CAF50';
                 ctx.stroke();
-                
-                // Draw center reference line
-                ctx.beginPath();
-                ctx.strokeStyle = 'rgba(46, 79, 46, 0.2)';
-                ctx.moveTo(0, centerY);
-                ctx.lineTo(canvas.width, centerY);
-                ctx.stroke();
+                ctx.shadowBlur = 0;
             }
             
             draw();
