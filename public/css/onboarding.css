@@ -349,3 +349,43 @@ body {
               z-index: 1;
           } */
   
+          /* Tablets (portrait) */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+
+}
+
+/* Tablets (landscape) */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+
+}
+
+/* Small laptops (11-13") */
+@media (min-width: 1025px) and (max-width: 1366px) {
+
+}
+
+/* Large screens (15"+ monitors) */
+@media (min-width: 1367px) {
+  canvas{
+    width: 0;
+    height: 0;
+  }
+  .ripple{
+    margin-left: 1.2%;
+  }
+  .waves-container{
+    width:255%;
+    margin-left: -76%;
+    /* margin-right: 50%; */
+  }
+  .waves-container {
+    /* width: 100%; */
+    /* margin-left: -19%; */
+    /* margin-right: 10%; */
+  }
+}
+
+/* Ultra-wide screens */
+@media (min-width: 1920px) {
+
+}
