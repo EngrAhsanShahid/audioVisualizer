@@ -515,6 +515,13 @@ async function streamingAudioElementForElevenLabs(text, retryAttempt = 0) {
         console.warn('Error cleaning audio element:', err);
       }
     }
+    window.visualizationRunning = false;
+    
+    // Clean up audio context
+    if (analyserServer) {
+        analyserServer.disconnect();
+        analyserServer = null;
+    }
   }
 
 function handleTranscript(message) {
@@ -1115,23 +1122,31 @@ function processElevenLabsAudioForVisualization(audioElement) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
     }
     
-    // Create an audio source from the audio element
-    // const source = audioContext.createMediaElementSource(audioElement);
+    // Create analyzer if it doesn't exist
+    if (!analyserServer) {
+        analyserServer = audioContext.createAnalyser();
+        analyserServer.fftSize = 1024;
+    }
     
-    // // Set up the analyzer for visualization
-    // analyserServer = audioContext.createAnalyser();
-    // analyserServer.fftSize = 1024;
+    // Create audio source from the audio element
+    const source = audioContext.createMediaElementSource(audioElement);
     
-    // // Connect the audio source to analyzer and destination
-    // source.connect(analyserServer);
-    // source.connect(audioContext.destination);
+    // Disconnect any existing connections
+    source.disconnect();
+    
+    // Connect to analyzer and destination
+    source.connect(analyserServer);
+    source.connect(audioContext.destination);
     
     // Initialize data array for visualization
-    const bufferLength = analyserServer.fftSize;
+    const bufferLength = analyserServer.frequencyBinCount;
     dataArrayServer = new Uint8Array(bufferLength);
     
-    // Start the visualization
-    drawWaveServer();
+    // Start the visualization if not already running
+    if (!window.visualizationRunning) {
+        drawWaveServer();
+        window.visualizationRunning = true;
+    }
 }
 // function startButton() {
 //     const statusElement = document.getElementById("status");
